@@ -5,11 +5,13 @@ module.exports = {
   // Where files should be sent once they are bundled
  output: {
    path: path.join(__dirname, '/..', '/public'),
-   filename: 'index.bundle.js'
+   filename: 'index.bundle.js',
+   publicPath: '/'
  },
  entry: './src/index.js',
  devtool: 'eval-cheap-module-source-map',
-  // Rules of how webpack will take our files, compile & bundle them for the browser 
+
+// Rules of how webpack will take our files, compile & bundle them for the browser 
  module: {
    rules: [
     {
