@@ -1,5 +1,5 @@
 {
-  "name": "front",
+  "name": "spotigame front",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -20,6 +20,7 @@
     "@types/babel__plugin-transform-runtime": "^7.9.1",
     "@types/babel__preset-env": "^7.9.1",
     "@types/eslint": "^7.2.10",
+    "@types/jquery": "^3.5.5",
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
@@ -27,13 +28,16 @@
     "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
+    "babel-cli": "^6.26.0",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.3",
     "eslint": "^7.24.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
     "style-loader": "^2.0.0",
+    "svg-url-loader": "^7.1.1",
     "ts-loader": "^9.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4",
@@ -41,6 +45,10 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0"

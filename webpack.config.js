@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const MiniCssExtractPlugin  = require('mini-css-extract-plugin');
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
 
 // Rules of how webpack will take our files, compile & bundle them for the browser 
  module: {
-   rules: [
+  rules: [
     {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
@@ -32,13 +33,34 @@ module.exports = {
        test: /\.css$/,
        exclude: /node_modules/,
        use: ['style-loader', 'css-loader']
-     }
+     }, {
+      test: /\.svg$/,
+      use: [
+        {
+          loader: 'svg-url-loader',
+          options: {
+            limit: 10000,
+          },
+        },
+      ],
+    }, {
+      test: /\.(png|jpe?g|gif)$/i,
+      use: [
+        {
+          loader: 'file-loader',
+        },
+      ],
+    },
    ]
  },
  resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
  plugins: [
-   new HtmlWebpackPlugin({ template: './src/index.html' })
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery',
+  }),
+   new HtmlWebpackPlugin({ template: './src/index.html', inject: false })
  ]
 }

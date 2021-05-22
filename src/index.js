@@ -5,8 +5,8 @@ import {
   } from "react-router-dom";
 
 import App from "./app.tsx"
-import "./App.css"
+import "./app.css"
 
 ReactDom.render(<Router>
-    <App />
+      <App />
   </Router>, document.getElementById('app'))
