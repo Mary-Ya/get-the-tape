@@ -1,23 +1,20 @@
 import React from 'react';
+import { ITrack } from '../types/track';
 function Artists(props: any) {
     return props.data.map((i: { name: any; }) =>`
         <span>${i.name}</span>
     `)
 }
 
-class Track extends React.Component {   
-    constructor (props: {track: any} | Readonly<{track: Array<any>}>) {
+class Track extends React.Component<{track: ITrack, className: string}>  {   
+    constructor (props: {track: ITrack}) {
       super(props);
-      this.state = { 
-        track: props.track,
-      };
     }
 
     render() {
-        console.log(this.state.track)
         return <p {...this.props}>
-            <a>{ this.state.track.name ? this.state.track.name : '' } 
-                <Artists key={'artist' + this.state.track.id} data={this.state.track.artists}></Artists> 
+            <a>{ this.props.track.name ? this.props.track.name : '' } 
+                <Artists key={'artist' + this.props.track.id} data={this.props.track.artists}></Artists> 
             </a>
         </p>
     }

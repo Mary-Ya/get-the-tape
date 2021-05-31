@@ -1,8 +1,9 @@
 import { map } from 'lodash';
 import React from 'react';
+import { ITrack } from '../types/track';
 
-class Player extends React.Component {   
-    constructor (props: Readonly<{track: any}>) {
+class Player extends React.Component<{track: ITrack}, any> {   
+    constructor (props: Readonly<{track: ITrack}>) {
       super(props);
       this.state = { 
         audioTrack: new Audio(),

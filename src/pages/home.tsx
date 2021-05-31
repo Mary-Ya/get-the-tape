@@ -8,10 +8,6 @@ import { IMe } from "./../types/me";
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
 
-const errorHandler = (e: JQueryXHR) => {
-  console.warn(e);
-}
-
 function Home(props: any) {
   const [genre, setGenre] = useState("rock");
   const [accessToken, setAccessToken] = useState(
@@ -21,7 +17,7 @@ function Home(props: any) {
     deserialize(props.location.search).refresh_token
   );
   const [me, setMe] = useState<IMe|null>();
-  const [settings, setSettings] = useState({});
+  const [settings, setSettings] = useState({tracksCount: 10});
 
   const updateUserDataInLocalStorage = () => {};
 
@@ -30,9 +26,14 @@ function Home(props: any) {
       safeLocalStorage.setItem('accessToken', accessToken);
       safeLocalStorage.setItem('refreshToken', refreshToken);
     });
-
+    fetchAccountData()
     // TODO: error handling
-  }, [accessToken]);
+  }, [accessToken, refreshToken]);
+
+  const errorHandler = (e: JQueryXHR) => {
+    console.warn(e);
+    fetchRefreshToken();
+  };
 
   const fetchAccountData = () => (
     api.getMe(accessToken).then((me) => {
@@ -40,6 +41,8 @@ function Home(props: any) {
       setMe({ ...me });
 
       // TODO: save me to sessionStorage
+    }).catch(e => {
+      errorHandler(e);
     })
   );
 
@@ -73,7 +76,7 @@ function Home(props: any) {
       <Link
         to={{
           pathname: "/play",
-          state: { me, accessToken, refreshToken, genre },
+          state: { me, accessToken, refreshToken, genre, settings },
         }}
       >
         PLAY!
