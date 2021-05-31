@@ -2,7 +2,7 @@ import React from "react";
 
 const NoMatch = () => (
     <div>
-        Game controllers are here
+        404
     </div>
 );
 

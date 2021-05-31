@@ -2,27 +2,24 @@ import React, {useState, useCallback} from "react";
 import {
     useLocation
 } from "react-router-dom";
+import _ from 'lodash';
 
-import Track from './track';
+import Track from '../components/track';
+import Player from '../components/player';
 
 import api from '../common/api'
-import _ from 'lodash';
-import Player from './player';
 
-const deserialize = (search: string) => Object.fromEntries(new URLSearchParams(search));
 const errorHandler = (e: any) => {console.log(e)};
 
 class Play extends React.Component {   
-  constructor (props: {} | Readonly<{modalActive: Boolean, searchInUrl: string, accessToken: String, refreshToken: String, me: any, thisTrack: any, recommendations: Array<any>}>) {
+  constructor (props: any | Readonly<{modalActive: Boolean, searchInUrl: string, accessToken: String, refreshToken: String, me: any, thisTrack: any, recommendations: Array<any>}>) {
     super(props);
     this.state = { 
       modalActive: false,
-      accessToken: deserialize(props.location.search).access_token,
-      refreshToken: deserialize(props.location.search).refresh_token,
-      me: {},
       thisTrack: {},
       recommendations: [],
       freshStart: true,
+      ...props.location.state
     };
     this.fetchAccountData = this.fetchAccountData.bind(this);
     this.fetchRefreshToken = this.fetchRefreshToken.bind(this);
@@ -32,11 +29,15 @@ class Play extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchAccountData();
+    api.getTheTape(this.state.accessToken, this.state.me.country, this.state.genre, 10).then((res) => {
+      console.log('componentDidMount, nextTrack: ', res)
+      this.setState({ thisTrack: res[0] });
+    });
   }
 
   async fetchAccountData () {
     const $this = this;
+
     await api.getMe(this.state.accessToken)
       .then(me => {
           console.info('me is done', me);
@@ -47,7 +48,7 @@ class Play extends React.Component {
   fetchRandomTrackAndRecommendation (genre = '') {
     const $this = this;
     this.setState({freshStart: true})
-      api.getRandomTrack(this.state.me.country, this.state.accessToken, `genre:"${genre}"`).then(res => {
+      api.getRandomTrack(this.state.me.country, this.state.accessToken, `genre:"${genre || this.state.genre}"`).then(res => {
         this.setState({thisTrack: res});
         console.log('fetchRandomTrack', res.items[0].name);
         $this.fetchRecommendation ();
@@ -101,15 +102,9 @@ class Play extends React.Component {
               <button className="button_" onClick={this.fetchRefreshToken}>fetchRefreshToken</button>
               <button className="button_" onClick={this.fetchRandomTrackAndRecommendation.bind(this, '')}>fetchRandomTrackAndRecommendation </button>
 
-              <button className="button_" onClick={this.fetchRandomTrackAndRecommendation.bind(this, 'rock')}>fetch rock</button>
-              <button className="button_" onClick={this.fetchRandomTrackAndRecommendation.bind(this, 'pop')}>fetch pop</button>
-              <button className="button_" onClick={this.fetchRandomTrackAndRecommendation.bind(this, 'folk')}>fetch folk</button>
+              <Player track={this.state.thisTrack ? this.state.thisTrack : {}}></Player>
 
-              <p>{ this.state.me.country }</p>
-              <p>{ this.state.thisTrack && this.state.thisTrack.items ? this.state.thisTrack.items[0].name : ''}</p>
-              <Player track={this.state.thisTrack && this.state.thisTrack.items ? this.state.thisTrack.items[0] : {}}></Player>
-
-              <div>{this.state.recommendations ? this.state.recommendations.map((item, index) => 
+              <div>{this.state.thisTrack.alts ? this.state.thisTrack.alts.map((item, index) => 
                 <Track track={item} key={'track-reccom-' + index}
                   className="button_" onClick={this.selectAnswer.bind(this, item.id)}
                 ></Track>
