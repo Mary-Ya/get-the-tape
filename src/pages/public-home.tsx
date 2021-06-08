@@ -7,7 +7,8 @@ const PublicHome = () => (
             About the game
         </div>
         <div>
-            <Login/>
+            <Login />
+            OR "GET SPOTIFY FREE"
         </div>
     </div>
 );
