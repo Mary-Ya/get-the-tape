@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 // const MiniCssExtractPlugin  = require('mini-css-extract-plugin');
 module.exports = {
   // Where files should be sent once they are bundled
@@ -29,11 +30,38 @@ module.exports = {
           },
         },
       },
-     {
+      {
+        test: /\.(scss)$/,
+        use: [{
+          // inject CSS to page
+          loader: 'style-loader'
+        }, {
+          // translates CSS into CommonJS modules
+          loader: 'css-loader'
+        }, {
+          // Run postcss actions
+          loader: 'postcss-loader',
+          options: {
+            // `postcssOptions` is needed for postcss 8.x;
+            // if you use postcss 7.x skip the key
+            postcssOptions: {
+              // postcss plugins, can be exported to postcss.config.js
+              plugins: function () {
+                return [
+                  require('autoprefixer')
+                ];
+              }
+            }
+          }
+        }, {
+          // compiles Sass to CSS
+          loader: 'sass-loader'
+        }]
+      }, /*{
        test: /\.css$/,
        exclude: /node_modules/,
        use: ['style-loader', 'css-loader']
-     }, {
+     }, */{
       test: /\.svg$/,
       use: [
         {
@@ -54,7 +82,11 @@ module.exports = {
    ]
  },
  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+  alias: {     
+    // bind to modules;
+    modules: path.join(__dirname, "node_modules")
+   },
+   extensions: ['.tsx', '.ts', '.js'],
   },
  plugins: [
   new webpack.ProvidePlugin({

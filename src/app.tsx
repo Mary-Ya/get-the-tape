@@ -4,7 +4,7 @@ import {
   Redirect,
   Switch,
   Route,
-  Link,
+  NavLink,
 } from "react-router-dom";
 
 import About from "./pages/about";
@@ -43,18 +43,24 @@ const App = () => {
   
   return (
     <div>
-      <ul>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/home">Home</Link>
-        </li>
-      </ul>
-      <div>
+      
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container">
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <NavLink to="/" className="nav-link px-0 mr-5" >GetTheTape</NavLink>
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0 right">
+              <li className="nav-item">
+                <NavLink to="/about" className="nav-link" activeClassName="active">About</NavLink>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+      <div className="container mt-lg-5">
         <Switch>
           <Route path="/about">
             <About />

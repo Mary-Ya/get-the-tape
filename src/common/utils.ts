@@ -6,7 +6,7 @@ const safeLocalStorage = {
         try {
             value = JSON.parse(localStorage.getItem(key) || '');
         } catch (e) {
-            console.warn(`spotigame.safeLocalStorage.getItem: ${e}`);
+            console.warn(`getTheTapeApp.safeLocalStorage.getItem: ${e}`);
         }
         return value;
     },
@@ -15,7 +15,7 @@ const safeLocalStorage = {
             const valueString = JSON.stringify(value);
             localStorage.setItem(key, valueString);
         } catch (e) {
-            console.warn(`spotigame.safeLocalStorage.setItem: ${e}`);
+            console.warn(`getTheTapeApp.safeLocalStorage.setItem: ${e}`);
         }
     }
 }

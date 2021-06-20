@@ -4,7 +4,7 @@ import Login from './spotify-login';
 const PublicHome = () => (
     <div>
         <div>
-            About the game
+            <h1>So you found a tape. Now what?</h1>
         </div>
         <div>
             <Login />

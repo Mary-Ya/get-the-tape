@@ -63,9 +63,22 @@ function Home(props: any) {
 
   return (
     <div>
-      <p>My country: { me ? me.country : 'unknown' }</p>
+      <p>My country: {me ? me.country : 'unknown'}</p>
       <br />
-      GENRE: 
+      keywords: 
+      <br />
+       ToDO: get tracks with keywords - no genres than
+      <br />
+      Popular: 
+      <br />
+       ToDO: popular scale min_popularity max_popularity
+      <br />
+      GENRE:
+      <input />
+      <div>
+        ToDO: load genres by request
+      </div>
+        ToDO: Make those checkboxes
       <button className="button_" onClick={() => setGenre('rock')}>rock</button>
       <button className="button_" onClick={() => setGenre('pop')}>pop</button>
       <button className="button_" onClick={() => setGenre('folk')}>folk</button>
@@ -73,14 +86,15 @@ function Home(props: any) {
       SWITCH: TOPS, TOPS AND MIDDLES, LEAST POPULAR, RANDOM: 
 
       SONGS COUNT ON A TAPE: 
-      <Link
-        to={{
-          pathname: "/play",
-          state: { me, accessToken, refreshToken, genre, settings },
-        }}
-      >
-        PLAY!
-      </Link>
+        <div><Link
+          to={{
+            pathname: "/play",
+            state: { me, accessToken, refreshToken, genre, settings },
+          }}
+        >
+          PLAY!
+        </Link>
+      </div>
     </div>
   );
 }

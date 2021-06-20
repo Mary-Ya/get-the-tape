@@ -100,7 +100,6 @@ class Play extends React.Component<{}, IPlayState> {
         gamesLeft: this.state.gamesLeft - 1
       });
     }
-    
   }
 
   render() {
@@ -123,7 +122,7 @@ class Play extends React.Component<{}, IPlayState> {
                   onClick={this.selectAnswer.bind(this, item.id)}
                 ></Track>
               ))
-            : "Game over"}
+            : "Save playlist screen"}
         </div>
 
         <div>
