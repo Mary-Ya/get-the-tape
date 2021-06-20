@@ -23,11 +23,13 @@ const App = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [spinnerIsOn, setSpinnerIsOn] = useState(true);
-  const [refresh_token, setRefreshTokes] = useState('')
-  const [access_token, setAccessTokes] = useState('')
+  const [refresh_token, setRefreshTokes] = useState('');
+  const [access_token, setAccessTokes] = useState('');
+
   useEffect(() => {
     const refreshToken = safeLocalStorage.getItem('refreshToken');
     if (refreshToken) {
+      debugger
       api.getNewTokens(refreshToken).then(data => {
         if (data.refresh_token && data.access_token) {
           setRefreshTokes(data.refresh_token);
@@ -76,9 +78,9 @@ const App = () => {
 
           <Route exact path="/">
             {spinnerIsOn ? 'Loading...' : ''}
-            {!spinnerIsOn && isLoggedIn ? <Redirect to={{
-              pathname: `/home?access_token=${access_token}&refresh_token=${refresh_token}`
-            }} /> : <PublicHome />}
+            {!spinnerIsOn && isLoggedIn ? <Redirect to={
+              `/home?access_token=${access_token}&refresh_token=${refresh_token}`
+            } /> : <PublicHome />}
           </Route>
 
           <Route path="*">
