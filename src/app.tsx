@@ -29,7 +29,6 @@ const App = () => {
   useEffect(() => {
     const refreshToken = safeLocalStorage.getItem('refreshToken');
     if (refreshToken) {
-      debugger
       api.getNewTokens(refreshToken).then(data => {
         if (data.refresh_token && data.access_token) {
           setRefreshTokes(data.refresh_token);
@@ -46,7 +45,7 @@ const App = () => {
   return (
     <div>
       
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-white">
         <div className="container">
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
