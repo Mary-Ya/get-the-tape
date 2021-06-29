@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import api from "../common/api";
 import { safeLocalStorage } from "../common/utils";
 import CheckButton from "../components/check-button";
+import GenresList from "../components/genres";
 import { IMe } from "./../types/me";
 
 const deserialize = (search: string) =>
@@ -22,10 +23,15 @@ function Home(props: any) {
     tracksCount: 10
   });
 
-  const [seeds, setSeeds] = useState(['Rock']);
-  const [availableGenreSeeds, setAvailableGenreSeeds] = useState(['Rock', 'Pop', 'Blues']);
+  const [genreSeeds, setGenreSeeds] = useState(['Rock']);
 
-  const [seedsCount, setSeedsCount] = useState(seeds.length);
+  const [artistSeeds, setArtistSeeds] = useState([]);
+  const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
+
+  const [songSeeds, setSongSeeds] = useState([]);
+  const [availableSongSeeds, setAvailableSongSeeds] = useState([]);
+
+  const [genreSeedsCount, setSeedsCount] = useState(genreSeeds.length + artistSeeds.length + songSeeds.length);
 
   useEffect(() => {
     fetchAccountData().then((data) => {
@@ -35,6 +41,10 @@ function Home(props: any) {
     fetchAccountData()
     // TODO: error handling
   }, [accessToken, refreshToken]);
+
+  useEffect(() => {
+    setSeedsCount(genreSeeds.length + artistSeeds.length + songSeeds.length);
+  }, [genreSeeds, artistSeeds, songSeeds])
 
   const errorHandler = (e: JQueryXHR) => {
     console.warn(e);
@@ -69,34 +79,15 @@ function Home(props: any) {
 
   const onGenreUpdate = (seedName: string) => {
     debugger;
-    const seedIndex = seeds.indexOf(seedName);
-    const newSeedState = [...seeds];
+    const seedIndex = genreSeeds.indexOf(seedName);
+    const newSeedState = [...genreSeeds];
     if (seedIndex !== -1) {
       newSeedState.splice(seedIndex, 1);
     } else {
       newSeedState.push(seedName);
     }
-    setSeeds(newSeedState);
+    setGenreSeeds(newSeedState);
   };
-
-  const isSeedSelected = (seedName: string) => {
-    return seeds.indexOf(seedName) !== -1;
-  }
-
-  const simpleDo = (param) => {
-    console.log(param);
-  }
-
-  const renderGenre = (genreName: string) => {
-    debugger;
-    /*return <CheckButton key={`${genreName}-button`} isSelected={isSeedSelected(genreName)} buttonName={genreName}
-      onChange={onGenreUpdate}></CheckButton>*/
-    return  <div className="d-inline-block" key={`${genreName}-button`} >
-      <input type="checkbox" className="btn-check" onChange={() => onGenreUpdate(genreName)} id={`${genreName}-input`} 
-        checked={isSeedSelected(genreName)} autoComplete="off" />
-        <label className="btn btn-outline-secondary" htmlFor={`${genreName}-input`}  key={`${genreName}-label`} >{genreName}</label><br/>
-    </div>
-  }
 
   return (
     <div className="container px-0">
@@ -108,25 +99,7 @@ function Home(props: any) {
         </div>
           
         <div className="col-4 form-check">
-          GENRE SEEDS:
-          <input />
-          <div>
-            ToDO: load genres by request
-          </div>
-            ToDO: Make those checkboxes
-          <button className="button-check" onClick={() => setGenre('rock')}>rock</button>
-          <button className="button-check" onClick={() => setGenre('pop')}>pop</button>
-          <button className="button-check" onClick={() => setGenre('folk')}>folk</button>
-        
-          <div>{availableGenreSeeds.map(renderGenre)}</div>
-          
-
-          <input type="radio" className="btn-check" name="options-outlined" id="success-outlined" onChange={() => onGenreUpdate('pop')}
-            autoComplete="off" checked={isSeedSelected('pop')}  />
-          <label className="btn btn-outline-success" htmlFor="success-outlined">pop</label>
-
-          <input type="radio" className="btn-check" name="options-outlined" id="danger-outlined" autoComplete="off" />
-          <label className="btn btn-outline-danger" htmlFor="danger-outlined">Danger radio</label>
+          <GenresList genreList={genreSeeds} onGenreUpdate={onGenreUpdate} />
         </div>
         <div className="col-4">
         Track seed: 
