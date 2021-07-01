@@ -99,7 +99,7 @@ function Home(props: any) {
         </div>
           
         <div className="col-4 form-check">
-          <GenresList genreList={genreSeeds} onGenreUpdate={onGenreUpdate} />
+          <GenresList accessToken={accessToken} genreList={genreSeeds} onGenreUpdate={onGenreUpdate} />
         </div>
         <div className="col-4">
         Track seed: 

@@ -15,6 +15,21 @@ export default {
       .then((i) => i.data);
   },
 
+  getGenres: (access_token: string) => {
+    const options: AxiosRequestConfig = {
+      method: "get",
+      params: {
+        access_token: access_token,
+      },
+    };
+    return axios
+      .get("/recommendation-genres", options)
+      .then((i) => {
+        console.log(i.data);
+        return i.data.genres ? i.data.genres : i.data;
+      });
+  },
+
   getNewTokens: (refresh_token: string) => {
     const options: AxiosRequestConfig = {
       method: "get",
