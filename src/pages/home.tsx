@@ -36,7 +36,12 @@ function Home(props: any) {
 
   const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
 
-  const [trackList, setTrackList] = useState<Array<ITrack> | null>(null)
+  const [trackList, setTrackList] = useState<Array<ITrack>>([]);
+
+  const [newPlayListName, setNewPlayListName] = useState(`My ${genreSeeds.join(', ')}`);
+  const [playListID, setPlayListID] = useState('');
+
+  const getDefaultPlayListName = (seeds: Array<string>) => (`My ${seeds.join(', ')}`);
 
   useEffect(() => {
     fetchAccountData().then((data) => {
@@ -50,6 +55,7 @@ function Home(props: any) {
   useEffect(() => {
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount > 4);
+    getDefaultPlayListName([... genreSeeds, ...artistSeeds, ...songSeeds]);
   }, [genreSeeds, artistSeeds, songSeeds]);
 
   const errorHandler = (e: JQueryXHR) => {
@@ -58,17 +64,21 @@ function Home(props: any) {
   };
 
   const fetchAccountData = () => {
-    if (!me) return api
-      .getMe(accessToken)
-      .then((me) => {
-        console.info("me is done", me);
-        setMe({ ...me });
+    if (!me) {
+      return api
+        .getMe(accessToken)
+        .then((me) => {
+          console.info("me is done", me);
+          setMe({ ...me });
 
-        // TODO: save me to sessionStorage
-      })
-      .catch((e) => {
-        errorHandler(e);
-      });
+          // TODO: save me to sessionStorage
+        })
+        .catch((e) => {
+          errorHandler(e);
+        })
+    } else {
+      Promise.reject(Error("Can't fetchAccountData"))
+    }
   };
 
   const fetchRefreshToken = () => {
@@ -113,6 +123,22 @@ function Home(props: any) {
       errorHandler(e);
     });
   }
+
+  
+  const createPlayList = () => {
+    api.createPlayList(accessToken, me.id, {
+        name: 'Test1',
+        description: 'Test1 desc',
+        public: false
+    }).then((res) => {
+      setPlayListID(res.id);
+    })
+  }
+  
+  const updatePlayList = () => {
+    api.updatePlayList(accessToken, playListID, trackList.map(i => i.uri))
+  }
+
 
   return !auth ? (
     <Redirect to="/public-home" />
@@ -171,7 +197,13 @@ function Home(props: any) {
           </Link>
         </div>
           </div>
-          {trackList ? <PlayList trackList={trackList} /> : ''}
+          {trackList.length > 0 ? <div>
+            <PlayList trackList={trackList} />
+            <input value={newPlayListName} />
+            <div><button onClick={() => {createPlayList()}}>createPlayList</button></div>
+            <div><button onClick={() => {updatePlayList()}}>updatePlayList</button></div>
+              
+            </div> : ''}
     </div>
   );
 }

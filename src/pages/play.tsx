@@ -9,7 +9,7 @@ import Player from "../components/player";
 
 import api from "../common/api";
 import { ITrack } from "../types/track";
-import { IPlayState } from "../types/interfaces";
+import { IPlayState } from "../types/play-state";
 import { errorHandler } from "../common/utils";
 
 

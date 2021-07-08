@@ -1,5 +1,5 @@
-import { IMe } from "../types/me";
-import { ITrack } from "../types/track";
+import { IMe } from "./me";
+import { ITrack } from "./track";
 
 interface IPlayState {
     me: IMe;

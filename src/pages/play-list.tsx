@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../common/api";
-import { IPlayState } from "../types/interfaces";
+import { IPlayState } from "../types/play-state";
 import { errorHandler } from "../common/utils";
 import { ITrack } from "../types/track";
 
 const PlayList = (props: any) => {
-    const [me, setMe] = useState(props.me);
     const [accessToken, setAccessToken] = useState(props.accessToken);
     //const [genreList, setGenreList] = useState(props.genreList)
 
@@ -18,9 +17,9 @@ const PlayList = (props: any) => {
             {i.name} - {i.artists[0].name}
         </div>
     )
-    
+
     return <div>
-        {props.trackList.map(renderItem)}
+        <div>{props.trackList.map(renderItem)}</div>
     </div>
 };
 
