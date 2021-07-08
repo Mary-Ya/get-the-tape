@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import api from "../common/api";
 import { safeLocalStorage } from "../common/utils";
@@ -19,19 +19,20 @@ function Home(props: any) {
     deserialize(props.location.search).refresh_token
   );
   const [me, setMe] = useState<IMe | null>();
+  const [auth, setAuth] = useState(true);
   const [settings, setSettings] = useState({
     tracksCount: 10
   });
 
   const [genreSeeds, setGenreSeeds] = useState(['Rock']);
-
+  
   const [artistSeeds, setArtistSeeds] = useState([]);
   const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
-
+  
   const [songSeeds, setSongSeeds] = useState([]);
   const [availableSongSeeds, setAvailableSongSeeds] = useState([]);
-
-  const [genreSeedsCount, setSeedsCount] = useState(genreSeeds.length + artistSeeds.length + songSeeds.length);
+  
+  const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
 
   useEffect(() => {
     fetchAccountData().then((data) => {
@@ -43,7 +44,8 @@ function Home(props: any) {
   }, [accessToken, refreshToken]);
 
   useEffect(() => {
-    setSeedsCount(genreSeeds.length + artistSeeds.length + songSeeds.length);
+    const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
+    setCanAddMoreSeeds(seedCount > 4);
   }, [genreSeeds, artistSeeds, songSeeds])
 
   const errorHandler = (e: JQueryXHR) => {
@@ -74,7 +76,9 @@ function Home(props: any) {
         setRefreshToken(data.refresh_token);
         setAccessToken(data.access_token);
       })
-      .catch(errorHandler);
+      .catch((error) => {
+        setAuth(false)
+      });
   };
 
   const onGenreUpdate = (seedName: string) => {
@@ -89,17 +93,18 @@ function Home(props: any) {
     setGenreSeeds(newSeedState);
   };
 
-  return (
+  return (!auth ? <Redirect to='/public-home' /> : me ? 
     <div className="container px-0">
       <div className="row">
         <div className="col-4">
-          Artist seed: 
-          <br />
-          ToDO: get tracks with keywords - no genres than
+          <div className="">Artist seed: 
+            <br />
+            ToDO: get tracks with keywords - no genres than
+          </div>
         </div>
           
         <div className="col-4 form-check">
-          <GenresList accessToken={accessToken} genreList={genreSeeds} onGenreUpdate={onGenreUpdate} />
+          <div className=""><GenresList canAddMoreSeeds={canAddMoreSeeds} accessToken={accessToken} genreList={genreSeeds} onGenreUpdate={onGenreUpdate} /></div>
         </div>
         <div className="col-4">
         Track seed: 
@@ -130,7 +135,7 @@ function Home(props: any) {
           </Link>
         </div>
       </div>
-    </div>
+    </div> : 'loading'
   );
 }
 

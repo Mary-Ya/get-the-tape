@@ -3,7 +3,7 @@ import api from '../common/api';
 import CheckButton from './check-button';
 
 function GenresList(props: any) {
-    const [availableGenreSeeds, setAvailableGenreSeeds] = useState(['Rock', 'Pop', 'Blues']);
+    const [availableGenreSeeds, setAvailableGenreSeeds] = useState(['rock', 'pop', 'blues']);
     const [searchQuery, setSearchQuery] = useState('');
 
     const isSeedSelected = (seedName: string) => {
@@ -21,16 +21,19 @@ function GenresList(props: any) {
         loadGenres()
     }, [])
 
-    const renderGenre = (genreName: string) => {
+    const renderGenre = (genreName: string, isInFetchedList: boolean) => {
+        const isSelected = isSeedSelected(genreName);
         return (<CheckButton
+            disabled={isInFetchedList && props.canAddMoreSeeds}
             key={`${genreName}-button`}
-            isSelected={isSeedSelected(genreName)}
+            isSelected={isSelected}
             buttonName={genreName}
+            className={isInFetchedList && isSelected ? 'd-none' : ''}
             onChange={props.onGenreUpdate}></CheckButton>
         )
     }
 
-    const genresFilter = (item => {
+    const genresFilter = ((item: string) => {
         return searchQuery.length > 1 ? item.toLowerCase().includes(searchQuery.toLowerCase()) : true;
     })
 
@@ -38,12 +41,12 @@ function GenresList(props: any) {
     return (<div>
         Selected: 
         <p>GENRE SEEDS: </p>
-        {props.genreList.map(renderGenre)}
+        { props.genreList.map((selectedGenre: string) => (renderGenre(selectedGenre, false))) }
         <form>
             <input value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value) }} />
         </form>
 
-        <div>{availableGenreSeeds.filter(genresFilter).map(renderGenre)}</div>
+        <div className="genres-list">{availableGenreSeeds.filter(genresFilter).map((selectableGenre) => renderGenre(selectableGenre, true))}</div>
     </div>)
 }
 

@@ -24,3 +24,9 @@ $wine: #4A001C;
 h1 {
     color: $wine;
 }
+
+.genres-list {
+    height: 30vh;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
