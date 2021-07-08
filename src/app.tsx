@@ -16,6 +16,7 @@ import NoMatch from "./pages/no-match";
 
 import { safeLocalStorage } from './common/utils';
 import api from "./common/api";
+import PlayList from "./pages/play-list";
 
 const App = () => {
   // TODO: check refreshToken in LocalStorage
@@ -72,8 +73,11 @@ const App = () => {
           </Route>
 
           <Route path="/home" component={Home} />
+          <Route path="/public-home" component={PublicHome} />
 
           <Route path="/play" component={Play} />
+          
+          <Route path="/play-list" component={PlayList} />
 
           <Route exact path="/">
             {spinnerIsOn ? 'Loading...' : ''}

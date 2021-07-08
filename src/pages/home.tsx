@@ -5,7 +5,9 @@ import api from "../common/api";
 import { safeLocalStorage } from "../common/utils";
 import CheckButton from "../components/check-button";
 import GenresList from "../components/genres";
+import { ITrack } from "../types/track";
 import { IMe } from "./../types/me";
+import PlayList from "./play-list";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -21,48 +23,53 @@ function Home(props: any) {
   const [me, setMe] = useState<IMe | null>();
   const [auth, setAuth] = useState(true);
   const [settings, setSettings] = useState({
-    tracksCount: 10
+    tracksCount: 10,
   });
 
-  const [genreSeeds, setGenreSeeds] = useState(['Rock']);
-  
+  const [genreSeeds, setGenreSeeds] = useState(["Rock"]);
+
   const [artistSeeds, setArtistSeeds] = useState([]);
   const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
-  
+
   const [songSeeds, setSongSeeds] = useState([]);
   const [availableSongSeeds, setAvailableSongSeeds] = useState([]);
-  
+
   const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
+
+  const [trackList, setTrackList] = useState<Array<ITrack> | null>(null)
 
   useEffect(() => {
     fetchAccountData().then((data) => {
-      safeLocalStorage.setItem('accessToken', accessToken);
-      safeLocalStorage.setItem('refreshToken', refreshToken);
+      safeLocalStorage.setItem("accessToken", accessToken);
+      safeLocalStorage.setItem("refreshToken", refreshToken);
     });
-    fetchAccountData()
+    fetchAccountData();
     // TODO: error handling
   }, [accessToken, refreshToken]);
 
   useEffect(() => {
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount > 4);
-  }, [genreSeeds, artistSeeds, songSeeds])
+  }, [genreSeeds, artistSeeds, songSeeds]);
 
   const errorHandler = (e: JQueryXHR) => {
     console.warn(e);
     fetchRefreshToken();
   };
 
-  const fetchAccountData = () => (
-    api.getMe(accessToken).then((me) => {
-      console.info("me is done", me);
-      setMe({ ...me });
+  const fetchAccountData = () => {
+    if (!me) return api
+      .getMe(accessToken)
+      .then((me) => {
+        console.info("me is done", me);
+        setMe({ ...me });
 
-      // TODO: save me to sessionStorage
-    }).catch(e => {
-      errorHandler(e);
-    })
-  );
+        // TODO: save me to sessionStorage
+      })
+      .catch((e) => {
+        errorHandler(e);
+      });
+  };
 
   const fetchRefreshToken = () => {
     $.ajax({
@@ -77,12 +84,11 @@ function Home(props: any) {
         setAccessToken(data.access_token);
       })
       .catch((error) => {
-        setAuth(false)
+        setAuth(false);
       });
   };
 
   const onGenreUpdate = (seedName: string) => {
-    debugger;
     const seedIndex = genreSeeds.indexOf(seedName);
     const newSeedState = [...genreSeeds];
     if (seedIndex !== -1) {
@@ -93,37 +99,67 @@ function Home(props: any) {
     setGenreSeeds(newSeedState);
   };
 
-  return (!auth ? <Redirect to='/public-home' /> : me ? 
+  const fetchPlaylist = () => {
+    api.getTheTape(
+      accessToken,
+      me.country,
+      genreSeeds,
+      10
+    )
+    .then((res) => {
+      setTrackList(res);
+      safeLocalStorage.setItem('currentTrackList', res);
+    }).catch(e => {
+      errorHandler(e);
+    });
+  }
+
+  return !auth ? (
+    <Redirect to="/public-home" />
+  ) : !me ? (
+    "loading"
+  ) : (
     <div className="container px-0">
       <div className="row">
         <div className="col-4">
-          <div className="">Artist seed: 
+          <div className="">
+            Artist seed:
             <br />
             ToDO: get tracks with keywords - no genres than
           </div>
         </div>
-          
+
         <div className="col-4 form-check">
-          <div className=""><GenresList canAddMoreSeeds={canAddMoreSeeds} accessToken={accessToken} genreList={genreSeeds} onGenreUpdate={onGenreUpdate} /></div>
+          <GenresList
+            canAddMoreSeeds={canAddMoreSeeds}
+            accessToken={accessToken}
+            genreList={genreSeeds}
+            onGenreUpdate={onGenreUpdate}
+          />
         </div>
         <div className="col-4">
-        Track seed: 
+          Track seed:
           <br />
           ToDO: get tracks with keywords - no genres than
-          </div>
+        </div>
       </div>
       <div className="row mt-3">
-        <div className="col-12 text-center">          
-        Popular: 
+        <div className="col-12 text-center">
+          Popular:
           <br />
           ToDO: popular scale min_popularity max_popularity
           <br />
-          
-          SWITCH: TOPS, TOPS AND MIDDLES, LEAST POPULAR, RANDOM: 
-            
+          SWITCH: TOPS, TOPS AND MIDDLES, LEAST POPULAR, RANDOM:
         </div>
       </div>
       <div className="row mt-3">
+        <div className="col-12 text-center">
+          <button onClick={() => {fetchPlaylist()}}
+            
+          >
+            GET THE TAPE!
+          </button>
+        </div>
         <div className="col-12 text-center">
           <Link
             to={{
@@ -131,11 +167,12 @@ function Home(props: any) {
               state: { me, accessToken, refreshToken, genre, settings },
             }}
           >
-            GET THE TAPE!
+            PLAY THE TAPE!
           </Link>
         </div>
-      </div>
-    </div> : 'loading'
+          </div>
+          {trackList ? <PlayList trackList={trackList} /> : ''}
+    </div>
   );
 }
 

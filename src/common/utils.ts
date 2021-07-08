@@ -20,6 +20,12 @@ const safeLocalStorage = {
     }
 }
 
+
+const errorHandler = (e: any) => {
+    console.log(e);
+  
+  };
+
 export {
-    getRandomNumber, safeLocalStorage
+    getRandomNumber, safeLocalStorage, errorHandler
 }

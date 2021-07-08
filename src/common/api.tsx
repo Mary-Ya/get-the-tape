@@ -25,7 +25,6 @@ export default {
     return axios
       .get("/recommendation-genres", options)
       .then((i) => {
-        console.log(i.data);
         return i.data.genres ? i.data.genres : i.data;
       });
   },
@@ -40,11 +39,11 @@ export default {
     return axios.get("/refresh_token", options).then((i) => i.data);
   },
 
-  getTheTape: (accessToken: string, market: string, genre: string, limit: number) => {
+  getTheTape: (accessToken: string, market: string, genreSeeds: Array<string>, limit: number) => {
     const options: AxiosRequestConfig = {
       method: "get",
       params: {
-        market, genre, limit,
+        market, genreSeeds: genreSeeds.join('%2C'), limit,
         access_token: accessToken,
       },
     };

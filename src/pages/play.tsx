@@ -9,25 +9,9 @@ import Player from "../components/player";
 
 import api from "../common/api";
 import { ITrack } from "../types/track";
+import { IPlayState } from "../types/interfaces";
+import { errorHandler } from "../common/utils";
 
-const errorHandler = (e: any) => {
-  console.log(e);
-
-};
-
-interface IPlayState {
-  me: IMe;
-  modalActive: Boolean;
-  searchInUrl: string;
-  accessToken: string;
-  refreshToken: string;
-  genre: string;
-  settings: any;
-  thisTrack: ITrack;
-  iWin: false;
-  gamesLeft: number;
-  resultsTable: Array<any>
-}
 
 class Play extends React.Component<{}, IPlayState> {
   constructor(props: any | Readonly<{}>) {
@@ -50,7 +34,7 @@ class Play extends React.Component<{}, IPlayState> {
     api.getTheTape(
         this.state.accessToken,
         this.state.me.country,
-        this.state.genre,
+        [this.state.genre],
         this.state.settings.tracksCount
       )
       .then((res) => {
