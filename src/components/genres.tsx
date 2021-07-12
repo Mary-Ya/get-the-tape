@@ -12,7 +12,6 @@ function GenresList(props: any) {
 
     const loadGenres = () => {
         api.getGenres(props.accessToken).then((data) => {
-            console.log(data)
             setAvailableGenreSeeds(data);
         })
     }

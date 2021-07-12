@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import { IPlayListInitData } from "../types/play-list";
-import { getRandomNumber } from "./utils";
+import { getRandomNumber, safeSessionStorage } from "./utils";
 const returnTracksData = (i: any) => i.data.body.tracks;
 const returnBody = (i: any) => i.data.body;
 
@@ -53,6 +53,8 @@ export default {
     return axios
       .get(`/get-the-tape`, options)
       .then((res) => {
+        safeSessionStorage.setItem('currentTrackList', res);
+        safeSessionStorage.setItem('currentGenreList', genreSeeds);
         return res.data;
       })
       .catch((e) => console.warn(e));

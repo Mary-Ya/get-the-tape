@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 
 import api from "../common/api";
-import { safeLocalStorage } from "../common/utils";
+import { safeLocalStorage, safeSessionStorage } from "../common/utils";
 import CheckButton from "../components/check-button";
 import GenresList from "../components/genres";
 import { ITrack } from "../types/track";
@@ -26,7 +26,7 @@ function Home(props: any) {
     tracksCount: 10,
   });
 
-  const [genreSeeds, setGenreSeeds] = useState(["Rock"]);
+  const [genreSeeds, setGenreSeeds] = useState(["rock"]);
 
   const [artistSeeds, setArtistSeeds] = useState([]);
   const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
@@ -35,6 +35,7 @@ function Home(props: any) {
   const [availableSongSeeds, setAvailableSongSeeds] = useState([]);
 
   const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
+  const [canRemoveSeeds, setCanRemoveSeeds] = useState(false);
 
   const [trackList, setTrackList] = useState<Array<ITrack>>([]);
 
@@ -48,18 +49,18 @@ function Home(props: any) {
       safeLocalStorage.setItem("accessToken", accessToken);
       safeLocalStorage.setItem("refreshToken", refreshToken);
     });
-    fetchAccountData();
+  // fetchAccountData();
     // TODO: error handling
   }, [accessToken, refreshToken]);
 
   useEffect(() => {
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount > 4);
+    setCanRemoveSeeds(seedCount < 2);
     getDefaultPlayListName([... genreSeeds, ...artistSeeds, ...songSeeds]);
   }, [genreSeeds, artistSeeds, songSeeds]);
 
   const errorHandler = (e: JQueryXHR) => {
-    console.warn(e);
     fetchRefreshToken();
   };
 
@@ -67,17 +68,10 @@ function Home(props: any) {
     if (!me) {
       return api
         .getMe(accessToken)
-        .then((me) => {
-          console.info("me is done", me);
-          setMe({ ...me });
-
-          // TODO: save me to sessionStorage
-        })
-        .catch((e) => {
-          errorHandler(e);
-        })
+        .then(setMe)
+        .catch(errorHandler)
     } else {
-      Promise.reject(Error("Can't fetchAccountData"))
+      return Promise.reject(Error("Can't fetchAccountData"))
     }
   };
 
@@ -114,14 +108,8 @@ function Home(props: any) {
       accessToken,
       me.country,
       genreSeeds,
-      10
-    )
-    .then((res) => {
-      setTrackList(res);
-      safeLocalStorage.setItem('currentTrackList', res);
-    }).catch(e => {
-      errorHandler(e);
-    });
+      settings.tracksCount
+    ).then(setTrackList).catch(errorHandler);
   }
 
   
@@ -146,63 +134,60 @@ function Home(props: any) {
     "loading"
   ) : (
     <div className="container px-0">
-      <div className="row">
-        <div className="col-4">
-          <div className="">
-            Artist seed:
-            <br />
-            ToDO: get tracks with keywords - no genres than
-          </div>
-        </div>
-
-        <div className="col-4 form-check">
-          <GenresList
-            canAddMoreSeeds={canAddMoreSeeds}
-            accessToken={accessToken}
-            genreList={genreSeeds}
-            onGenreUpdate={onGenreUpdate}
-          />
-        </div>
-        <div className="col-4">
-          Track seed:
+          {/* <div className="row">
+      <div className="col-12">
+        <div className="">
+          Artist seed:
           <br />
           ToDO: get tracks with keywords - no genres than
         </div>
-      </div>
-      <div className="row mt-3">
-        <div className="col-12 text-center">
-          Popular:
-          <br />
-          ToDO: popular scale min_popularity max_popularity
-          <br />
-          SWITCH: TOPS, TOPS AND MIDDLES, LEAST POPULAR, RANDOM:
-        </div>
-      </div>
-      <div className="row mt-3">
-        <div className="col-12 text-center">
-          <button onClick={() => {fetchPlaylist()}}
-            
-          >
-            GET THE TAPE!
-          </button>
-        </div>
-        <div className="col-12 text-center">
-          <Link
-            to={{
-              pathname: "/play",
-              state: { me, accessToken, refreshToken, genre, settings },
-            }}
-          >
-            PLAY THE TAPE!
-          </Link>
-        </div>
+      </div> */}
+          <div className="row">
+            <div className="col-12 form-check">
+              <GenresList
+                canAddMoreSeeds={canAddMoreSeeds}
+                canRemoveSeeds={canRemoveSeeds}
+                accessToken={accessToken}
+                genreList={genreSeeds}
+                onGenreUpdate={onGenreUpdate} />
+            </div>
           </div>
-          {trackList.length > 0 ? <div>
-            <PlayList trackList={trackList} />
-            <input value={newPlayListName} />
-            <div><button onClick={() => {createPlayList()}}>createPlayList</button></div>
-            <div><button onClick={() => {updatePlayList()}}>updatePlayList</button></div>
-              
+        {/* <div className="row">
+            <div className="col-12">
+              Track seed:
+              <br />
+              ToDO: get tracks with keywords - no genres than
+            </div>
+          </div> */}<div className="row mt-3">
+            <div className=" text-center">
+              Popular:
+              <br />
+              ToDO: popular scale min_popularity max_popularity
+              <br />
+              SWITCH: TOPS, TOPS AND MIDDLES, LEAST POPULAR, RANDOM:
+            </div>
+          </div><div className="row mt-3">
+            <div className="col-12 text-center">
+              <button onClick={() => { fetchPlaylist(); } }>
+                GET THE TAPE!
+              </button>
+            </div>
+            <div className="col-12 text-center">
+              <Link
+                to={{
+                  pathname: "/play",
+                  state: { me, accessToken, refreshToken, genre, settings },
+                }}
+              >
+                PLAY THE TAPE!
+              </Link>
+            </div>
+          </div>
+          {trackList && trackList.length > 0 ? <div>
+              <PlayList trackList={trackList} />
+              <input value={newPlayListName} onChange={(e) => { setNewPlayListName(e.target.value) }} />
+              <div><button onClick={() => {createPlayList()}}>createPlayList</button></div>
+              <div><button onClick={() => {updatePlayList()}}>updatePlayList</button></div>
             </div> : ''}
     </div>
   );
