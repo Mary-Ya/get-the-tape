@@ -2,7 +2,7 @@ import React from 'react';
 
 function CheckButton(props: { onChange: any, buttonName: string, isSelected: any, className: string, disabled: boolean }) {
   return (
-    <div className={`d-inline-block ${props.className}`}>
+    <div className={`d-inline-block m-1 ${props.className}`}>
       <input disabled={props.disabled} type="checkbox" className="btn-check" id={`btn-check-${props.buttonName}`} onChange={() => {
         props.onChange(props.buttonName);
       }}
