@@ -202,19 +202,15 @@ function Home(props: any) {
 
   
   const createPlayList = () => {
-    api.createPlayList(accessToken, me.id, {
+    api.savePlayListAsNew(accessToken, me.id, {
       name: 'Test1',
       description: 'Test1 desc',
       public: false
-    }).then((res) => {
+    }, trackList.map(i => i.uri)).then((res) => {
       setPlayListID(res.id);
     })
   };
   
-  const updatePlayList = () => {
-    api.updatePlayList(accessToken, playListID, trackList.map(i => i.uri))
-  };
-
   const renderHandle = (props) => {
     const { value, dragging, index, ...restProps } = props;
     return (
@@ -295,8 +291,7 @@ function Home(props: any) {
           {trackList && trackList.length > 0 ? <div>
               <PlayList trackList={trackList} />
               <input value={newPlayListName} onChange={(e) => { setNewPlayListName(e.target.value) }} />
-              <div><button onClick={() => {createPlayList()}}>createPlayList</button></div>
-              <div><button onClick={() => {updatePlayList()}}>updatePlayList</button></div>
+              <div><button onClick={() => {createPlayList()}}>SaveAsNew</button></div>
             </div> : ''}
     </div>
   );
