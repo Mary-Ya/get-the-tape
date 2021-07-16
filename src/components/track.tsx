@@ -7,7 +7,7 @@ function Artists(props: any) {
 }
 
 class Track extends React.Component<{track: ITrack, className: string}>  {   
-    constructor (props: {track: ITrack}) {
+    constructor (props: {track: ITrack, className: string}) {
       super(props);
     }
 

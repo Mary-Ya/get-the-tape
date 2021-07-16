@@ -133,7 +133,7 @@ function Home(props: any) {
   ) : !me ? (
     "loading"
   ) : (
-    <div className="container px-0">
+    <div><div className="container px-0">
           {/* <div className="row">
       <div className="col-12">
         <div className="">
@@ -152,7 +152,7 @@ function Home(props: any) {
                 onGenreUpdate={onGenreUpdate} />
             </div>
           </div>
-        {/* <div className="row">
+        </div>{/* <div className="row">
             <div className="col-12">
               Track seed:
               <br />

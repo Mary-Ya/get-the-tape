@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import { IPlayListInitData } from "../types/play-list";
+import { IRecommendationSettings } from "../types/recommendation-settings";
 import { getRandomNumber, safeSessionStorage } from "./utils";
 const returnTracksData = (i: any) => i.data.body.tracks;
 const returnBody = (i: any) => i.data.body;
@@ -42,19 +43,20 @@ export default {
     return axios.get("/refresh_token", options).then((i) => i.data);
   },
 
-  getTheTape: (accessToken: string, market: string, genreSeeds: Array<string>, limit: number) => {
+  getTheTape: (access_token: string, settings: IRecommendationSettings) => {
+    console.log(settings)
     const options: AxiosRequestConfig = {
       method: "get",
       params: {
-        market, genreSeeds: genreSeeds.join('%2C'), limit,
-        access_token: accessToken,
+        access_token,
+        settings
       },
     };
     return axios
       .get(`/get-the-tape`, options)
       .then((res) => {
         safeSessionStorage.setItem('currentTrackList', res);
-        safeSessionStorage.setItem('currentGenreList', genreSeeds);
+        safeSessionStorage.setItem('currentSettings', settings);
         return res.data;
       })
       .catch((e) => console.warn(e));
