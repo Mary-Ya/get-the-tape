@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 
 import api from "../common/api";
-import { safeLocalStorage, safeSessionStorage } from "../common/utils";
+import { safeLocalStorage } from "../common/utils";
 import CheckButton from "../components/check-button";
 import GenresList from "../components/genres";
 import { ITrack } from "../types/track";
@@ -127,6 +127,14 @@ function Home(props: any) {
   }
 
   useEffect(() => {
+    try {
+      setTrackList(JSON.parse(safeLocalStorage.getItem('playList')));
+    } catch (e) {
+      console.warn(e)
+    }
+  }, []);
+
+  useEffect(() => {
     fetchAccountData().then((data) => {
       safeLocalStorage.setItem("accessToken", accessToken);
       safeLocalStorage.setItem("refreshToken", refreshToken);
@@ -197,7 +205,10 @@ function Home(props: any) {
     api.getTheTape(
       accessToken,
       settings
-    ).then(setTrackList).catch(errorHandler);
+    ).then((res) => {
+        safeLocalStorage.setItem('playList', JSON.stringify(res));
+        return res;
+    }).then(setTrackList).catch(errorHandler);
   };
 
   
