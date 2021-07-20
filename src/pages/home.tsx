@@ -26,8 +26,7 @@ function Home(props: any) {
   const [me, setMe] = useState<IMe | null>();
   const [auth, setAuth] = useState(true);
   const [tracksCount, setTrackCount] = useState(10);
-
-  const [settings, setSettings] = useState<IRecommendationSettings>({ limit: 10, market: 'EU' });
+  const [settings, setSettings] = useState<IRecommendationSettings>({ market: 'EU' });
 
   const [genreSeeds, setGenreSeeds] = useState(["rock"]);
 
@@ -194,7 +193,7 @@ function Home(props: any) {
 
   const combineSettings = () => {
     setSettings(Object.assign(settings, {
-      limit: tracksCount,
+      // limit: tracksCount,
       market: me.country || 'EU',
       seed_genres: genreSeeds.join(',')
     }, rangeToObject(tempo, 'tempo')));
@@ -204,6 +203,7 @@ function Home(props: any) {
     combineSettings();
     api.getTheTape(
       accessToken,
+      tracksCount,
       settings
     ).then((res) => {
         safeLocalStorage.setItem('playList', JSON.stringify(res));

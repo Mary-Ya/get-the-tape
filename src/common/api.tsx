@@ -75,12 +75,13 @@ export default {
     return axios.get("/refresh_token", options).then((i) => i.data);
   },
 
-  getTheTape: (access_token: string, settings: IRecommendationSettings) => {
+  getTheTape: (access_token: string, limit: number, settings: IRecommendationSettings) => {
     console.log(settings)
     const options: AxiosRequestConfig = {
       method: "get",
       params: {
         access_token,
+        limit,
         settings
       },
     };

@@ -1,7 +1,7 @@
 
 export interface IRecommendationSettings {
     market: string,
-    limit: number,
+    // limit: number,
   
     seed_genres?: Array<string>,
     
