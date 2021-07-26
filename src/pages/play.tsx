@@ -18,56 +18,24 @@ class Play extends React.Component<{}, IPlayState> {
     super(props);
     this.state = {
       modalActive: false,
-      thisTrack: {},
+      thisTrack: props.location.state.tracks[0] ,
       freshStart: true,
-      gamesLeft: props.location.state.settings.tracksCount,
+      gamesLeft: props.location.state.tracksCount,
       resultsTable: [],
 
+      level: [],
+      tracks: props.location.state.tracks,
       ...props.location.state,
     };
-    this.fetchAccountData = this.fetchAccountData.bind(this);
-    this.fetchRefreshToken = this.fetchRefreshToken.bind(this);
+    /*this.fetchAccountData = this.fetchAccountData.bind(this);
+    this.fetchRefreshToken = this.fetchRefreshToken.bind(this);*/
     this.selectAnswer = this.selectAnswer.bind(this);
   }
 
   componentDidMount() {
-    api.getTheTape(
-        this.state.accessToken,
-        this.state.me.country,
-        [this.state.genre],
-        this.state.settings.tracksCount
-      )
-      .then((res) => {
-        this.setState({ thisTrack: res[0] });
-      }).catch(e => {
-        errorHandler(e);
-      });
+    this.nextLevel();
   }
 
-  async fetchAccountData() {
-    const $this = this;
-
-    await api.getMe(this.state.accessToken).then((me) => {
-      $this.setState({ me });
-    }).catch(e => {
-      errorHandler(e);
-    });
-  }
-
-  fetchRefreshToken() {
-    const $this = this;
-    $.ajax({
-      url: "/refresh_token",
-      data: {
-        refresh_token: this.state.refreshToken,
-      },
-    })
-      .done(function (data) {
-        console.info("refresh_token is done", data);
-        $this.setState({ me: data });
-      })
-      .catch(errorHandler);
-  }
   selectAnswer(id: string) {
     const roundResult = {
       iWin: this.state.thisTrack.id === id,
@@ -81,32 +49,62 @@ class Play extends React.Component<{}, IPlayState> {
 
     if (this.state.gamesLeft > 0) {
       this.setState({
-        gamesLeft: this.state.gamesLeft - 1
+        gamesLeft: this.state.gamesLeft - 1,
+        thisTrack: this.state.tracks[this.state.gamesLeft - 1]
       });
+      this.nextLevel();
     }
   }
 
+  nextLevel() {
+    let tempLevel = [this.state.thisTrack].concat(this.state.thisTrack.alts);
+    const shuffledArray = tempLevel.sort((a, b) => 0.5 - Math.random());
+
+    this.setState({
+      level: shuffledArray
+    })
+  }
+
   render() {
-    console.log("render started");
     return (
       <div>
         {this.state.modalActive ? "Yay" : ""}
 
-        {this.state.thisTrack && this.state.gamesLeft > 0 ? <Player
-          track={this.state.thisTrack}
-        ></Player> : ''}
+        {this.state.thisTrack && this.state.gamesLeft > 0 ? <audio
+                    id={`audio-${this.state.thisTrack.id}`}
+                    controls={true}
+                    src={this.state.thisTrack.preview_url || this.state.thisTrack.href}>
+                        Your browser does not support the
+                        <code>audio</code> element.
+                </audio> : ''}
+        
+        <div className="row">
+          <div className="col-6">
+            {this.state.thisTrack.alts && this.state.gamesLeft > 0
+              ? this.state.level.map((item, index) => (
+                  <Track controls={false}
+                    track={item}
+                    key={"track-reccom-" + index}
+                    className="button_"
+                    onClick={this.selectAnswer.bind(this, item.id)}
+                  ></Track>
+                ))
+              : "Save playlist screen"}
+          </div>
 
-        <div>
-          {this.state.thisTrack.alts && this.state.gamesLeft > 0
-            ? this.state.thisTrack.alts.map((item, index) => (
-                <Track
-                  track={item}
-                  key={"track-reccom-" + index}
-                  className="button_"
-                  onClick={this.selectAnswer.bind(this, item.id)}
-                ></Track>
-              ))
-            : "Save playlist screen"}
+          <div className="col-6">
+            {this.state.resultsTable.map((item, index) => (
+              <div className={item.iWin ? 'bg-success' : 'bg-warning'}
+                key={"track-result-" + index}><Track controls={true}
+                    track={item.track}
+                    key={"track-result-" + item.track.id}
+                    className="button_"
+                    onClick={null}
+                  ></Track>
+              </div>
+            ))
+            }
+          </div>
         </div>
 
         <div>

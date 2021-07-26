@@ -1,51 +1,64 @@
-import { map } from 'lodash';
 import React from 'react';
 import { ITrack } from '../types/track';
+import Icons from "../assets/icons";
 
-class Player extends React.Component<{track: ITrack}, any> {   
-    constructor (props: Readonly<{track: ITrack}>) {
+interface IPlayerProps {
+  track: ITrack, currentTrack: string, isPlaying: boolean, playAudio: any, pauseAudio: any
+}
+
+class Player extends React.Component<IPlayerProps, any> {   
+    constructor (props: Readonly<IPlayerProps>) {
       super(props);
-      this.state = { 
-        audioTrack: new Audio(),
-        isPlaying: false
-      };
-      this.playAudio = this.playAudio.bind(this);
-      this.pauseAudio = this.pauseAudio.bind(this);
+      /*this.playAudio = this.playAudio.bind(this);
+      this.pauseAudio = this.pauseAudio.bind(this);*/
     }
     
-    componentDidUpdate(prevProps, prevState) {
+    /*componentDidUpdate(prevProps, prevState) {
       if (this.props.track.preview_url && prevProps.track.preview_url !== this.props.track.preview_url) {
-        prevState.audioTrack.pause();
+        prevState.this.props.audioTrack.pause();
         this.initAudio();
       }
     }
 
     initAudio() {
       this.setState({audioTrack: new Audio(this.props.track.preview_url || this.props.track.href)});
-    }
-
-    playAudio() {
-        this.state.audioTrack.play();
+    }*/
+/*
+  playAudio() {
+        this.initAudio();
+        this.props.audioTrack.play();
         this.setState({isPlaying: true});
     }
     pauseAudio() {
         try {
-          this.state.audioTrack.pause();
+          this.props.audioTrack.pause();
           this.setState({isPlaying: false});
         } catch (e) {
           console.log(e);
         }
     }
-
+*/
     componentWillUnmount() {
-      this.pauseAudio();
-    }
-
-    render() {
-        let elements = this.props.track ? <div>
-          
-          <button className="button_" onClick={this.playAudio} disabled={!this.props.track.preview_url}> PLAY </button>
-          <button className="button_" onClick={this.pauseAudio} disabled={!this.props.track.preview_url && this.state.isPlaying}> STOP </button>
+      this.props.pauseAudio();
+  };
+  
+  playIsDisabled() { return !this.props.track.preview_url || this.props.isPlaying };
+  pauseIsDisabled() { return !this.props.track.preview_url && !this.props.isPlaying };
+  
+  render() {
+    let elements = this.props.track ? <div>
+          <audio
+              id={`audio-${this.props.track.id}`}
+              controls={false}
+              src={this.props.track.preview_url || this.props.track.href}>
+                  Your browser does not support the
+                  <code>audio</code> element.
+          </audio>
+          {/* 
+          <button className="btn" onClick={() => { this.props.playAudio(this.props.track.preview_url) }}
+            disabled={this.playIsDisabled()}> <Icons.Play></Icons.Play> </button>
+          <button className="btn" onClick={() => { this.props.pauseAudio() }}
+            disabled={this.pauseIsDisabled()}> <Icons.Pause></Icons.Pause> </button> */}
         </div> : '';
 
         return <div>{elements}</div>

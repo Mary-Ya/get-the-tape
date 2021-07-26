@@ -5,6 +5,7 @@ import { errorHandler } from "../common/utils";
 import { Artist, ITrack } from "../types/track";
 import Icons from "../assets/icons";
 import Player from "../components/player";
+import Track from "../components/track";
 
 const PlayList = (props: any) => {
     const renderArtist = (artist: Artist) => (
@@ -14,28 +15,19 @@ const PlayList = (props: any) => {
         </a>
     )
 
+    
+    const playIsDisabled = () => { return !this.props.track.preview_url || this.props.isPlaying };
+    const pauseIsDisabled = () => { return !this.props.track.preview_url && !this.props.isPlaying };
+  
+
     const renderItem = (i: ITrack) => (
-        <div className="row my-3 justify-content-center" key={`song ${i.id}`}>
-            <div className="col-1 col-xs-2 logo-container">
-                <a className="mr-1" href={i.external_urls.spotify} target="_blank">
-                    <Icons.Logo></Icons.Logo>
-                </a>
-            </div>
-            <div className="col-4">
-                <a target="_blank" href={i.external_urls.spotify} className="fs-4">{i.name}</a>
-                <br />
-                { i.artists.map(renderArtist) }
-                <i className="bi-alarm"></i>
-            </div>
-            <div className="col-1">
-            <audio
-                controls
-                src={i.preview_url || i.href}>
-                    Your browser does not support the
-                    <code>audio</code> element.
-            </audio>
-            </div>
-        </div>
+        <Track controls={true}
+            track={i}
+            key={"playlist-item" + i.id}
+            className="button_"
+            onClick={null}
+            
+        ></Track>
     )
 
     return <div>

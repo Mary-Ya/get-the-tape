@@ -12,7 +12,8 @@ interface IPlayState {
     thisTrack: ITrack;
     iWin: false;
     gamesLeft: number;
-    resultsTable: Array<any>
+    resultsTable: Array<any>,
+    tracks: Array<ITrack>
 }
   
 export type { IPlayState }

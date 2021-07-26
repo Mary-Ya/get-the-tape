@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory  } from "react-router-dom";
 
 import api from "../common/api";
 import { safeLocalStorage } from "../common/utils";
@@ -12,10 +12,15 @@ import PlayList from "./play-list";
 import { Handle, Range, SliderTooltip } from 'rc-slider';
 import { IRecommendationSettings } from "../types/recommendation-settings";
 
+import { createBrowserHistory } from 'history';
+
+
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
 
 function Home(props: any) {
+  const history = useHistory();
+  
   const [genre, setGenre] = useState("rock");
   const [accessToken, setAccessToken] = useState(
     deserialize(props.location.search).access_token
@@ -200,6 +205,8 @@ function Home(props: any) {
   };
 
   const fetchPlaylist = () => {
+
+    // TODO: do DRY
     combineSettings();
     api.getTheTape(
       accessToken,
@@ -210,6 +217,20 @@ function Home(props: any) {
         return res;
     }).then(setTrackList).catch(errorHandler);
   };
+
+  const startGame = () => {
+    combineSettings();
+    api.getTheTape(
+      accessToken,
+      tracksCount,
+      settings
+    ).then((res) => {
+
+      // TODO: do DRY
+      safeLocalStorage.setItem('playList', JSON.stringify(res));
+      history.push('/play', { me, accessToken, refreshToken, genre, settings, tracksCount, tracks: res })
+    }).catch(errorHandler);
+  }
 
   
   const createPlayList = () => {
@@ -289,14 +310,16 @@ function Home(props: any) {
               </button>
             </div>
             <div className="col-12 text-center">
-              <Link
+              {/* <Link
                 to={{
                   pathname: "/play",
                   state: { me, accessToken, refreshToken, genre, settings },
                 }}
               >
                 PLAY THE TAPE!
-              </Link>
+              </Link> */}
+
+              <button onClick={() => { startGame(); }}>PLAY THE TAPE!</button>
             </div>
           </div>
           {trackList && trackList.length > 0 ? <div>
