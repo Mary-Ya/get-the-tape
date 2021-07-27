@@ -38,14 +38,17 @@ function GenresList(props: any) {
 
 
     return (<div>
-        Selected: 
-        <p>GENRE SEEDS: </p>
         { props.genreList.map((selectedGenre: string) => (renderGenre(selectedGenre, false))) }
         <form>
-            <input value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value) }} />
+            <input
+                className="form-control rounded-pill"
+                value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value) }}
+            />
         </form>
 
-        <div className="genres-list">{availableGenreSeeds.filter(genresFilter).map((selectableGenre) => renderGenre(selectableGenre, true))}</div>
+        <div className="genres-list mt-2 pretty-scroll">
+            {availableGenreSeeds.filter(genresFilter).map((selectableGenre) => renderGenre(selectableGenre, true))}
+        </div>
     </div>)
 }
 
