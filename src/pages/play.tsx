@@ -18,9 +18,9 @@ class Play extends React.Component<{}, IPlayState> {
     super(props);
     this.state = {
       modalActive: false,
-      thisTrack: props.location.state.tracks[0] ,
+      thisTrack: props.location.state.tracks[0],
       freshStart: true,
-      gamesLeft: props.location.state.tracksCount,
+      gamesLeft: props.location.state.tracks.length,
       resultsTable: [],
 
       level: [],
