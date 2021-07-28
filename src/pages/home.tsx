@@ -13,6 +13,7 @@ import { Handle, Range, SliderTooltip } from 'rc-slider';
 import { IRecommendationSettings } from "../types/recommendation-settings";
 
 import { createBrowserHistory } from 'history';
+import SavePlaylist from "../components/save-playlist";
 
 import playListApi from "../common/api-playlist";
 
@@ -149,10 +150,13 @@ function Home(props: any) {
   }, [accessToken, refreshToken]);
 
   useEffect(() => {
+    const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount > 4);
     setCanRemoveSeeds(seedCount < 2);
-    getDefaultPlayListName([... genreSeeds, ...artistSeeds, ...songSeeds]);
+    getDefaultPlayListName([...genreSeeds, ...artistSeeds, ...songSeeds]);
+    
+    setNewPlayListName(`My ${genresCount ? genreSeeds.join(', ') : 'playlist'}`);
   }, [genreSeeds, artistSeeds, songSeeds]);
 
   const errorHandler = (e: JQueryXHR) => {
@@ -311,22 +315,15 @@ function Home(props: any) {
               </button>
             </div>
             <div className="col-12 text-center">
-              {/* <Link
-                to={{
-                  pathname: "/play",
-                  state: { me, accessToken, refreshToken, genre, settings },
-                }}
-              >
+              <button onClick={() => { startGame(); }}>
                 PLAY THE TAPE!
-              </Link> */}
-
-              <button onClick={() => { startGame(); }}>PLAY THE TAPE!</button>
+              </button>
             </div>
           </div>
           {trackList && trackList.length > 0 ? <div>
               <PlayList trackList={trackList} />
-              <input value={newPlayListName} onChange={(e) => { setNewPlayListName(e.target.value) }} />
-              <div><button onClick={() => {createPlayList()}}>SaveAsNew</button></div>
+
+              <SavePlaylist name={newPlayListName} accessToken={accessToken} myId={me.id} trackList={ trackList } />
             </div> : ''}
     </div>
   );
