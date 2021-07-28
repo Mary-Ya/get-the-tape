@@ -33,6 +33,8 @@ class SafeStorage {
     }
 }
 
+// add safety check in case i is corrupted
+const returnBody = (i: any) => i.data.body;
 
 const safeLocalStorage = new SafeStorage('localStorage');
 const safeSessionStorage = new SafeStorage('sessionStorage');
@@ -45,5 +47,6 @@ export {
     getRandomNumber,
     safeLocalStorage,
     safeSessionStorage,
-    errorHandler
+    errorHandler,
+    returnBody
 }

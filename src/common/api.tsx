@@ -2,9 +2,8 @@ import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import { IPlayListInitData } from "../types/play-list";
 import { IRecommendationSettings } from "../types/recommendation-settings";
-import { getRandomNumber, safeSessionStorage } from "./utils";
+import { getRandomNumber, returnBody, safeSessionStorage } from "./utils";
 const returnTracksData = (i: any) => i.data.body.tracks;
-const returnBody = (i: any) => i.data.body;
 
 const playList = {
   create: (access_token: string, userId: string, playlistData: IPlayListInitData) => {
@@ -112,12 +111,5 @@ export default {
       .get(`/get_random_track`, options)
       .then(returnTracksData)
       .catch((e) => console.warn(e));
-  },
-  
-  savePlayListAsNew: (access_token: string, userId: string, playlistData: IPlayListInitData, trackUrisList: Array<string>) => {
-    return playList.create(access_token, userId, playlistData)
-      .then(res => {
-        return playList.update(access_token, res.id, trackUrisList);
-      });
   }
 };

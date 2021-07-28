@@ -14,6 +14,7 @@ import { IRecommendationSettings } from "../types/recommendation-settings";
 
 import { createBrowserHistory } from 'history';
 
+import playListApi from "../common/api-playlist";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -234,7 +235,7 @@ function Home(props: any) {
 
   
   const createPlayList = () => {
-    api.savePlayListAsNew(accessToken, me.id, {
+    playListApi.savePlayListAsNew(accessToken, me.id, {
       name: 'Test1',
       description: 'Test1 desc',
       public: false
