@@ -5,37 +5,6 @@ import { IRecommendationSettings } from "../types/recommendation-settings";
 import { getRandomNumber, returnBody, safeSessionStorage } from "./utils";
 const returnTracksData = (i: any) => i.data.body.tracks;
 
-const playList = {
-  create: (access_token: string, userId: string, playlistData: IPlayListInitData) => {
-    const options: AxiosRequestConfig = {
-      method: "get",
-      params: {
-        access_token,
-        data: playlistData,
-        userId
-      },
-    };
-    return axios
-      .get(`/create-play-list`, options)
-      .then(returnBody)
-      .catch((e) => console.warn(e));
-  },
-
-  update: (access_token: string, playlist_id: string, urisList: Array<string>) => {
-    const options: AxiosRequestConfig = {
-      method: "get",
-      params: {
-        playlist_id,
-        urisList,
-        access_token
-      },
-    };
-    return axios
-      .get(`/update-play-list`, options)
-      .then(returnBody)
-      .catch((e) => console.warn(e));
-  },
-}
 
 export default {
   getMe: (access_token: string) => {
