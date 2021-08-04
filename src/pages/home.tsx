@@ -159,7 +159,7 @@ function Home(props: any) {
   useEffect(() => {
     const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
-    setCanAddMoreSeeds(seedCount < 6);
+    setCanAddMoreSeeds(seedCount > 4);
     setCanRemoveSeeds(seedCount < 2);
     getDefaultPlayListName([...genreSeeds, ...artistSeeds, ...songSeeds]);
     
@@ -212,7 +212,8 @@ function Home(props: any) {
     setSettings(Object.assign(settings, {
       // limit: tracksCount,
       market: me.country || 'EU',
-      seed_genres: genreSeeds.join(',')
+      seed_genres: genreSeeds.join(','),
+      seed_tracks: songSeeds.map(i => i.id).join(',')
     }, rangeToObject(tempo, 'tempo')));
   };
 
@@ -244,10 +245,9 @@ function Home(props: any) {
     }).catch(errorHandler);
   }
 
-  
   const createPlayList = () => {
     playListApi.savePlayListAsNew(accessToken, me.id, {
-      name: 'Test1',
+      name: newPlayListName,
       description: 'Test1 desc',
       public: false
     }, trackList.map(i => i.uri)).then((res) => {
