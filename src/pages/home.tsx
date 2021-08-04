@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect, useHistory  } from "react-router-dom";
+import AsyncSelect from 'react-select/async';
 
 import api from "../common/api";
 import { safeLocalStorage } from "../common/utils";
@@ -16,6 +17,7 @@ import { createBrowserHistory } from 'history';
 import SavePlaylist from "../components/save-playlist";
 
 import playListApi from "../common/api-playlist";
+import apiPlaylist from "../common/api-playlist";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -37,7 +39,7 @@ function Home(props: any) {
 
   const [genreSeeds, setGenreSeeds] = useState(["rock"]);
 
-  const [artistSeeds, setArtistSeeds] = useState([]);
+  const [artistSeeds, setArtistSeeds] = useState<Array<ITrack>>([]);
   const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
 
   const [songSeeds, setSongSeeds] = useState([]);
@@ -119,6 +121,11 @@ function Home(props: any) {
   const [valence, setValence] = useState([-0.5, 6.5]);
   // target_valence
 
+  const [songSeedInputValue, setSongSeedInputValue] = useState('');
+  const [selectedSongSeed, setSelectedSongSeed] = useState<ITrack | null>();
+  const songSeedSelectorRef = useRef();
+
+
   const getDefaultPlayListName = (seeds: Array<string>) => (`My ${seeds.join(', ')}`);
 
   const rangeToObject = (dots: Array<number>, propertyName: string) => {
@@ -152,7 +159,7 @@ function Home(props: any) {
   useEffect(() => {
     const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
-    setCanAddMoreSeeds(seedCount > 4);
+    setCanAddMoreSeeds(seedCount < 6);
     setCanRemoveSeeds(seedCount < 2);
     getDefaultPlayListName([...genreSeeds, ...artistSeeds, ...songSeeds]);
     
@@ -263,29 +270,71 @@ function Home(props: any) {
     );
   };
 
+  
+  const getTracks = (inputValue: string) => {
+    return api.searchRequest(me.country, accessToken, encodeURI(inputValue), 10, 0);
+  }
+
+  const selectSeedTrack = (selectedOption) => {
+    const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
+    setCanAddMoreSeeds(seedCount < 6);
+    console.log('selectSeedTrack ', selectedOption)
+    if (selectedOption && canAddMoreSeeds) {
+      let newValue: Array<ITrack> = [].concat(...songSeeds);
+      newValue.push(selectedOption);
+      setSongSeeds(newValue);
+      setSongSeedInputValue('');
+      songSeedSelectorRef.current?.select?.select?.clearValue();
+    }
+  }
+
+  const removeSeedTrack = (track: ITrack) => {
+    const newSongSeeds = songSeeds.filter((i: ITrack) => (i.id !== track.id));
+    setSongSeeds(newSongSeeds);
+  }
+
+  const renderSeedTrack = (track: ITrack) => {
+    return <div className={`d-inline-block m-1`} key={`${track.id}-seed-track`}>
+      <input disabled={false} type="checkbox" className="btn-check" id={`btn-check-${track.name}`}
+        onChange={
+          () => {removeSeedTrack(track)}
+      }
+        checked={true} autoComplete="off" />
+      <label className="btn btn-outline-secondary rounded-pill text-capitalize"
+        htmlFor={`btn-check-${track.name}`}>
+        {track.name}</label><br />
+    </div>
+  }
 
   return !auth ? (
     <Redirect to="/public-home" />
   ) : !me ? (
     "loading"
   ) : (
-    <div><div className="container px-0">
-          {/* <div className="row">
-      <div className="col-12">
-        <div className="">
-          Artist seed:
-          <br />
-          ToDO: get tracks with keywords - no genres than
-        </div>
-      </div> */}
+      <div>
+        <div className="container px-0">
           <div className="row">
+            {songSeeds.map(renderSeedTrack)}
+            <div className="col-12 form-check">
+                <AsyncSelect
+                  ref={songSeedSelectorRef}
+                  cacheOptions
+                  defaultOptions
+                  value={songSeedInputValue}
+                  blurInputOnSelect={true}
+                  loadOptions={getTracks}
+                  onChange={selectSeedTrack}
+                  getOptionLabel={(option: ITrack) => `${option.name} by ${option.artists.map(i => i.name).join(', ')}`}
+                />
+              </div>
             <div className="col-12 form-check">
               <GenresList
                 canAddMoreSeeds={canAddMoreSeeds}
                 canRemoveSeeds={canRemoveSeeds}
                 accessToken={accessToken}
                 genreList={genreSeeds}
-                onGenreUpdate={onGenreUpdate} />
+                onGenreUpdate={onGenreUpdate}
+              />
             </div>
           </div>
         </div>{/* <div className="row">

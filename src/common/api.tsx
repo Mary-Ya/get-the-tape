@@ -63,6 +63,29 @@ export default {
       .catch((e) => console.warn(e));
   },
 
+  searchRequest: (market: string, accessToken: string, q: string = "", limit: number, offset: number) => {
+    const options: AxiosRequestConfig = {
+      method: "get",
+      headers: {
+        Authorization: "Bearer " + accessToken,
+      },
+      params: {
+        market,
+        q,
+        offset,
+        limit,
+        access_token: accessToken,
+      },
+    };
+    return axios
+      .get(`/search_track`, options)
+      .then(res => {
+        console.log('search_track', res)
+        return res.data.tracks.items || [];
+      })
+      .catch((e) => console.warn(e));
+  },
+
   getRandomTrack: (market: string, accessToken: string, q: string = "") => {
     const options: AxiosRequestConfig = {
       method: "get",
