@@ -23,7 +23,7 @@ function GenresList(props: any) {
     const renderGenre = (genreName: string, isInFetchedList: boolean) => {
         const isSelected = isSeedSelected(genreName);
         return (<CheckButton
-            disabled={isInFetchedList && props.canAddMoreSeeds}
+            disabled={isInFetchedList && !props.canAddMoreSeeds}
             key={`${genreName}-button`}
             isSelected={isSelected}
             buttonName={genreName}

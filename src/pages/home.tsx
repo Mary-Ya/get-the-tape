@@ -159,7 +159,7 @@ function Home(props: any) {
   useEffect(() => {
     const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
-    setCanAddMoreSeeds(seedCount > 4);
+    setCanAddMoreSeeds(seedCount < 5);
     setCanRemoveSeeds(seedCount < 2);
     getDefaultPlayListName([...genreSeeds, ...artistSeeds, ...songSeeds]);
     
@@ -275,11 +275,12 @@ function Home(props: any) {
     return api.searchRequest(me.country, accessToken, encodeURI(inputValue), 10, 0);
   }
 
-  const selectSeedTrack = (selectedOption) => {
+  const selectSeedTrack = (selectedOption: ITrack) => {
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount < 6);
-    console.log('selectSeedTrack ', selectedOption)
-    if (selectedOption && canAddMoreSeeds) {
+    console.log('selectSeedTrack ', selectedOption);
+    const isADuplicate = artistSeeds.findIndex((i) => { return i.id === selectedOption.id }) !== -1;
+    if(selectedOption && canAddMoreSeeds && !isADuplicate) {
       let newValue: Array<ITrack> = [].concat(...songSeeds);
       newValue.push(selectedOption);
       setSongSeeds(newValue);
@@ -294,6 +295,8 @@ function Home(props: any) {
   }
 
   const renderSeedTrack = (track: ITrack) => {
+    // TODO: block selected item from rendering 
+    
     return <div className={`d-inline-block m-1`} key={`${track.id}-seed-track`}>
       <input disabled={false} type="checkbox" className="btn-check" id={`btn-check-${track.name}`}
         onChange={
@@ -316,14 +319,17 @@ function Home(props: any) {
           <div className="row">
             {songSeeds.map(renderSeedTrack)}
             <div className="col-12 form-check">
+                {/**try to remove value prop? */}
                 <AsyncSelect
                   ref={songSeedSelectorRef}
                   cacheOptions
                   defaultOptions
                   value={songSeedInputValue}
+
                   blurInputOnSelect={true}
                   loadOptions={getTracks}
                   onChange={selectSeedTrack}
+                  isDisabled={!canAddMoreSeeds}
                   getOptionLabel={(option: ITrack) => `${option.name} by ${option.artists.map(i => i.name).join(', ')}`}
                 />
               </div>
