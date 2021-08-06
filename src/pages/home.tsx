@@ -370,14 +370,13 @@ function Home(props: any) {
               </button>
             </div>
             <div className="col-12 text-center">
-              <button onClick={() => { startGame(); }}>
+              <button onClick={() => { startGame() }}>
                 PLAY THE TAPE!
               </button>
             </div>
           </div>
           {trackList && trackList.length > 0 ? <div>
-              <PlayList trackList={trackList} />
-
+              <PlayList trackList={trackList} updateTrackList={setTrackList} />
               <SavePlaylist name={newPlayListName} accessToken={accessToken} myId={me.id} trackList={ trackList } />
             </div> : ''}
     </div>

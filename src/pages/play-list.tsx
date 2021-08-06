@@ -6,19 +6,14 @@ import { Artist, ITrack } from "../types/track";
 import Icons from "../assets/icons";
 import Player from "../components/player";
 import Track from "../components/track";
+import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
 
 const PlayList = (props: any) => {
-    const renderArtist = (artist: Artist) => (
-        <a target="_blank" key={`artist_${artist.id}`}
-            href={artist.external_urls.spotify} className="fs-6 me-2">
-            { artist.name }
-        </a>
-    )
+    const [currentList, setCurrentList] = useState(props.trackList || []);
 
-    
-    const playIsDisabled = () => { return !this.props.track.preview_url || this.props.isPlaying };
-    const pauseIsDisabled = () => { return !this.props.track.preview_url && !this.props.isPlaying };
-  
+    useEffect(() => {
+        setCurrentList(props.trackList || [])
+    }, [props.trackList])
 
     const renderItem = (i: ITrack) => (
         <Track controls={true}
@@ -28,10 +23,26 @@ const PlayList = (props: any) => {
             onClick={null}
             
         ></Track>
-    )
+    );
 
+    const SortableItem = SortableElement(({value}) => renderItem(value));
+    const SortableList = SortableContainer(({items}) => {
+        return (
+            <ul>
+                {items.map((value: ITrack, index: number) => (
+                    <SortableItem key={`item-${value.id}`} index={index} value={value} />
+                ))}
+            </ul>
+        )
+    });
+
+    const onSortEnd = ({ oldIndex, newIndex }) => {
+        const newArray = arrayMove(currentList, oldIndex, newIndex);
+        props.updateTrackList(newArray);
+    };
+    
     return <div>
-        <div>{props.trackList.map(renderItem)}</div>
+        <SortableList items={currentList} onSortEnd={onSortEnd} />
     </div>
 };
 

@@ -14,7 +14,7 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
     }
     renderArtist(artist: Artist) {
         return <a target="_blank" key={`artist_${artist.id}`}
-            href={artist.external_urls.spotify} className="fs-6 me-2">
+            href={artist.external_urls?.spotify || '#'} className="fs-6 me-2">
             {artist.name}
         </a>
     }
