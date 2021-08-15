@@ -18,7 +18,7 @@
 @import "node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-$body-bg: #FAEBF0;
+$body-bg: #fff;
 $wine: #9c8e94;
 
 h1 {
@@ -29,4 +29,8 @@ h1 {
     height: 30vh;
     overflow-y: scroll;
     scroll-behavior: smooth;
+}
+
+.rounded-10 {
+    border-radius: 1rem !important;
 }

@@ -46,13 +46,19 @@ class Play extends React.Component<{}, IPlayState> {
     this.setState({
       resultsTable: resultsTableTemp,
     });
-
+    const thisTrack = this.state.tracks[this.state.gamesLeft - 1];
     if (this.state.gamesLeft > 0) {
       this.setState({
         gamesLeft: this.state.gamesLeft - 1,
-        thisTrack: this.state.tracks[this.state.gamesLeft - 1]
+        thisTrack: thisTrack
       });
-      this.nextLevel();
+      
+      const tempLevel = [thisTrack].concat(thisTrack.alts);
+      const shuffledArray = tempLevel.sort((a, b) => 0.5 - Math.random());
+
+      this.setState({
+        level: shuffledArray
+      });
     }
   }
 

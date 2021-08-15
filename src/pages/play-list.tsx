@@ -37,8 +37,10 @@ const PlayList = (props: any) => {
     });
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
-        const newArray = arrayMove(currentList, oldIndex, newIndex);
-        props.updateTrackList(newArray);
+        if (oldIndex !== newIndex) {
+            const newArray = arrayMove(currentList, oldIndex, newIndex);
+            props.updateTrackList(newArray);
+        }
     };
     
     return <div>
@@ -46,4 +48,4 @@ const PlayList = (props: any) => {
     </div>
 };
 
-export default PlayList;
+export default React.memo(PlayList);

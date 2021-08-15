@@ -23,7 +23,7 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
     render() {
         const i = this.props.track;
 
-        return <div className={`row my-3 justify-content-center ${this.props.className}`}
+        return <div className={`row my-3 justify-content-left ${this.props.className}`}
             onClick={this.props.onClick}
             key={`song-${i.id}`}>
         <div className="col-1 col-xs-2 logo-container">

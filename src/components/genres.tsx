@@ -36,9 +36,8 @@ function GenresList(props: any) {
         return searchQuery.length > 1 ? item.toLowerCase().includes(searchQuery.toLowerCase()) : true;
     })
 
-
-    return (<div>
-        { props.genreList.map((selectedGenre: string) => (renderGenre(selectedGenre, false))) }
+    return (<div className={`${props.className || ''}`}>
+        Seed genres: { props.genreList.map((selectedGenre: string) => (renderGenre(selectedGenre, false))) }
         <form>
             <input
                 className="form-control rounded-pill"
@@ -52,4 +51,4 @@ function GenresList(props: any) {
     </div>)
 }
 
-export default GenresList;
+export default React.memo(GenresList);
