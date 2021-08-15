@@ -41,6 +41,7 @@ function GenresList(props: any) {
         <form>
             <input
                 className="form-control rounded-pill"
+                disabled={!props.canAddMoreSeeds}
                 value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value) }}
             />
         </form>

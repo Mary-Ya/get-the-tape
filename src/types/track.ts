@@ -2,7 +2,7 @@
 
 export interface ITrack {
     album:         Album;
-    artists:       Artist[];
+    artists:       IArtist[];
     disc_number:   number;
     duration_ms:   number;
     explicit:      boolean;
@@ -24,7 +24,7 @@ export interface ITrack {
 
 export interface Album {
     album_type:             string;
-    artists:                Artist[];
+    artists:                IArtist[];
     external_urls:          ExternalUrls;
     href:                   string;
     id:                     string;
@@ -37,7 +37,7 @@ export interface Album {
     uri:                    string;
 }
 
-export interface Artist {
+export interface IArtist {
     external_urls: ExternalUrls;
     href:          string;
     id:            string;

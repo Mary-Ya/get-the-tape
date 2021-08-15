@@ -6,7 +6,7 @@ import api from "../common/api";
 import { safeLocalStorage } from "../common/utils";
 import CheckButton from "../components/check-button";
 import GenresList from "../components/genres";
-import { ITrack } from "../types/track";
+import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
 import PlayList from "./play-list";
 
@@ -42,8 +42,10 @@ function Home(props: any) {
 
   const [genreSeeds, setGenreSeeds] = useState(["rock"]);
 
-  const [artistSeeds, setArtistSeeds] = useState<Array<ITrack>>([]);
+  const [artistSeeds, setArtistSeeds] = useState<Array<IArtist>>([]);
   const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
+  const [artistSeedInputValue, setArtistSeedInputValue] = useState([]);
+  const artistSeedSelectorRef = useRef();
 
   const [songSeeds, setSongSeeds] = useState([]);
   const [availableSongSeeds, setAvailableSongSeeds] = useState([]);
@@ -293,13 +295,25 @@ function Home(props: any) {
   };
 
   const getTracks = (inputValue: string) => {
-    return api.searchRequest(
+    return api.search(
       me.country,
       accessToken,
       encodeURI(inputValue),
       10,
-      0
-    );
+      0,
+      'track'
+    ).then(data => data.tracks.items);
+  };
+
+  const getArtists = (inputValue: string) => {
+    return api.search(
+      me.country,
+      accessToken,
+      encodeURI(inputValue),
+      10,
+      0,
+      'artist'
+    ).then(data => data.artists.items);
   };
 
   const selectSeedTrack = (selectedOption: ITrack | null, action: ActionMeta<ITrack>) => {
@@ -308,7 +322,7 @@ function Home(props: any) {
     console.log("selectSeedTrack ", selectedOption);
     const isADuplicate =
       artistSeeds.findIndex((i) => {
-        return i.id === selectedOption.id;
+        return i.id === selectedOption?.id;
       }) !== -1;
     if (selectedOption && canAddMoreSeeds && !isADuplicate) {
       let newValue: Array<ITrack> = [].concat(...songSeeds);
@@ -319,9 +333,31 @@ function Home(props: any) {
     }
   };
 
+  const selectSeedArtist = (selectedOption: IArtist | null, action: ActionMeta<IArtist>) => {
+    const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
+    setCanAddMoreSeeds(seedCount < 6);
+    console.log("selectSeedTrack ", selectedOption);
+    const isADuplicate =
+      artistSeeds.findIndex((i) => {
+        return i.id === selectedOption?.id;
+      }) !== -1;
+    if (selectedOption && canAddMoreSeeds && !isADuplicate) {
+      let newValue: Array<IArtist> = [].concat(...artistSeeds);
+      newValue.push(selectedOption);
+      setArtistSeeds(newValue);
+      setArtistSeedInputValue("");
+      artistSeedSelectorRef.current?.select?.select?.clearValue();
+    }
+  };
+
   const removeSeedTrack = (track: ITrack) => {
     const newSongSeeds = songSeeds.filter((i: ITrack) => i.id !== track.id);
     setSongSeeds(newSongSeeds);
+  };
+
+  const removeSeedArtist = (artist: IArtist) => {
+    const newSeeds = artistSeeds.filter((i: IArtist) => i.id !== artist.id);
+    setArtistSeeds(newSeeds);
   };
 
   const renderSeedTrack = (track: ITrack) => {
@@ -351,6 +387,33 @@ function Home(props: any) {
     );
   };
 
+  const renderSeedArtist = (artist: IArtist) => {
+    // TODO: block selected item from rendering
+
+    return (
+      <div className={`d-inline-block m-1`} key={`${artist.id}-seed-track`}>
+        <input
+          disabled={false}
+          type="checkbox"
+          className="btn-check"
+          id={`btn-check-${artist.name}`}
+          onChange={() => {
+            removeSeedArtist(artist);
+          }}
+          checked={true}
+          autoComplete="off"
+        />
+        <label
+          className="btn btn-outline-secondary rounded-pill text-capitalize"
+          htmlFor={`btn-check-${artist.name}`}
+        >
+          {artist.name}
+        </label>
+        <br />
+      </div>
+    );
+  };
+
   return !auth ? (
     <Redirect to="/public-home" />
   ) : !me ? (
@@ -368,7 +431,6 @@ function Home(props: any) {
               onGenreUpdate={onGenreUpdate}
             />
 
-            {/**try to remove value prop? */}
             <div className="rounded-10 pt-3">
               Seed Songs: {songSeeds.map(renderSeedTrack)}
               <AsyncSelect
@@ -384,6 +446,23 @@ function Home(props: any) {
                   `${option.name} by ${option.artists
                     .map((i) => i.name)
                     .join(", ")}`
+                }
+              />
+            </div>
+                
+            <div className="rounded-10 pt-3">
+              Seed Artists: {artistSeeds.map(renderSeedArtist)}
+              <AsyncSelect
+                className="async-select"
+                innerRef={artistSeedSelectorRef}
+                cacheOptions
+                defaultOptions
+                blurInputOnSelect={true}
+                loadOptions={getArtists}
+                onChange={selectSeedArtist}
+                isDisabled={!canAddMoreSeeds}
+                getOptionLabel={(option: ITrack) =>
+                  `${option.name}`
                 }
               />
             </div>

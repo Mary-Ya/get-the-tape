@@ -63,25 +63,26 @@ export default {
       .catch((e) => console.warn(e));
   },
 
-  searchRequest: (market: string, accessToken: string, q: string = "", limit: number, offset: number) => {
+  search: (market: string, access_token: string, q: string = "", limit: number, offset: number, type: string) => {
     const options: AxiosRequestConfig = {
       method: "get",
       headers: {
-        Authorization: "Bearer " + accessToken,
+        Authorization: "Bearer " + access_token,
       },
       params: {
         market,
         q,
         offset,
         limit,
-        access_token: accessToken,
+        access_token,
+        type
       },
     };
     return axios
-      .get(`/search_track`, options)
+      .get(`/search`, options)
       .then(res => {
-        console.log('search_track', res)
-        return res.data.tracks.items || [];
+        console.log('search', res)
+        return res.data;
       })
       .catch((e) => console.warn(e));
   },

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../common/api";
 import { IPlayState } from "../types/play-state";
 import { errorHandler } from "../common/utils";
-import { Artist, ITrack } from "../types/track";
+import { IArtist, ITrack } from "../types/track";
 import Icons from "../assets/icons";
 import Player from "../components/player";
 import Track from "../components/track";
