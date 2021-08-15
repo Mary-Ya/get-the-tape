@@ -227,7 +227,8 @@ function Home(props: any) {
           seed_artists: artistSeeds.map((i: IArtist) => i.id).join(","),
         },
         rangeToObject(tempo, "tempo"),
-        rangeToObject(instrumentalness, "instrumentalness")
+        rangeToObject(instrumentalness, "instrumentalness"),
+        rangeToObject(popularity, "instrumentalness")
       )
     );
   };
@@ -499,11 +500,20 @@ function Home(props: any) {
                   }}
                 />
               </div>
-              Popular:
-              <br />
-              ToDO: popular scale min_popularity max_popularity
-              <br />
-              SWITCH: TOPS, TOPS AND MIDDLES, LEAST POPULAR, RANDOM:
+              <div className="mt-3 w-100 rounded-10 pt-3">
+                <div className="text-start">Popularity: {popularity[0]} - {popularity[1]}</div>
+                <Range
+                  pushable={true}
+                  allowCross={false}
+                  defaultValue={[40, 86]}
+                  min={0}
+                  max={100}
+                  step={1}
+                  onChange={(e) => {
+                    setPopularity(divideArray(e));
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div className="col-8 ">
