@@ -19,6 +19,7 @@ import SavePlaylist from "../components/save-playlist";
 import playListApi from "../common/api-playlist";
 import apiPlaylist from "../common/api-playlist";
 import { ActionMeta } from "react-select";
+import Spinner from "../components/spinner";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -417,9 +418,7 @@ function Home(props: any) {
   return !auth ? (
     <Redirect to="/public-home" />
   ) : !me ? (
-    <div className="spinner-grow" role="status">
-      <span className="sr-only">Loading...</span>
-    </div>
+    <Spinner />
   ) : (
     <div className="row">
       <div className="col-12">
