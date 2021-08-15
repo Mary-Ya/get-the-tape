@@ -43,10 +43,15 @@ const errorHandler = (e: any) => {
     console.log(e);
 };
 
+const divideArray = (e: Array<number>, divider = 100) => {
+    return e.map(i => i / divider)
+}
+
 export {
     getRandomNumber,
     safeLocalStorage,
     safeSessionStorage,
     errorHandler,
-    returnBody
+    returnBody,
+    divideArray
 }

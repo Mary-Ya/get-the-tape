@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef, LegacyRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 
 import api from "../common/api";
-import { safeLocalStorage } from "../common/utils";
+import { divideArray, safeLocalStorage } from "../common/utils";
 import CheckButton from "../components/check-button";
 import GenresList from "../components/genres";
 import { IArtist, ITrack } from "../types/track";
@@ -223,9 +223,11 @@ function Home(props: any) {
           // limit: tracksCount,
           market: me.country || "EU",
           seed_genres: genreSeeds.join(","),
-          seed_tracks: songSeeds.map((i) => i.id).join(","),
+          seed_tracks: songSeeds.map((i: ITrack) => i.id).join(","),
+          seed_artists: artistSeeds.map((i: IArtist) => i.id).join(","),
         },
-        rangeToObject(tempo, "tempo")
+        rangeToObject(tempo, "tempo"),
+        rangeToObject(instrumentalness, "instrumentalness")
       )
     );
   };
@@ -469,8 +471,8 @@ function Home(props: any) {
             </div>
 
             <div className="w-100 text-center">
-                  <div className="mt-3 w-100 rounded-10 pt-3">
-                    <div className="text-start">Tempo: {tempo[0]} - {tempo[1]}</div>
+              <div className="mt-3 w-100 rounded-10 pt-3">
+                <div className="text-start">Tempo: {tempo[0]} - {tempo[1]}</div>
                 <Range
                   pushable={true}
                   allowCross={false}
@@ -480,6 +482,20 @@ function Home(props: any) {
                   step={1}
                   onChange={(e) => {
                     setTempo(e);
+                  }}
+                />
+              </div>
+              <div className="mt-3 w-100 rounded-10 pt-3">
+                <div className="text-start">Instrumentalness: {instrumentalness[0]} - {instrumentalness[1]}</div>
+                <Range
+                  pushable={true}
+                  allowCross={false}
+                  defaultValue={[35, 171]}
+                  min={0}
+                  max={200}
+                  step={1}
+                  onChange={(e) => {
+                    setInstrumentalness(divideArray(e));
                   }}
                 />
               </div>
