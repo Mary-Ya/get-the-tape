@@ -417,7 +417,9 @@ function Home(props: any) {
   return !auth ? (
     <Redirect to="/public-home" />
   ) : !me ? (
-    "loading"
+    <div className="spinner-grow" role="status">
+      <span className="sr-only">Loading...</span>
+    </div>
   ) : (
     <div className="row">
       <div className="col-12">
