@@ -3,6 +3,7 @@ import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import playlistApi from "../common/api-playlist";
 import { ITrack } from "../types/track";
+import EditableText from "./editable-text";
 
 interface ISavePlaylistProps {
   name: string;
@@ -59,15 +60,11 @@ function SavePlaylist(props: ISavePlaylistProps) {
 
   return (
     <div>
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Recipient's username"
+      
+        <EditableText
           value={name}
           onChange={onChange}
-          aria-label="Recipient's username"
-          aria-describedby="button-addon2"
+          placeholder={'Playlist name here'}
         />
         <button
           className="btn btn-outline-secondary"
@@ -112,7 +109,6 @@ function SavePlaylist(props: ISavePlaylistProps) {
           Add
         </button>
       </div>
-    </div>
   );
 }
 

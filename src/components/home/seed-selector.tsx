@@ -40,7 +40,6 @@ function SeedSelector(props: SeedSelectorProps) {
     action: ActionMeta<TPossibleSeedTypes>,
     props: SeedSelectorProps
   ) => {
-    console.log(props.seeds)
         const isADuplicate = haveACopyInArray(selectedOption, props.seeds);
         if (selectedOption && props.canAddMoreSeeds && !isADuplicate) {
             let newValue: Array<TPossibleSeedTypes> = ([] as Array<TPossibleSeedTypes>).concat(...props.seeds);
