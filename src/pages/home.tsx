@@ -20,6 +20,8 @@ import playListApi from "../common/api-playlist";
 import apiPlaylist from "../common/api-playlist";
 import { ActionMeta } from "react-select";
 import Spinner from "../components/spinner";
+import SongSeed from "../components/home/seed-selector";
+import SeedSelector from "../components/home/seed-selector";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -45,7 +47,7 @@ function Home(props: any) {
 
   const [artistSeeds, setArtistSeeds] = useState<Array<IArtist>>([]);
   const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
-  const [artistSeedInputValue, setArtistSeedInputValue] = useState([]);
+  const [artistSeedInputValue, setArtistSeedInputValue] = useState('');
   const artistSeedSelectorRef = useRef();
 
   const [songSeeds, setSongSeeds] = useState([]);
@@ -167,7 +169,7 @@ function Home(props: any) {
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount < 5);
     setCanRemoveSeeds(seedCount < 2);
-    getDefaultPlayListName([...genreSeeds, ...artistSeeds, ...songSeeds]);
+    getDefaultPlayListName([...genreSeeds]);
 
     setNewPlayListName(
       `My ${genresCount ? genreSeeds.join(", ") : "playlist"}`
@@ -298,17 +300,6 @@ function Home(props: any) {
     );
   };
 
-  const getTracks = (inputValue: string) => {
-    return api.search(
-      me.country,
-      accessToken,
-      encodeURI(inputValue),
-      10,
-      0,
-      'track'
-    ).then(data => data.tracks.items);
-  };
-
   const getArtists = (inputValue: string) => {
     return api.search(
       me.country,
@@ -318,23 +309,6 @@ function Home(props: any) {
       0,
       'artist'
     ).then(data => data.artists.items);
-  };
-
-  const selectSeedTrack = (selectedOption: ITrack | null, action: ActionMeta<ITrack>) => {
-    const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
-    setCanAddMoreSeeds(seedCount < 6);
-    console.log("selectSeedTrack ", selectedOption);
-    const isADuplicate =
-      artistSeeds.findIndex((i) => {
-        return i.id === selectedOption?.id;
-      }) !== -1;
-    if (selectedOption && canAddMoreSeeds && !isADuplicate) {
-      let newValue: Array<ITrack> = [].concat(...songSeeds);
-      newValue.push(selectedOption);
-      setSongSeeds(newValue);
-      setSongSeedInputValue("");
-      songSeedSelectorRef.current?.select?.select?.clearValue();
-    }
   };
 
   const selectSeedArtist = (selectedOption: IArtist | null, action: ActionMeta<IArtist>) => {
@@ -437,38 +411,28 @@ function Home(props: any) {
 
             <div className="rounded-10 pt-3">
               Seed Songs: {songSeeds.map(renderSeedTrack)}
-              <AsyncSelect
-                className="async-select"
-                innerRef={songSeedSelectorRef}
-                cacheOptions
-                defaultOptions
-                blurInputOnSelect={true}
-                loadOptions={getTracks}
-                onChange={selectSeedTrack}
-                isDisabled={!canAddMoreSeeds}
-                getOptionLabel={(option: ITrack) =>
-                  `${option.name} by ${option.artists
-                    .map((i) => i.name)
-                    .join(", ")}`
-                }
-              />
+                <SeedSelector
+                  country={me.country}
+                  accessToken={accessToken}
+                  canAddMoreSeeds={canAddMoreSeeds}
+                  seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
+                  setSeeds={setSongSeeds}
+                  seeds={songSeeds}
+                  searchType={"track"}
+                />
             </div>
                 
             <div className="rounded-10 pt-3">
               Seed Artists: {artistSeeds.map(renderSeedArtist)}
-              <AsyncSelect
-                className="async-select"
-                innerRef={artistSeedSelectorRef}
-                cacheOptions
-                defaultOptions
-                blurInputOnSelect={true}
-                loadOptions={getArtists}
-                onChange={selectSeedArtist}
-                isDisabled={!canAddMoreSeeds}
-                getOptionLabel={(option: ITrack) =>
-                  `${option.name}`
-                }
-              />
+                  <SeedSelector
+                  country={me.country}
+                  accessToken={accessToken}
+                  canAddMoreSeeds={canAddMoreSeeds}
+                  seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
+                  setSeeds={setArtistSeeds}
+                  seeds={artistSeeds}
+                  searchType={"artist"}
+                />
             </div>
 
             <div className="w-100 text-center">

@@ -1,4 +1,5 @@
 import { stringify } from "querystring";
+import { MutableRefObject } from "react";
 
 const getRandomNumber = (max = 1000) => Math.floor(Math.random() * max)
 
@@ -47,11 +48,21 @@ const divideArray = (e: Array<number>, divider = 100) => {
     return e.map(i => i / divider)
 }
 
+const haveACopyInArray = (item: any, array: Array<any>) => (array.findIndex((i: ITrack) => {
+    return i.id === item?.id;
+}) !== -1);
+
+const clearSelectedValue = (selectorRef) => {
+    selectorRef.current?.select?.select?.clearValue();
+}
+
 export {
     getRandomNumber,
     safeLocalStorage,
     safeSessionStorage,
     errorHandler,
     returnBody,
-    divideArray
+    divideArray,
+    clearSelectedValue,
+    haveACopyInArray
 }
