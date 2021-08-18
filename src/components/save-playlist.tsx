@@ -60,7 +60,6 @@ function SavePlaylist(props: ISavePlaylistProps) {
 
   return (
     <div>
-      
         <EditableText
           value={name}
           onChange={onChange}
