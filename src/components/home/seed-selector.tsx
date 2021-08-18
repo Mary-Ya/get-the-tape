@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { DOMElement, useRef } from "react";
 import { IArtist, ITrack } from "../../types/track";
 import AsyncSelect from "react-select/async";
 import api from "../../common/api";
@@ -6,7 +6,7 @@ import { ActionMeta } from "react-select";
 import { useState } from "react";
 import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
 
-type TPossibleSeedTypes = ITrack | IArtist
+type TPossibleSeedTypes = ITrack | IArtist;
 
 interface SeedSelectorProps {
   seeds: Array<TPossibleSeedTypes>,
@@ -50,10 +50,10 @@ function SeedSelector(props: SeedSelectorProps) {
         }
     };
     
-  const renderOptionLabel = {
-    track: (option: ITrack) =>
-      (`${option.name} by ${option.artists.map((i) => i.name).join(", ")}`),
-    artist: (option: IArtist) => (`${option.name}`)
+  const renderOptionLabel: {[key: string]: (option: TPossibleSeedTypes) => string} = {
+    track: (option) => 
+      (`${option.name} by ${option.artists.map((i: ITrack) => i.name).join(", ")}`),
+    artist: (option) => (`${option.name}`)
   }
 
   const callRender = (option: IArtist | ITrack) => (renderOptionLabel[props.searchType](option))
