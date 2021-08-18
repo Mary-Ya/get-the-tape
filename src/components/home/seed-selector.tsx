@@ -6,14 +6,16 @@ import { ActionMeta } from "react-select";
 import { useState } from "react";
 import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
 
+type TPossibleSeedTypes = ITrack | IArtist
+
 interface SeedSelectorProps {
-  seeds: Array<ITrack | IArtist>,
+  seeds: Array<TPossibleSeedTypes>,
   canAddMoreSeeds: boolean,
   country: string,
   accessToken: string,
   seedCount: number,
   searchType: string,
-  setSeeds(data: Array<ITrack | IArtist>): void
+  setSeeds(data: Array<TPossibleSeedTypes>): void
 }
 
 function SeedSelector(props: SeedSelectorProps) {
@@ -34,14 +36,14 @@ function SeedSelector(props: SeedSelectorProps) {
   };
 
   const onChange = (
-    selectedOption: ITrack | IArtist | null,
-    action: ActionMeta<ITrack | IArtist>,
+    selectedOption: TPossibleSeedTypes | null,
+    action: ActionMeta<TPossibleSeedTypes>,
     props: SeedSelectorProps
   ) => {
     console.log(props.seeds)
         const isADuplicate = haveACopyInArray(selectedOption, props.seeds);
         if (selectedOption && props.canAddMoreSeeds && !isADuplicate) {
-            let newValue: Array<ITrack | IArtist> = [].concat(...props.seeds);
+            let newValue: Array<TPossibleSeedTypes> = ([] as Array<TPossibleSeedTypes>).concat(...props.seeds);
             newValue.push(selectedOption);
             props.setSeeds(newValue);
             clearSelectedValue(songSeedSelectorRef);
