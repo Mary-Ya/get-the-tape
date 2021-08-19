@@ -44,14 +44,8 @@ function Home(props: any) {
   });
 
   const [genreSeeds, setGenreSeeds] = useState(["rock"]);
-
   const [artistSeeds, setArtistSeeds] = useState<Array<IArtist>>([]);
-  const [availableArtistSeeds, setAvailableArtistSeeds] = useState([]);
-  const [artistSeedInputValue, setArtistSeedInputValue] = useState('');
-  const artistSeedSelectorRef = useRef();
-
-  const [songSeeds, setSongSeeds] = useState([]);
-  const [availableSongSeeds, setAvailableSongSeeds] = useState([]);
+  const [songSeeds, setSongSeeds] = useState<Array<ITrack>>([]);
 
   const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
   const [canRemoveSeeds, setCanRemoveSeeds] = useState(false);
@@ -311,23 +305,6 @@ function Home(props: any) {
     ).then(data => data.artists.items);
   };
 
-  const selectSeedArtist = (selectedOption: IArtist | null, action: ActionMeta<IArtist>) => {
-    const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
-    setCanAddMoreSeeds(seedCount < 6);
-    console.log("selectSeedTrack ", selectedOption);
-    const isADuplicate =
-      artistSeeds.findIndex((i) => {
-        return i.id === selectedOption?.id;
-      }) !== -1;
-    if (selectedOption && canAddMoreSeeds && !isADuplicate) {
-      let newValue: Array<IArtist> = [].concat(...artistSeeds);
-      newValue.push(selectedOption);
-      setArtistSeeds(newValue);
-      setArtistSeedInputValue("");
-      artistSeedSelectorRef.current?.select?.select?.clearValue();
-    }
-  };
-
   const removeSeedTrack = (track: ITrack) => {
     const newSongSeeds = songSeeds.filter((i: ITrack) => i.id !== track.id);
     setSongSeeds(newSongSeeds);
@@ -441,7 +418,7 @@ function Home(props: any) {
                 <Range
                   pushable={true}
                   allowCross={false}
-                  defaultValue={[80, 120]}
+                  defaultValue={[63, 205]}
                   min={63}
                   max={205}
                   step={1}
@@ -455,7 +432,7 @@ function Home(props: any) {
                 <Range
                   pushable={true}
                   allowCross={false}
-                  defaultValue={[35, 171]}
+                  defaultValue={[0, 200]}
                   min={0}
                   max={200}
                   step={1}
@@ -469,7 +446,7 @@ function Home(props: any) {
                 <Range
                   pushable={true}
                   allowCross={false}
-                  defaultValue={[40, 86]}
+                  defaultValue={[0, 100]}
                   min={0}
                   max={100}
                   step={1}
@@ -480,34 +457,17 @@ function Home(props: any) {
               </div>
             </div>
           </div>
-          <div className="col-8 ">
-            <div className="text-center  bg-light rounded-10 p-3">
-              <button
-                className="btn btn-light mx-1"
-                onClick={() => {
-                  fetchPlaylist();
-                }}
-              >
-                GET THE TAPE!
-              </button>
-              <button
-                className="btn btn-light mx-1"
-                onClick={() => {
-                  startGame();
-                }}
-              >
-                PLAY THE TAPE!
-              </button>
-            </div>
-
-            {trackList && trackList.length > 0 ? (
-              <div className="">
-                <SavePlaylist
+              <div className="col-8 ">
+              <SavePlaylist
                   name={newPlayListName}
                   accessToken={accessToken}
                   myId={me.id}
-                  trackList={trackList}
+                      trackList={trackList}
+                      fetchPlaylist={fetchPlaylist}
                 />
+            {trackList && trackList.length > 0 ? (
+              <div className="">
+                
                 <PlayList
                   trackList={trackList}
                   updateTrackList={setTrackList}

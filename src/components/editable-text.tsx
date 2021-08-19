@@ -5,7 +5,7 @@ import Icons from "../assets/icons";
 interface IEditableTextProps {
     value: string,
     placeholder?: string,
-    className?: string,
+    textClass?: string,
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -16,32 +16,33 @@ function EditableText(props: IEditableTextProps) {
         setHideInput(!hideInput);
     };
 
-    return <div>
-        <a href="#" className={`text-decoration-none ${hideInput ? '' : 'd-none'}`}>
+    const renderText = () => (
+        <a href="#" className={`text-decoration-none ${props.textClass}`}>
             {props.value}
-            <span onClick={toggleControls}>
+            <span onClick={toggleControls} className='ms-2'>
                 <Icons.Pencil />
             </span>
         </a>
-        <div className={`input-group mb-3  ${hideInput ? 'd-none' : ''}`}>
-            <input
-                type="text"
-                className={`form-control`}
-                placeholder={props.placeholder}
-                value={props.value}
-                onChange={props.onChange}
-                aria-label={props.placeholder}
-                aria-describedby="button-addon2"
-            />
-            <button
+    );
+
+    const renderInput = () => (
+        <><input
+            type="text"
+            className={`form-control`}
+            placeholder={props.placeholder}
+            value={props.value}
+            onChange={props.onChange}
+            aria-label={props.placeholder}
+            aria-describedby="button-addon2" /><button
                 className={`btn btn-outline-secondary`}
                 type="button"
                 id="button-addon2"
                 onClick={toggleControls}
             ><Icons.Save />
-            </button>
-        </div>
-    </div>
+            </button></>
+    );
+
+    return hideInput ? renderText() : renderInput();
 }
 
 export default EditableText;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
+import Icons from "../assets/icons";
 import playlistApi from "../common/api-playlist";
 import { ITrack } from "../types/track";
 import EditableText from "./editable-text";
@@ -10,6 +11,7 @@ interface ISavePlaylistProps {
   accessToken: string;
   myId: string;
   trackList: Array<ITrack>;
+  fetchPlaylist: () => void
 }
 
 function SavePlaylist(props: ISavePlaylistProps) {
@@ -23,7 +25,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
     }
   }, [props.name]);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsChangedManually(true);
     setName(e.target.value);
   };
@@ -59,34 +61,17 @@ function SavePlaylist(props: ISavePlaylistProps) {
   };
 
   return (
-    <div>
-        <EditableText
-          value={name}
-          onChange={onChange}
-          placeholder={'Playlist name here'}
-        />
-        <button
-          className="btn btn-outline-secondary"
-          type="button"
-          id="button-addon2"
+    <div className={`input-group mb-3`}>
+       <button
+          className="btn btn-outline-primary"
           onClick={() => {
-            createPlayList();
+            props.fetchPlaylist();
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-save"
-            viewBox="0 0 16 16"
-          >
-            <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"></path>
-          </svg>{" "}
-          Save as New
-        </button>
-
-        <button
+          GET THE TAPE!
+      </button>
+      
+      <button
           className={`btn btn-outline-secondary ${playListID ? "" : "d-none"}`}
           type="button"
           id="button-addon2"
@@ -94,19 +79,28 @@ function SavePlaylist(props: ISavePlaylistProps) {
             updatePlayList();
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-plus-square"
-            viewBox="0 0 16 16"
-          >
-            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
-          </svg>{" "}
+          <Icons.Plus />
           Add
+      </button>
+      
+      <button
+          className="btn btn-outline-secondary"
+          type="button"
+          id="button-addon2"
+          onClick={() => {
+            createPlayList();
+          }}
+        >
+          <Icons.Inside />
+          Save as New
         </button>
+      <EditableText
+          textClass={'ms-3 py-2'}
+          value={name}
+          onChange={onNameChange}
+          placeholder={'Playlist name here'}
+        />
+
       </div>
   );
 }
