@@ -2,14 +2,16 @@ import React, { DOMElement, useRef } from "react";
 import { IArtist, ITrack } from "../../types/track";
 import AsyncSelect from "react-select/async";
 import api from "../../common/api";
-import { ActionMeta } from "react-select";
+import { ActionMeta, createFilter } from "react-select";
 import { useState } from "react";
 import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
+import { useEffect } from "react";
 
 type TPossibleSeedTypes = ITrack | IArtist;
 
 interface SeedSelectorProps {
   seeds: Array<TPossibleSeedTypes>,
+  selectedSeedsIds: Array<string>,
   canAddMoreSeeds: boolean,
   country: string,
   accessToken: string,
@@ -21,8 +23,9 @@ interface SeedSelectorProps {
 function SeedSelector(props: SeedSelectorProps) {
   const [offset, setOffset] = useState(0);
   const songSeedSelectorRef = useRef();
+  const [localSeeds, setLocalSeeds] = useState(props.seeds);
 
-  const getTracks = (inputValue: string) => {
+  const getSeeds = (inputValue: string) => {
     return api
       .search(
         props.country,
@@ -32,7 +35,9 @@ function SeedSelector(props: SeedSelectorProps) {
         offset,
         props.searchType
       )
-      .then((data) => (data[props.searchType + 's'].items));
+      .then((data) => (data[props.searchType + 's'].items
+        // .filter(i => !props.selectedSeedsIds || props.selectedSeedsIds.indexOf(i.id) === -1)
+      ));
   };
 
   const onChange = (
@@ -64,7 +69,7 @@ function SeedSelector(props: SeedSelectorProps) {
       innerRef={songSeedSelectorRef}
       getOptionLabel={callRender}
       blurInputOnSelect={true}
-      loadOptions={getTracks}
+      loadOptions={getSeeds}
       onChange={(options, action) => (onChange(options, action, props))}
       defaultOptions
       cacheOptions

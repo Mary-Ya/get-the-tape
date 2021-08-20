@@ -22,6 +22,7 @@ import { ActionMeta } from "react-select";
 import Spinner from "../components/spinner";
 import SongSeed from "../components/home/seed-selector";
 import SeedSelector from "../components/home/seed-selector";
+import SelectedSeed from "../components/home/selected-seed";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -294,17 +295,6 @@ function Home(props: any) {
     );
   };
 
-  const getArtists = (inputValue: string) => {
-    return api.search(
-      me.country,
-      accessToken,
-      encodeURI(inputValue),
-      10,
-      0,
-      'artist'
-    ).then(data => data.artists.items);
-  };
-
   const removeSeedTrack = (track: ITrack) => {
     const newSongSeeds = songSeeds.filter((i: ITrack) => i.id !== track.id);
     setSongSeeds(newSongSeeds);
@@ -317,55 +307,28 @@ function Home(props: any) {
 
   const renderSeedTrack = (track: ITrack) => {
     // TODO: block selected item from rendering
-
-    return (
-      <div className={`d-inline-block m-1`} key={`${track.id}-seed-track`}>
-        <input
-          disabled={false}
-          type="checkbox"
-          className="btn-check"
-          id={`btn-check-${track.name}`}
-          onChange={() => {
-            removeSeedTrack(track);
-          }}
-          checked={true}
-          autoComplete="off"
-        />
-        <label
-          className="btn btn-outline-secondary rounded-pill text-capitalize"
-          htmlFor={`btn-check-${track.name}`}
-        >
-          {track.name}
-        </label>
-        <br />
-      </div>
-    );
+    console.log(track)
+    return <SelectedSeed
+        key={`${track.id}-seed-track-key`}
+        id={`${track.id}-seed-track`}
+        labelText={track.name}
+        data={track}
+        onClick={removeSeedTrack}
+      />
+    ;
   };
 
   const renderSeedArtist = (artist: IArtist) => {
     // TODO: block selected item from rendering
 
     return (
-      <div className={`d-inline-block m-1`} key={`${artist.id}-seed-track`}>
-        <input
-          disabled={false}
-          type="checkbox"
-          className="btn-check"
-          id={`btn-check-${artist.name}`}
-          onChange={() => {
-            removeSeedArtist(artist);
-          }}
-          checked={true}
-          autoComplete="off"
-        />
-        <label
-          className="btn btn-outline-secondary rounded-pill text-capitalize"
-          htmlFor={`btn-check-${artist.name}`}
-        >
-          {artist.name}
-        </label>
-        <br />
-      </div>
+      <SelectedSeed
+        key={`${artist.id}-seed-artist-key`}
+        id={`${artist.id}-seed-artist`}
+        labelText={artist.name}
+        data={artist}
+        onClick={removeSeedArtist}
+      />
     );
   };
 
@@ -388,27 +351,29 @@ function Home(props: any) {
 
             <div className="rounded-10 pt-3">
               Seed Songs: {songSeeds.map(renderSeedTrack)}
-                <SeedSelector
-                  country={me.country}
-                  accessToken={accessToken}
-                  canAddMoreSeeds={canAddMoreSeeds}
-                  seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
-                  setSeeds={setSongSeeds}
-                  seeds={songSeeds}
-                  searchType={"track"}
+                  <SeedSelector
+                    selectedSeeds={songSeeds.map(i => i.id)}
+                    country={me.country}
+                    accessToken={accessToken}
+                    canAddMoreSeeds={canAddMoreSeeds}
+                    seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
+                    setSeeds={setSongSeeds}
+                    seeds={songSeeds}
+                    searchType={"track"}
                 />
             </div>
-                
+
             <div className="rounded-10 pt-3">
               Seed Artists: {artistSeeds.map(renderSeedArtist)}
                   <SeedSelector
-                  country={me.country}
-                  accessToken={accessToken}
-                  canAddMoreSeeds={canAddMoreSeeds}
-                  seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
-                  setSeeds={setArtistSeeds}
-                  seeds={artistSeeds}
-                  searchType={"artist"}
+                    selectedSeeds={artistSeeds.map(i => i.id)}
+                    country={me.country}
+                    accessToken={accessToken}
+                    canAddMoreSeeds={canAddMoreSeeds}
+                    seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
+                    setSeeds={setArtistSeeds}
+                    seeds={artistSeeds}
+                    searchType={"artist"}
                 />
             </div>
 
