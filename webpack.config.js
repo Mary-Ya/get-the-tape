@@ -93,6 +93,10 @@ module.exports = {
     $: 'jquery',
     jQuery: 'jquery',
   }),
-   new HtmlWebpackPlugin({ template: './src/index.html', inject: false })
+  new HtmlWebpackPlugin({
+    template: './src/index.html', 
+    inject: false
+  }),
+  new FaviconsWebpackPlugin("./src/assets/favicon.png"),
  ]
 }
