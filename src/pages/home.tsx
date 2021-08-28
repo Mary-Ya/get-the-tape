@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 
 import api from "../common/api";
 import { divideArray, safeLocalStorage } from "../common/utils";
-import CheckButton from "../components/check-button";
 import GenresList from "../components/genres";
 import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
 import PlayList from "./play-list";
 
-import { Handle, Range, SliderTooltip } from "rc-slider";
+const Slider = require('rc-slider');
+const createSliderWithTooltip = Slider.createSliderWithTooltip;
+const Range = createSliderWithTooltip(Slider.Range);
+
 import { IRecommendationSettings } from "../types/recommendation-settings";
 
 import { createBrowserHistory } from "history";
@@ -18,11 +20,23 @@ import SavePlaylist from "../components/save-playlist";
 
 import playListApi from "../common/api-playlist";
 import apiPlaylist from "../common/api-playlist";
-import { ActionMeta } from "react-select";
 import Spinner from "../components/spinner";
 import SongSeed from "../components/home/seed-selector";
 import SeedSelector from "../components/home/seed-selector";
 import SelectedSeed from "../components/home/selected-seed";
+
+interface IListRequestSettings {
+  market: string
+  seed_genres: string
+  seed_tracks: string
+  seed_artists: string
+  min_tempo?: number
+  max_tempo?: number
+  min_instrumentalness?: number
+  max_instrumentalness?: number
+  min_popularity?: number
+  max_popularity?: number
+}
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -57,6 +71,12 @@ function Home(props: any) {
     `My ${genreSeeds.join(", ")}`
   );
   const [playListID, setPlayListID] = useState("");
+
+  const [enabledParams, setEnabledParams] = useState({
+    'instrumentalness': false,
+    'popularity': false,
+    'tempo': false,
+  });
 
   // min_acousticness, max_acousticness 0.0 -1.0
   const [acousticness, setAcousticness] = useState([0.35, 1.33]);
@@ -114,7 +134,6 @@ function Home(props: any) {
   // Tempos are also related to different Genres: Hip Hop 85–95 BPM, Techno 120–125 BPM, House & Pop 115–130 BPM, Electro 128 BPM, Reggaeton >130 BPM, Dubstep 140 BPM
   const [tempo, setTempo] = useState([140, 160]);
   // target_tempo
-
   // min_time_signature, max_time_signature
   const [timeSignature, setTimeSignature] = useState([140, 160]);
   // target_time_signature
@@ -124,9 +143,10 @@ function Home(props: any) {
   const [valence, setValence] = useState([-0.5, 6.5]);
   // target_valence
 
-  const [songSeedInputValue, setSongSeedInputValue] = useState("");
-  const [selectedSongSeed, setSelectedSongSeed] = useState<ITrack | null>();
-  const songSeedSelectorRef = useRef();
+  const toggleParamEnabled = (e: React.ChangeEvent<HTMLInputElement>, paramName: string) => {
+    setEnabledParams(prev => ({...prev, [paramName]: e.target.checked}))
+    console.log(paramName, enabledParams);
+  };
 
   const getDefaultPlayListName = (seeds: Array<string>) =>
     `My ${seeds.join(", ")}`;
@@ -213,21 +233,32 @@ function Home(props: any) {
   };
 
   const combineSettings = () => {
-    setSettings(
-      Object.assign(
-        settings,
-        {
-          // limit: tracksCount,
-          market: me.country || "EU",
-          seed_genres: genreSeeds.join(","),
-          seed_tracks: songSeeds.map((i: ITrack) => i.id).join(","),
-          seed_artists: artistSeeds.map((i: IArtist) => i.id).join(","),
-        },
-        rangeToObject(tempo, "tempo"),
-        rangeToObject(instrumentalness, "instrumentalness"),
-        rangeToObject(popularity, "instrumentalness")
-      )
-    );
+    let newSettings: IRecommendationSettings = Object.assign(
+      settings,
+      {
+        // limit: tracksCount,
+        market: me.country || "EU",
+        seed_genres: genreSeeds.join(","),
+        seed_tracks: songSeeds.map((i: ITrack) => i.id).join(","),
+        seed_artists: artistSeeds.map((i: IArtist) => i.id).join(","),
+      },
+      /* rangeToObject(tempo, "tempo"),
+      rangeToObject(instrumentalness, "instrumentalness"),
+      rangeToObject(popularity, "popularity") */
+    )
+    Object.keys(enabledParams)
+      .forEach((param) => {
+        const rangeInObject = rangeToObject(eval(param), param);
+        if (enabledParams[param as keyof typeof enabledParams]) {
+          newSettings = {...newSettings, ...rangeInObject};        
+        } else {
+          for(const i in rangeInObject) {
+            delete newSettings[i as keyof typeof newSettings]
+          }
+        }
+      })
+    console.log('newSettings: ' + newSettings);
+    setSettings(newSettings);
   };
 
   const fetchPlaylist = () => {
@@ -280,21 +311,6 @@ function Home(props: any) {
       });
   };
 
-  const renderHandle = (props) => {
-    const { value, dragging, index, ...restProps } = props;
-    return (
-      <SliderTooltip
-        prefixCls="rc-slider-tooltip"
-        overlay={`${value} BPM`}
-        visible={true}
-        placement="top"
-        key={index}
-      >
-        <Handle value={value} {...restProps} />
-      </SliderTooltip>
-    );
-  };
-
   const removeSeedTrack = (track: ITrack) => {
     const newSongSeeds = songSeeds.filter((i: ITrack) => i.id !== track.id);
     setSongSeeds(newSongSeeds);
@@ -306,16 +322,16 @@ function Home(props: any) {
   };
 
   const renderSeedTrack = (track: ITrack) => {
-    // TODO: block selected item from rendering
-    console.log(track)
-    return <SelectedSeed
+    // TODO: fix double rendering here
+    return (
+      <SelectedSeed
         key={`${track.id}-seed-track-key`}
         id={`${track.id}-seed-track`}
         labelText={track.name}
         data={track}
         onClick={removeSeedTrack}
       />
-    ;
+    );
   };
 
   const renderSeedArtist = (artist: IArtist) => {
@@ -351,35 +367,50 @@ function Home(props: any) {
 
             <div className="rounded-10 pt-3">
               Seed Songs: {songSeeds.map(renderSeedTrack)}
-                  <SeedSelector
-                    selectedSeeds={songSeeds.map(i => i.id)}
-                    country={me.country}
-                    accessToken={accessToken}
-                    canAddMoreSeeds={canAddMoreSeeds}
-                    seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
-                    setSeeds={setSongSeeds}
-                    seeds={songSeeds}
-                    searchType={"track"}
-                />
+              <SeedSelector
+                selectedSeeds={songSeeds.map((i) => i.id)}
+                country={me.country}
+                accessToken={accessToken}
+                canAddMoreSeeds={canAddMoreSeeds}
+                seedCount={
+                  songSeeds.length + artistSeeds.length + genreSeeds.length
+                }
+                setSeeds={setSongSeeds}
+                seeds={songSeeds}
+                searchType={"track"}
+              />
             </div>
 
             <div className="rounded-10 pt-3">
               Seed Artists: {artistSeeds.map(renderSeedArtist)}
-                  <SeedSelector
-                    selectedSeeds={artistSeeds.map(i => i.id)}
-                    country={me.country}
-                    accessToken={accessToken}
-                    canAddMoreSeeds={canAddMoreSeeds}
-                    seedCount={songSeeds.length + artistSeeds.length + genreSeeds.length}
-                    setSeeds={setArtistSeeds}
-                    seeds={artistSeeds}
-                    searchType={"artist"}
-                />
+              <SeedSelector
+                selectedSeeds={artistSeeds.map((i) => i.id)}
+                country={me.country}
+                accessToken={accessToken}
+                canAddMoreSeeds={canAddMoreSeeds}
+                seedCount={
+                  songSeeds.length + artistSeeds.length + genreSeeds.length
+                }
+                setSeeds={setArtistSeeds}
+                seeds={artistSeeds}
+                searchType={"artist"}
+              />
             </div>
 
-            <div className="w-100 text-center">
-              <div className="mt-3 w-100 rounded-10 pt-3">
-                <div className="text-start">Tempo: {tempo[0]} - {tempo[1]}</div>
+            <div className="row">
+              <div className="text-start pt-3 col-12">
+                    Tempo: {tempo[0]} - {tempo[1]}
+              </div>
+              <div className="col-1">
+                <input
+                  name='tempo-check'
+                  className="form-check-input ms-0"
+                  type="checkbox"
+                  defaultChecked={enabledParams['tempo']}
+                  onChange={(e) => { toggleParamEnabled(e, 'tempo') }}
+                />
+              </div>
+              <div className="col-11">
                 <Range
                   pushable={true}
                   allowCross={false}
@@ -387,52 +418,86 @@ function Home(props: any) {
                   min={63}
                   max={205}
                   step={1}
-                  onChange={(e) => {
-                    setTempo(e);
+                  onChange={(e: number[]) => {
+                    setTempo(divideArray(e));
                   }}
-                />
-              </div>
-              <div className="mt-3 w-100 rounded-10 pt-3">
-                <div className="text-start">Instrumentalness: {instrumentalness[0]} - {instrumentalness[1]}</div>
-                <Range
-                  pushable={true}
-                  allowCross={false}
-                  defaultValue={[0, 200]}
-                  min={0}
-                  max={200}
-                  step={1}
-                  onChange={(e) => {
-                    setInstrumentalness(divideArray(e));
-                  }}
-                />
-              </div>
-              <div className="mt-3 w-100 rounded-10 pt-3">
-                <div className="text-start">Popularity: {popularity[0]} - {popularity[1]}</div>
-                <Range
-                  pushable={true}
-                  allowCross={false}
-                  defaultValue={[0, 100]}
-                  min={0}
-                  max={100}
-                  step={1}
-                  onChange={(e) => {
-                    setPopularity(divideArray(e));
-                  }}
+                  disabled={!enabledParams['tempo']}
                 />
               </div>
             </div>
+              <div className="row">
+                <div className="text-start pt-3 col-12">
+                  Instrumentalness: {`${instrumentalness[0]} - ${instrumentalness[1]}`}
+                </div>
+                <div className="col-1">
+                  <input
+                    name='instrumentalness-check'
+                    className="form-check-input ms-0"
+                    key={Math.random()}
+                    type="checkbox"
+                    defaultChecked={enabledParams['instrumentalness']}
+                    onChange={(e) => {
+                      toggleParamEnabled(e, "instrumentalness");
+                    }}
+                  />
+                </div>
+                <div className={"col-11 "}>
+                  <Range
+                    pushable={true}
+                    allowCross={false}
+                    defaultValue={[0, 200]}
+                    min={0}
+                    max={200}
+                    step={1}
+                    onChange={(e: number[]) => {
+                      setInstrumentalness(divideArray(e));
+                      }}
+                      disabled={!enabledParams['instrumentalness']}
+                  />
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="text-start pt-3 col-12">
+                  Popularity: {popularity[0]} - {popularity[1]}
+                </div>
+                <div className="col-1">
+                    <input
+                      name='popularity-check'
+                      className="form-check-input ms-0"
+                      type="checkbox"
+                      value={enabledParams['popularity']}
+                      onChange={(e) => {
+                        toggleParamEnabled(e, "popularity");
+                      }}
+                  />
+                </div>
+                <div className="col-11">
+                  <Range
+                    disabled={!enabledParams['popularity']}
+                    pushable={true}
+                    allowCross={false}
+                    defaultValue={[0, 100]}
+                    min={0}
+                    max={100}
+                    step={1}
+                    onChange={(e: number[]) => {
+                      setPopularity(divideArray(e));
+                      }}
+                  />
+                </div>
+              </div>
           </div>
-              <div className="col-8 ">
-              <SavePlaylist
-                  name={newPlayListName}
-                  accessToken={accessToken}
-                  myId={me.id}
-                      trackList={trackList}
-                      fetchPlaylist={fetchPlaylist}
-                />
+          <div className="col-8 ">
+            <SavePlaylist
+              name={newPlayListName}
+              accessToken={accessToken}
+              myId={me.id}
+              trackList={trackList}
+              fetchPlaylist={fetchPlaylist}
+            />
             {trackList && trackList.length > 0 ? (
               <div className="">
-                
                 <PlayList
                   trackList={trackList}
                   updateTrackList={setTrackList}
@@ -443,8 +508,8 @@ function Home(props: any) {
             )}
           </div>
         </div>
-      </div>
-    </div>
+        </div>
+        </div>
   );
 }
 

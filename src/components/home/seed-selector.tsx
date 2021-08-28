@@ -20,6 +20,7 @@ interface SeedSelectorProps {
   setSeeds(data: Array<TPossibleSeedTypes>): void
 }
 
+// TODO: block selected item from rendering
 function SeedSelector(props: SeedSelectorProps) {
   const [offset, setOffset] = useState(0);
   const songSeedSelectorRef = useRef();
