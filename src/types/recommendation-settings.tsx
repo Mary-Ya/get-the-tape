@@ -19,3 +19,16 @@ export interface IRecommendationSettings {
   max_popularity?: number | null,
   target_popularity?: number | null,
 }
+
+export interface IPossibleSettings {
+  market?: string
+  seed_genres?: string
+  seed_tracks?: string
+  seed_artists?: string
+  min_tempo?: number
+  max_tempo?: number
+  min_instrumentalness?: number
+  max_instrumentalness?: number
+  min_popularity?: number
+  max_popularity?: number
+}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
-import AsyncSelect from "react-select/async";
 
 import api from "../common/api";
 import { divideArray, safeLocalStorage, cleanObject } from "../common/utils";
@@ -9,34 +8,15 @@ import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
 import PlayList from "./play-list";
 
-const Slider = require('rc-slider');
-const createSliderWithTooltip = Slider.createSliderWithTooltip;
-const Range = createSliderWithTooltip(Slider.Range);
-
-import { IRecommendationSettings } from "../types/recommendation-settings";
+import { IRecommendationSettings, IPossibleSettings } from "../types/recommendation-settings";
 
 import SavePlaylist from "../components/save-playlist";
 
 import playListApi from "../common/api-playlist";
-import apiPlaylist from "../common/api-playlist";
 import Spinner from "../components/spinner";
-import SongSeed from "../components/home/seed-selector";
 import SeedSelector from "../components/home/seed-selector";
 import SelectedSeed from "../components/home/selected-seed";
 import ToggleAndRange from "../components/home/toggle-and-range";
-
-interface IPossibleSettings {
-  market?: string
-  seed_genres?: string
-  seed_tracks?: string
-  seed_artists?: string
-  min_tempo?: number
-  max_tempo?: number
-  min_instrumentalness?: number
-  max_instrumentalness?: number
-  min_popularity?: number
-  max_popularity?: number
-}
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -54,11 +34,11 @@ function Home(props: any) {
   const [auth, setAuth] = useState(true);
   const [tracksCount, setTrackCount] = useState(10);
 
-  function useSettingsUpdater(initialValue: IRecommendationSettings) {
+  function useSettingsUpdater(initialValue: any) {
     const [state, setState] = useState(initialValue);
   
     function setter(value: IPossibleSettings) {
-      setState((prevState: IRecommendationSettings) => {
+      setState((prevState: any) => {
         const newState = { ...prevState, ...value };
         return newState;
       });
@@ -66,19 +46,13 @@ function Home(props: any) {
     }
 
     function getItem(name: string) {
-      return state[name as keyof IRecommendationSettings]
+      return state[name]
     }
   
     return [state, setter, getItem] as const;
   }
 
-  const [settings, setSettings, getSettingByName] = useSettingsUpdater({
-    market: "EU",
-
-    seed_genres: undefined,
-    seed_tracks: undefined,
-    seed_artists: undefined,
-    
+  const [optionalSettings, setOptionalSettings, getOptionalSettingByName] = useSettingsUpdater({
     min_tempo: undefined,
     max_tempo: undefined,
     target_tempo: undefined,
@@ -91,6 +65,14 @@ function Home(props: any) {
     min_popularity: undefined,
     max_popularity: undefined,
     target_popularity: undefined,
+  });
+
+  const [settings, setSettings, getSettingByName] = useSettingsUpdater({
+    market: "EU",
+
+    seed_genres: undefined,
+    seed_tracks: undefined,
+    seed_artists: undefined,
   });
 
   const [genreSeeds, setGenreSeeds] = useState(["rock"]);
@@ -175,17 +157,6 @@ function Home(props: any) {
   const getDefaultPlayListName = (seeds: Array<string>) =>
     `My ${seeds.join(", ")}`;
 
-  const rangeToObject = (dots: Array<number>, propertyName: string) => {
-    let result: any = {};
-    const minName = `min_${propertyName}`;
-    const maxName = `max_${propertyName}`;
-
-    result[minName] = dots[0];
-    result[maxName] = dots[1];
-
-    return result;
-  };
-
   useEffect(() => {
     try {
       setTrackList(JSON.parse(safeLocalStorage.getItem("playList")));
@@ -263,7 +234,7 @@ function Home(props: any) {
   };
 
   const fetchPlaylist = () => {
-    const cleanSettings = cleanObject({...settings})
+    const cleanSettings = cleanObject({...settings, optional: cleanObject(optionalSettings)})
     api
       .getTheTape(accessToken, tracksCount, cleanSettings)
       .then((res) => {
@@ -376,7 +347,6 @@ function Home(props: any) {
                 searchType={"artist"}
               />
             </div>
-
                 <ToggleAndRange
                   label='Tempo'
                   name='tempo'
@@ -390,7 +360,7 @@ function Home(props: any) {
                     allowCross: false
                   }}
                   onUpdate={(data) => {
-                    setSettings(data);
+                    setOptionalSettings(data);
                   }}
                 />
                 <ToggleAndRange
@@ -406,7 +376,7 @@ function Home(props: any) {
                     allowCross: false
                   }}
                   onUpdate={(data) => {
-                    setSettings(data);
+                    setOptionalSettings(data);
                   }}
                   intervalFormat={divideArray}
                 />
@@ -423,11 +393,10 @@ function Home(props: any) {
                     allowCross: false
                   }}
                   onUpdate={(data) => {
-                    setSettings(data);
+                    setOptionalSettings(data);
                   }}
                   intervalFormat={divideArray}
                 />
-
           </div>
           <div className="col-8 ">
             <SavePlaylist
