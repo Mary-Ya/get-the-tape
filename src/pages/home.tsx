@@ -8,7 +8,7 @@ import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
 import PlayList from "./play-list";
 
-import { IRecommendationSettings, IPossibleSettings } from "../types/recommendation-settings";
+import { IPossibleSettings } from "../types/recommendation-settings";
 
 import SavePlaylist from "../components/save-playlist";
 
@@ -52,7 +52,25 @@ function Home(props: any) {
     return [state, setter, getItem] as const;
   }
 
-  const [optionalSettings, setOptionalSettings, getOptionalSettingByName] = useSettingsUpdater({
+  const useCashableState = (initialValue: (string | ITrack | IArtist)[], localStorageKey: string) => {
+    let savedValue;
+    try {
+      savedValue = safeLocalStorage.getItem(localStorageKey);
+    } catch (e) {
+      console.warn(e);
+    }
+
+    const [state, setState] = useState(savedValue ? savedValue : initialValue);
+
+    function setter(value: (string | ITrack | IArtist)[]) {
+      safeLocalStorage.setItem(localStorageKey, value);
+      setState(value);
+    }
+    
+    return [state, setter] as const;
+  }
+
+  const [optionalSettings, setOptionalSettings] = useSettingsUpdater({
     min_tempo: undefined,
     max_tempo: undefined,
     target_tempo: undefined,
@@ -60,7 +78,6 @@ function Home(props: any) {
     min_instrumentalness: undefined,
     max_instrumentalness: undefined,
     target_instrumentalness: undefined,
-    
     
     min_popularity: undefined,
     max_popularity: undefined,
@@ -75,9 +92,9 @@ function Home(props: any) {
     seed_artists: undefined,
   });
 
-  const [genreSeeds, setGenreSeeds] = useState(["rock"]);
-  const [artistSeeds, setArtistSeeds] = useState<Array<IArtist>>([]);
-  const [songSeeds, setSongSeeds] = useState<Array<ITrack>>([]);
+  const [genreSeeds, setGenreSeeds] = useCashableState(["rock"], 'genreSeeds');
+  const [artistSeeds, setArtistSeeds] = useCashableState([], 'artistSeeds');
+  const [songSeeds, setSongSeeds] = useCashableState([], 'songSeeds');
 
   const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
   const [canRemoveSeeds, setCanRemoveSeeds] = useState(false);
@@ -189,7 +206,7 @@ function Home(props: any) {
       seed_genres: genreSeeds.join(","),
       seed_tracks: songSeeds.map((i: ITrack) => i.id).join(","),
       seed_artists: artistSeeds.map((i: IArtist) => i.id).join(",")
-    })
+    });
   }, [genreSeeds, artistSeeds, songSeeds]);
 
   const errorHandler = (e: JQueryXHR) => {

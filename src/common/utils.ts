@@ -1,5 +1,4 @@
-import { stringify } from "querystring";
-import { MutableRefObject } from "react";
+import { ITrack } from "../types/track";
 
 const getRandomNumber = (max = 1000) => Math.floor(Math.random() * max)
 
@@ -15,7 +14,7 @@ class SafeStorage {
     }
 
     getItem(key: string) {
-        let value = '';
+        let value;
         try {
             value = JSON.parse((window as WindowType)[this.storageName].getItem(key) || '');
         } catch (e) {
