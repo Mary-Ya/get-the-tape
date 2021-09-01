@@ -3,7 +3,7 @@ import { Link, Redirect, useHistory } from "react-router-dom";
 import AsyncSelect from "react-select/async";
 
 import api from "../common/api";
-import { divideArray, safeLocalStorage } from "../common/utils";
+import { divideArray, safeLocalStorage, cleanObject } from "../common/utils";
 import GenresList from "../components/genres";
 import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
@@ -15,7 +15,6 @@ const Range = createSliderWithTooltip(Slider.Range);
 
 import { IRecommendationSettings } from "../types/recommendation-settings";
 
-import { createBrowserHistory } from "history";
 import SavePlaylist from "../components/save-playlist";
 
 import playListApi from "../common/api-playlist";
@@ -24,12 +23,13 @@ import Spinner from "../components/spinner";
 import SongSeed from "../components/home/seed-selector";
 import SeedSelector from "../components/home/seed-selector";
 import SelectedSeed from "../components/home/selected-seed";
+import ToggleAndRange from "../components/home/toggle-and-range";
 
-interface IListRequestSettings {
-  market: string
-  seed_genres: string
-  seed_tracks: string
-  seed_artists: string
+interface IPossibleSettings {
+  market?: string
+  seed_genres?: string
+  seed_tracks?: string
+  seed_artists?: string
   min_tempo?: number
   max_tempo?: number
   min_instrumentalness?: number
@@ -44,7 +44,6 @@ const deserialize = (search: string) =>
 function Home(props: any) {
   const history = useHistory();
 
-  const [genre, setGenre] = useState("rock");
   const [accessToken, setAccessToken] = useState(
     deserialize(props.location.search).access_token
   );
@@ -54,8 +53,44 @@ function Home(props: any) {
   const [me, setMe] = useState<IMe | null>();
   const [auth, setAuth] = useState(true);
   const [tracksCount, setTrackCount] = useState(10);
-  const [settings, setSettings] = useState<IRecommendationSettings>({
+
+  function useSettingsUpdater(initialValue: IRecommendationSettings) {
+    const [state, setState] = useState(initialValue);
+  
+    function setter(value: IPossibleSettings) {
+      setState((prevState: IRecommendationSettings) => {
+        const newState = { ...prevState, ...value };
+        return newState;
+      });
+      console.log('setSettings: ', state);
+    }
+
+    function getItem(name: string) {
+      return state[name as keyof IRecommendationSettings]
+    }
+  
+    return [state, setter, getItem] as const;
+  }
+
+  const [settings, setSettings, getSettingByName] = useSettingsUpdater({
     market: "EU",
+
+    seed_genres: undefined,
+    seed_tracks: undefined,
+    seed_artists: undefined,
+    
+    min_tempo: undefined,
+    max_tempo: undefined,
+    target_tempo: undefined,
+    
+    min_instrumentalness: undefined,
+    max_instrumentalness: undefined,
+    target_instrumentalness: undefined,
+    
+    
+    min_popularity: undefined,
+    max_popularity: undefined,
+    target_popularity: undefined,
   });
 
   const [genreSeeds, setGenreSeeds] = useState(["rock"]);
@@ -71,12 +106,6 @@ function Home(props: any) {
     `My ${genreSeeds.join(", ")}`
   );
   const [playListID, setPlayListID] = useState("");
-
-  const [enabledParams, setEnabledParams] = useState({
-    'instrumentalness': false,
-    'popularity': false,
-    'tempo': false,
-  });
 
   // min_acousticness, max_acousticness 0.0 -1.0
   const [acousticness, setAcousticness] = useState([0.35, 1.33]);
@@ -143,11 +172,6 @@ function Home(props: any) {
   const [valence, setValence] = useState([-0.5, 6.5]);
   // target_valence
 
-  const toggleParamEnabled = (e: React.ChangeEvent<HTMLInputElement>, paramName: string) => {
-    setEnabledParams(prev => ({...prev, [paramName]: e.target.checked}))
-    console.log(paramName, enabledParams);
-  };
-
   const getDefaultPlayListName = (seeds: Array<string>) =>
     `My ${seeds.join(", ")}`;
 
@@ -189,6 +213,12 @@ function Home(props: any) {
     setNewPlayListName(
       `My ${genresCount ? genreSeeds.join(", ") : "playlist"}`
     );
+
+    setSettings({
+      seed_genres: genreSeeds.join(","),
+      seed_tracks: songSeeds.map((i: ITrack) => i.id).join(","),
+      seed_artists: artistSeeds.map((i: IArtist) => i.id).join(",")
+    })
   }, [genreSeeds, artistSeeds, songSeeds]);
 
   const errorHandler = (e: JQueryXHR) => {
@@ -232,65 +262,15 @@ function Home(props: any) {
     setGenreSeeds(newSeedState);
   };
 
-  const combineSettings = () => {
-    let newSettings: IRecommendationSettings = Object.assign(
-      settings,
-      {
-        // limit: tracksCount,
-        market: me.country || "EU",
-        seed_genres: genreSeeds.join(","),
-        seed_tracks: songSeeds.map((i: ITrack) => i.id).join(","),
-        seed_artists: artistSeeds.map((i: IArtist) => i.id).join(","),
-      },
-      /* rangeToObject(tempo, "tempo"),
-      rangeToObject(instrumentalness, "instrumentalness"),
-      rangeToObject(popularity, "popularity") */
-    )
-    Object.keys(enabledParams)
-      .forEach((param) => {
-        const rangeInObject = rangeToObject(eval(param), param);
-        if (enabledParams[param as keyof typeof enabledParams]) {
-          newSettings = {...newSettings, ...rangeInObject};        
-        } else {
-          for(const i in rangeInObject) {
-            delete newSettings[i as keyof typeof newSettings]
-          }
-        }
-      })
-    console.log('newSettings: ' + newSettings);
-    setSettings(newSettings);
-  };
-
   const fetchPlaylist = () => {
-    // TODO: do DRY
-    combineSettings();
+    const cleanSettings = cleanObject({...settings})
     api
-      .getTheTape(accessToken, tracksCount, settings)
+      .getTheTape(accessToken, tracksCount, cleanSettings)
       .then((res) => {
         safeLocalStorage.setItem("playList", JSON.stringify(res));
         return res;
       })
       .then(setTrackList)
-      .catch(errorHandler);
-  };
-
-  const startGame = () => {
-    combineSettings();
-    api
-      .getTheTape(accessToken, tracksCount, settings)
-      .then((res) => {
-        // TODO: do DRY
-        safeLocalStorage.setItem("playList", JSON.stringify(res));
-        history.push("/play", {
-          me,
-          accessToken,
-          refreshToken,
-          genre,
-          settings,
-          tracksCount,
-          tracks: res,
-        });
-      })
       .catch(errorHandler);
   };
 
@@ -368,7 +348,7 @@ function Home(props: any) {
             <div className="rounded-10 pt-3">
               Seed Songs: {songSeeds.map(renderSeedTrack)}
               <SeedSelector
-                selectedSeeds={songSeeds.map((i) => i.id)}
+                selectedSeedsIds={songSeeds.map((i) => i.id)}
                 country={me.country}
                 accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
@@ -384,7 +364,7 @@ function Home(props: any) {
             <div className="rounded-10 pt-3">
               Seed Artists: {artistSeeds.map(renderSeedArtist)}
               <SeedSelector
-                selectedSeeds={artistSeeds.map((i) => i.id)}
+                selectedSeedsIds={artistSeeds.map((i) => i.id)}
                 country={me.country}
                 accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
@@ -397,96 +377,57 @@ function Home(props: any) {
               />
             </div>
 
-            <div className="row">
-              <div className="text-start pt-3 col-12">
-                    Tempo: {tempo[0]} - {tempo[1]}
-              </div>
-              <div className="col-1">
-                <input
-                  name='tempo-check'
-                  className="form-check-input ms-0"
-                  type="checkbox"
-                  defaultChecked={enabledParams['tempo']}
-                  onChange={(e) => { toggleParamEnabled(e, 'tempo') }}
-                />
-              </div>
-              <div className="col-11">
-                <Range
-                  pushable={true}
-                  allowCross={false}
-                  defaultValue={[63, 205]}
-                  min={63}
-                  max={205}
-                  step={1}
-                  onChange={(e: number[]) => {
-                    setTempo(divideArray(e));
+                <ToggleAndRange
+                  label='Tempo'
+                  name='tempo'
+                  defaultChecked={false}
+                  rangeProps={{
+                    min: 63,
+                    max: 205,
+                    step: 1,
+                    defaultValue: [63, 205],
+                    pushable: false,
+                    allowCross: false
                   }}
-                  disabled={!enabledParams['tempo']}
+                  onUpdate={(data) => {
+                    setSettings(data);
+                  }}
                 />
-              </div>
-            </div>
-              <div className="row">
-                <div className="text-start pt-3 col-12">
-                  Instrumentalness: {`${instrumentalness[0]} - ${instrumentalness[1]}`}
-                </div>
-                <div className="col-1">
-                  <input
-                    name='instrumentalness-check'
-                    className="form-check-input ms-0"
-                    key={Math.random()}
-                    type="checkbox"
-                    defaultChecked={enabledParams['instrumentalness']}
-                    onChange={(e) => {
-                      toggleParamEnabled(e, "instrumentalness");
-                    }}
-                  />
-                </div>
-                <div className={"col-11 "}>
-                  <Range
-                    pushable={true}
-                    allowCross={false}
-                    defaultValue={[0, 200]}
-                    min={0}
-                    max={200}
-                    step={1}
-                    onChange={(e: number[]) => {
-                      setInstrumentalness(divideArray(e));
-                      }}
-                      disabled={!enabledParams['instrumentalness']}
-                  />
-                </div>
-              </div>
+                <ToggleAndRange
+                  label='Instrumentalness'
+                  name='instrumentalness'
+                  defaultChecked={false}
+                  rangeProps={{
+                    min: 0,
+                    max: 200,
+                    step: 1,
+                    defaultValue: [35, 171],
+                    pushable: false,
+                    allowCross: false
+                  }}
+                  onUpdate={(data) => {
+                    setSettings(data);
+                  }}
+                  intervalFormat={divideArray}
+                />
+                <ToggleAndRange
+                  label='Popularity'
+                  name='popularity'
+                  defaultChecked={false}
+                  rangeProps={{
+                    min: 0,
+                    max: 100,
+                    step: 1,
+                    defaultValue: [40, 86],
+                    pushable: false,
+                    allowCross: false
+                  }}
+                  onUpdate={(data) => {
+                    setSettings(data);
+                  }}
+                  intervalFormat={divideArray}
+                />
 
-              <div className="row">
-                <div className="text-start pt-3 col-12">
-                  Popularity: {popularity[0]} - {popularity[1]}
-                </div>
-                <div className="col-1">
-                    <input
-                      name='popularity-check'
-                      className="form-check-input ms-0"
-                      type="checkbox"
-                      value={enabledParams['popularity']}
-                      onChange={(e) => {
-                        toggleParamEnabled(e, "popularity");
-                      }}
-                  />
-                </div>
-                <div className="col-11">
-                  <Range
-                    disabled={!enabledParams['popularity']}
-                    pushable={true}
-                    allowCross={false}
-                    defaultValue={[0, 100]}
-                    min={0}
-                    max={100}
-                    step={1}
-                    onChange={(e: number[]) => {
-                      setPopularity(divideArray(e));
-                      }}
-                  />
-                </div>
-              </div>
           </div>
           <div className="col-8 ">
             <SavePlaylist

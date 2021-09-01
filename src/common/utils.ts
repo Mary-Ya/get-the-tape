@@ -44,8 +44,8 @@ const errorHandler = (e: any) => {
     console.log(e);
 };
 
-const divideArray = (e: Array<number>, divider = 100) => {
-    return e.map(i => i / divider)
+const divideArray = (e: Array<number | null>, divider = 100) => {
+    return e.map(i => i ? i / divider : null)
 }
 
 const haveACopyInArray = (item: any, array: Array<any>) => (array.findIndex((i: ITrack) => {
@@ -56,6 +56,12 @@ const clearSelectedValue = (selectorRef) => {
     selectorRef.current?.select?.select?.clearValue();
 }
 
+const cleanObject = (data: any) => {
+    let cleanData = { ...data };
+    Object.keys(cleanData).forEach(key => !cleanData[key] ? delete cleanData[key] : {});
+    return cleanData;
+}
+  
 export {
     getRandomNumber,
     safeLocalStorage,
@@ -64,5 +70,6 @@ export {
     returnBody,
     divideArray,
     clearSelectedValue,
-    haveACopyInArray
+    haveACopyInArray,
+    cleanObject
 }

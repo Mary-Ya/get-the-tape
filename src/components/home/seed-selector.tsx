@@ -7,7 +7,7 @@ import { useState } from "react";
 import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
 import { useEffect } from "react";
 
-type TPossibleSeedTypes = ITrack | IArtist;
+type TPossibleSeedTypes = ITrack | IArtist | string;
 
 interface SeedSelectorProps {
   seeds: Array<TPossibleSeedTypes>,
