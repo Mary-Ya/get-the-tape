@@ -393,7 +393,7 @@ function Home(props: any) {
                   onUpdate={(data) => {
                     setOptionalSettings(data);
                   }}
-                  intervalFormat={divideArray}
+                  // intervalFormat={divideArray}
                 />
           </div>
           <div className="col-lg-8 col-12 ps-lg-5 pt-3 pt-lg-0">
