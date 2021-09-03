@@ -262,23 +262,6 @@ function Home(props: any) {
       .catch(errorHandler);
   };
 
-  const createPlayList = () => {
-    playListApi
-      .savePlayListAsNew(
-        accessToken,
-        me.id,
-        {
-          name: newPlayListName,
-          description: "Test1 desc",
-          public: false,
-        },
-        trackList.map((i) => i.uri)
-      )
-      .then((res) => {
-        setPlayListID(res.id);
-      });
-  };
-
   const removeSeedTrack = (track: ITrack) => {
     const newSongSeeds = songSeeds.filter((i: ITrack) => i.id !== track.id);
     setSongSeeds(newSongSeeds);
@@ -321,10 +304,8 @@ function Home(props: any) {
   ) : !me ? (
     <Spinner />
   ) : (
-    <div className="row">
-      <div className="col-12">
-        <div className="row">
-          <div className="col-4 form-check bg-light rounded-10 p-3">
+        <div className="row g-0">
+          <div className="col-lg-4 col-12 form-check bg-light rounded-10 p-3">
             <GenresList
               canAddMoreSeeds={canAddMoreSeeds}
               canRemoveSeeds={canRemoveSeeds}
@@ -415,7 +396,7 @@ function Home(props: any) {
                   intervalFormat={divideArray}
                 />
           </div>
-          <div className="col-8 ">
+          <div className="col-lg-8 col-12 ps-lg-5 pt-3 pt-lg-0">
             <SavePlaylist
               name={newPlayListName}
               accessToken={accessToken}
@@ -434,8 +415,6 @@ function Home(props: any) {
               ""
             )}
           </div>
-        </div>
-        </div>
         </div>
   );
 }

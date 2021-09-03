@@ -39,13 +39,15 @@ html {
         }
     }
 }
-
-.w-10 {
-    max-width: 10%;
-}
-
-.w-90 {
-    max-width: 90%;
+@media (min-width: 992px) {
+    .w-lg-10 {
+        max-width: 10%;
+    }
+    
+    .w-lg-90 {
+        max-width: 90%;
+    }
+    
 }
 
 .async-select {

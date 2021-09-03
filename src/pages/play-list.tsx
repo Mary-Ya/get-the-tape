@@ -28,7 +28,7 @@ const PlayList = (props: any) => {
     const SortableItem = SortableElement(({value}) => renderItem(value));
     const SortableList = SortableContainer(({items}) => {
         return (
-            <ul>
+            <ul className="px-lg-0 px-3">
                 {items.map((value: ITrack, index: number) => (
                     <SortableItem key={`item-${value.id}`} index={index} value={value} />
                 ))}

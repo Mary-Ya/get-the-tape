@@ -61,7 +61,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
   };
 
   return (
-    <div className={`input-group mb-3`}>
+    <div className={`input-group mb-3 px-lg-0 px-3`}>
        <button
           className="btn btn-outline-primary"
           onClick={() => {

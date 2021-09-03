@@ -23,21 +23,21 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
     render() {
         const i = this.props.track;
 
-        return <div className={`row my-3 justify-content-left ${this.props.className}`}
+        return <div className={`row g-0 my-3 justify-content-left ${this.props.className}`}
             onClick={this.props.onClick}
             key={`song-${i.id}`}>
-        <div className="col-1 col-xs-2 logo-container">
+        <div className="col-3 col-xs-2 logo-container">
             <a className="mr-1" href={i.external_urls.spotify} target="_blank">
                 <Icons.Logo></Icons.Logo>
             </a>
         </div>
-        <div className="col-4">
+        <div className="col-lg-4 col-9">
             <a target="_blank" href={i.external_urls.spotify} className="fs-4">{i.name}</a>
             <br />
             { i.artists.map(this.renderArtist) }
             <i className="bi-alarm"></i>
         </div>
-        <div className={`col-1 ${ this.props.controls ? '' : 'd-none'}`}>
+        <div className={`col-lg-1 col-12 ${ this.props.controls ? '' : 'd-none'}`}>
             <audio
                 id={`audio-${i.id}`}
                 controls={true}
