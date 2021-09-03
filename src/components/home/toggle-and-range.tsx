@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { divideArray, getRandomNumber } from '../../common/utils';
 import { IArtist, ITrack } from '../../types/track';
+import { useCashableState } from '../hooks';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;
@@ -25,8 +26,8 @@ interface IToggleAndRangeProps {
 }
 
 function ToggleAndRange(props: IToggleAndRangeProps) {
-    const [rowRange, setRowRange] = useState(props.rangeProps.defaultValue || [0, 100]);
-    const [checked, setChecked] = useState(props.defaultChecked);
+    const [rowRange, setRowRange] = useCashableState(props.rangeProps.defaultValue || [0, 100], props.name);
+    const [checked, setChecked] = useCashableState(props.defaultChecked, props.name);
     const [name] = useState(props.name);
     const intervalFormat = props.intervalFormat ? props.intervalFormat : (e: any)=> (e);
     const key = Math.random();

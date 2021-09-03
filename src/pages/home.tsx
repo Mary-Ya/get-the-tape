@@ -17,6 +17,7 @@ import Spinner from "../components/spinner";
 import SeedSelector from "../components/home/seed-selector";
 import SelectedSeed from "../components/home/selected-seed";
 import ToggleAndRange from "../components/home/toggle-and-range";
+import { useCashableState } from "../components/hooks";
 
 const deserialize = (search: string) =>
   Object.fromEntries(new URLSearchParams(search));
@@ -50,24 +51,6 @@ function Home(props: any) {
     }
   
     return [state, setter, getItem] as const;
-  }
-
-  const useCashableState = (initialValue: (string | ITrack | IArtist)[], localStorageKey: string) => {
-    let savedValue;
-    try {
-      savedValue = safeLocalStorage.getItem(localStorageKey);
-    } catch (e) {
-      console.warn(e);
-    }
-
-    const [state, setState] = useState(savedValue ? savedValue : initialValue);
-
-    function setter(value: (string | ITrack | IArtist)[]) {
-      safeLocalStorage.setItem(localStorageKey, value);
-      setState(value);
-    }
-    
-    return [state, setter] as const;
   }
 
   const [optionalSettings, setOptionalSettings] = useSettingsUpdater({
@@ -126,7 +109,7 @@ function Home(props: any) {
 
   // predicts whether a track contains no vocals
   // min_instrumentalness, max_instrumentalness
-  const [instrumentalness, setInstrumentalness] = useState([0.35, 1.71]);
+  const [instrumentalness, setInstrumentalness] = useCashableState([0.35, 1.71], 'instrumentalness');
   //target_instrumentalness
 
   // 0 = C, 1 = C♯/D♭, 2 = D
@@ -150,7 +133,7 @@ function Home(props: any) {
   // target_mode
 
   // min_popularity, max_popularity
-  const [popularity, setPopularity] = useState([0.4, 0.86]);
+  const [popularity, setPopularity] = useCashableState([4, 86], 'popularity');
   // target_popularity
 
   // min_speechiness, max_speechiness
@@ -160,7 +143,7 @@ function Home(props: any) {
   // Target tempo (BPM)
   // min_tempo, max_tempo 205 - 63
   // Tempos are also related to different Genres: Hip Hop 85–95 BPM, Techno 120–125 BPM, House & Pop 115–130 BPM, Electro 128 BPM, Reggaeton >130 BPM, Dubstep 140 BPM
-  const [tempo, setTempo] = useState([140, 160]);
+  const [tempo, setTempo] = useCashableState([140, 160], 'tempo');
   // target_tempo
   // min_time_signature, max_time_signature
   const [timeSignature, setTimeSignature] = useState([140, 160]);
