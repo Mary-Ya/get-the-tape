@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { safeLocalStorage } from '../common/utils';
 import { IArtist, ITrack } from '../types/track';
 
-const useCashableState = (initialValue: (string | ITrack | IArtist | number)[], localStorageKey: string) => {
+const useCashableState = (initialValue: (string | ITrack | IArtist | number | boolean)[], localStorageKey: string) => {
     let savedValue;
     try {
       savedValue = safeLocalStorage.getItem(localStorageKey);
