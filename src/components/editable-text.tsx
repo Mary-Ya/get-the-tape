@@ -17,12 +17,12 @@ function EditableText(props: IEditableTextProps) {
     };
 
     const renderText = () => (
-        <a href="#" className={`text-decoration-none ${props.textClass}`}>
+        <button className={`btn btn-link text-decoration-none ${props.textClass}`}>
             {props.value}
             <span onClick={toggleControls} className='ms-2'>
                 <Icons.Pencil />
             </span>
-        </a>
+        </button>
     );
 
     const renderInput = () => (
@@ -45,4 +45,4 @@ function EditableText(props: IEditableTextProps) {
     return hideInput ? renderText() : renderInput();
 }
 
-export default EditableText;
+export default React.memo(EditableText);
