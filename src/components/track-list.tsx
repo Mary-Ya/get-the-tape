@@ -4,8 +4,8 @@ import { IPlayState } from "../types/play-state";
 import { errorHandler } from "../common/utils";
 import { IArtist, ITrack } from "../types/track";
 import Icons from "../assets/icons";
-import Player from "../components/player";
-import Track from "../components/track";
+import Player from "./player";
+import Track from "./track";
 import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
 
 const PlayList = (props: any) => {
@@ -45,6 +45,7 @@ const PlayList = (props: any) => {
     
     return <div>
         <SortableList items={currentList} onSortEnd={onSortEnd} />
+        TODO: pagination
     </div>
 };
 

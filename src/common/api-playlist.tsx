@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { IPlayListInitData } from "../types/play-list";
+import { IPlaylistInitData } from "../types/playlist";
 import { returnBody } from "./utils";
 
-const create = (access_token: string, userId: string, playlistData: IPlayListInitData) => {
+const create = (access_token: string, userId: string, playlistData: IPlaylistInitData) => {
     const options: AxiosRequestConfig = {
         method: "get",
         params: {
@@ -12,7 +12,7 @@ const create = (access_token: string, userId: string, playlistData: IPlayListIni
         },
     };
     return axios
-        .get(`/create-play-list`, options)
+        .get(`/create-playlist`, options)
         .then(returnBody)
         .catch((e) => console.warn(e));
 };
@@ -27,12 +27,12 @@ const update = (access_token: string, playlist_id: string, urisList: Array<strin
         },
     };
     return axios
-        .get(`/update-play-list`, options)
+        .get(`/update-playlist`, options)
         .then((res) => (Object.assign(returnBody(res), {playlist_id})))
         .catch((e) => console.warn(e));
 };
 
-const savePlayListAsNew = (access_token: string, userId: string, playlistData: IPlayListInitData, trackUrisList: Array<string>) => {
+const savePlaylistAsNew = (access_token: string, userId: string, playlistData: IPlaylistInitData, trackUrisList: Array<string>) => {
     return create(access_token, userId, playlistData)
         .then(res => {
             return update(access_token, res.id, trackUrisList);
@@ -40,5 +40,5 @@ const savePlayListAsNew = (access_token: string, userId: string, playlistData: I
 };
   
 export default {
-    create, update, savePlayListAsNew
+    create, update, savePlaylistAsNew
 }

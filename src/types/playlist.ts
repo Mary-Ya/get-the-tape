@@ -1,4 +1,4 @@
-export interface IPlayList {
+export interface IPlaylist {
     collaborative: boolean;
     description:   string;
     external_urls: ExternalUrls;
@@ -44,7 +44,7 @@ export interface Tracks {
     total:    number;
 }
 
-export interface IPlayListInitData {
+export interface IPlaylistInitData {
     name: string,
     description: string,
     public: boolean

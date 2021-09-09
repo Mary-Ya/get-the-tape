@@ -1,59 +1,31 @@
-import React, { useState, useEffect, useRef, SyntheticEvent } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 
 import api from "../common/api";
 import { divideArray, safeLocalStorage, cleanObject } from "../common/utils";
 import GenresList from "../components/genres";
 import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
-import PlayList from "./play-list";
-
-import { IPossibleSettings } from "../types/recommendation-settings";
+import PlayList from "../components/track-list";
 
 import SavePlaylist from "../components/save-playlist";
 
-import playListApi from "../common/api-playlist";
 import Spinner from "../components/spinner";
 import SeedSelector from "../components/home/seed-selector";
 import SelectedSeed from "../components/home/selected-seed";
 import ToggleAndRange from "../components/home/toggle-and-range";
-import { useCashableState } from "../components/hooks";
-
-const deserialize = (search: string) =>
-  Object.fromEntries(new URLSearchParams(search));
+import useCashableState from "../hooks/use-cashable-state";
+import useSearchSettings from "../hooks/use-search-settings";
 
 function Home(props: any) {
-  const history = useHistory();
 
-  const [accessToken, setAccessToken] = useState(
-    deserialize(props.location.search).access_token
-  );
-  const [refreshToken, setRefreshToken] = useState(
-    deserialize(props.location.search).refresh_token
-  );
+  const [accessToken, setAccessToken] = useState(props.access_token);
+  const [refreshToken, setRefreshToken] = useState(props.refresh_token);
   const [me, setMe] = useState<IMe | null>();
   const [auth, setAuth] = useState(true);
   const [tracksCount, setTrackCount] = useState(10);
 
-  function useSettingsUpdater(initialValue: any) {
-    const [state, setState] = useState(initialValue);
-  
-    function setter(value: IPossibleSettings) {
-      setState((prevState: any) => {
-        const newState = { ...prevState, ...value };
-        return newState;
-      });
-      console.log('setSettings: ', state);
-    }
-
-    function getItem(name: string) {
-      return state[name]
-    }
-  
-    return [state, setter, getItem] as const;
-  }
-
-  const [optionalSettings, setOptionalSettings] = useSettingsUpdater({
+  const [optionalSettings, setOptionalSettings] = useSearchSettings({
     min_tempo: undefined,
     max_tempo: undefined,
     target_tempo: undefined,
@@ -67,7 +39,8 @@ function Home(props: any) {
     target_popularity: undefined,
   });
 
-  const [settings, setSettings, getSettingByName] = useSettingsUpdater({
+  // TODO: check if we actually need getSettingByName
+  const [settings, setSettings, getSettingByName] = useSearchSettings({
     market: "EU",
 
     seed_genres: undefined,
@@ -87,7 +60,6 @@ function Home(props: any) {
   const [newPlayListName, setNewPlayListName] = useState(
     `My ${genreSeeds.join(", ")}`
   );
-  const [playListID, setPlayListID] = useState("");
 
   // min_acousticness, max_acousticness 0.0 -1.0
   const [acousticness, setAcousticness] = useState([0.35, 1.33]);
@@ -158,6 +130,7 @@ function Home(props: any) {
     `My ${seeds.join(", ")}`;
 
   useEffect(() => {
+    // ToDO: add random song and artist
     try {
       setTrackList(JSON.parse(safeLocalStorage.getItem("playList")));
     } catch (e) {
@@ -166,11 +139,8 @@ function Home(props: any) {
   }, []);
 
   useEffect(() => {
-    fetchAccountData().then((data) => {
-      safeLocalStorage.setItem("accessToken", accessToken);
-      safeLocalStorage.setItem("refreshToken", refreshToken);
-    });
-    // fetchAccountData();
+    fetchAccountData();
+    
     // TODO: error handling
   }, [accessToken, refreshToken]);
 
@@ -178,7 +148,7 @@ function Home(props: any) {
     const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount < 5);
-    setCanRemoveSeeds(seedCount < 2);
+    setCanRemoveSeeds(seedCount < 4 && genreSeeds.length > 0 && artistSeeds.length > 0 && songSeeds.length > 0);
     getDefaultPlayListName([...genreSeeds]);
 
     setNewPlayListName(
@@ -395,7 +365,7 @@ function Home(props: any) {
                 />
               </div>
             ) : (
-              ""
+              <>💃💃💃</>
             )}
           </div>
         </div>

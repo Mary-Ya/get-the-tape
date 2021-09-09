@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
-import { IPlayListInitData } from "../types/play-list";
+import { IPlaylistInitData } from "../types/playlist";
 import { IRecommendationSettings } from "../types/recommendation-settings";
 import { getRandomNumber, returnBody, safeSessionStorage } from "./utils";
 const returnTracksData = (i: any) => i.data.body.tracks;

@@ -27,11 +27,11 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
             onClick={this.props.onClick}
             key={`song-${i.id}`}>
         <div className="col-3 col-xs-2 logo-container">
-            <a className="mr-1" href={i.external_urls.spotify} target="_blank">
-                <Icons.Logo></Icons.Logo>
+            <a className="mr-1" href={i.album.external_urls.spotify} target="_blank">
+                <img className="img-fluid" src={i.album.images[0].url}></img>
             </a>
         </div>
-        <div className="col-lg-4 col-9">
+        <div className="col-lg-4 col-9 ps-3">
             <a target="_blank" href={i.external_urls.spotify} className="fs-4">{i.name}</a>
             <br />
             { i.artists.map(this.renderArtist) }

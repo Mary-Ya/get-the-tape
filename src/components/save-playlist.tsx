@@ -3,6 +3,7 @@ import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import Icons from "../assets/icons";
 import playlistApi from "../common/api-playlist";
+import useCashableState from "../hooks/use-cashable-state";
 import { ITrack } from "../types/track";
 import EditableText from "./editable-text";
 
@@ -17,7 +18,7 @@ interface ISavePlaylistProps {
 function SavePlaylist(props: ISavePlaylistProps) {
   const [isChangedManually, setIsChangedManually] = useState(false);
   const [name, setName] = useState(props.name);
-  const [playListID, setPlayListID] = useState("");
+  const [playListID, setPlayListID] = useCashableState("", 'playListID');
 
   useEffect(() => {
     if (!isChangedManually) {
@@ -32,7 +33,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
 
   const createPlayList = () => {
     playlistApi
-      .savePlayListAsNew(
+      .savePlaylistAsNew(
         props.accessToken,
         props.myId,
         {
@@ -61,17 +62,18 @@ function SavePlaylist(props: ISavePlaylistProps) {
   };
 
   return (
-    <div className={`input-group mb-3 px-lg-0 px-3`}>
-       <button
+    <div>
+      <div className={`input-group mb-3 px-lg-0 px-3`}>
+        <button
           className="btn btn-outline-primary"
           onClick={() => {
             props.fetchPlaylist();
           }}
         >
           GET THE TAPE!
-      </button>
-      
-      <button
+        </button>
+        
+        <button
           className={`btn btn-outline-secondary ${playListID ? "" : "d-none"}`}
           type="button"
           id="button-addon2"
@@ -81,9 +83,9 @@ function SavePlaylist(props: ISavePlaylistProps) {
         >
           <Icons.Plus />
           Add
-      </button>
-      
-      <button
+        </button>
+        
+        <button
           className="btn btn-outline-secondary"
           type="button"
           id="button-addon2"
@@ -94,15 +96,23 @@ function SavePlaylist(props: ISavePlaylistProps) {
           <Icons.Inside />
           Save as New
         </button>
-      <EditableText
+        <EditableText
           textClass={'ms-3 py-2'}
           value={name}
           onChange={onNameChange}
           placeholder={'Playlist name here'}
         />
-
       </div>
+      {playListID
+        ? <span className="text-black-50">This playlist ID is 
+            <span className="text-decoration-none mx-2 py-2">{playListID} </span>
+              <a href={`https://open.spotify.com/playlist/${playListID}`} target="_blank">
+              Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
+            </a>
+          </span>
+        : ''}
+    </div>
   );
 }
 
-export default SavePlaylist;
+export default React.memo(SavePlaylist);

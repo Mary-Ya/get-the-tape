@@ -60,7 +60,10 @@ const cleanObject = (data: any) => {
     Object.keys(cleanData).forEach(key => !cleanData[key] ? delete cleanData[key] : {});
     return cleanData;
 }
-  
+
+const deserialize = (search: string) =>
+    Object.fromEntries(new URLSearchParams(search));
+
 export {
     getRandomNumber,
     safeLocalStorage,
@@ -70,5 +73,6 @@ export {
     divideArray,
     clearSelectedValue,
     haveACopyInArray,
-    cleanObject
+    cleanObject,
+    deserialize
 }
