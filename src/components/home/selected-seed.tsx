@@ -4,7 +4,8 @@ import { IArtist, ITrack } from '../../types/track';
 interface ISelectedSeedProps {
     id: string,
     labelText: string,
-    data: ITrack | IArtist,
+    item: ITrack | IArtist | any,
+    enabled: boolean,
     onClick: (e: any) => void,
 }
 
@@ -14,16 +15,16 @@ function SelectedSeed(props: ISelectedSeedProps) {
             disabled={false}
             type="checkbox"
             className="btn-check"
-            id={`btn-check-${props.data.name}`}
+            id={`btn-check-${props.item.name}`}
             onChange={() => {
-                props.onClick(props.data);
+                props.enabled ? props.onClick(props.item) : null;
             }}
             checked={true}
             autoComplete="off"
         />
         <label
             className="btn btn-outline-secondary rounded-pill text-capitalize"
-            htmlFor={`btn-check-${props.data.name}`}
+            htmlFor={`btn-check-${props.item.name}`}
         >
             {props.labelText}
         </label>

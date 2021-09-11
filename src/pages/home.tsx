@@ -148,7 +148,7 @@ function Home(props: any) {
     const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount < 5);
-    setCanRemoveSeeds(seedCount < 4 && genreSeeds.length > 0 && artistSeeds.length > 0 && songSeeds.length > 0);
+    setCanRemoveSeeds(seedCount > 3 && genreSeeds.length > 0 && artistSeeds.length > 0 && songSeeds.length > 0);
     getDefaultPlayListName([...genreSeeds]);
 
     setNewPlayListName(
@@ -225,20 +225,21 @@ function Home(props: any) {
     setArtistSeeds(newSeeds);
   };
 
-  const renderSeedTrack = (track: ITrack) => {
+  const renderSeedTrack = (track: ITrack, selectedCount: number) => {
     // TODO: fix double rendering here
     return (
       <SelectedSeed
         key={`${track.id}-seed-track-key`}
         id={`${track.id}-seed-track`}
         labelText={track.name}
-        data={track}
+        item={track}
         onClick={removeSeedTrack}
+        enabled={canRemoveSeeds && selectedCount > 0}
       />
     );
   };
 
-  const renderSeedArtist = (artist: IArtist) => {
+  const renderSeedArtist = (artist: IArtist, selectedCount: number) => {
     // TODO: block selected item from rendering
 
     return (
@@ -246,8 +247,9 @@ function Home(props: any) {
         key={`${artist.id}-seed-artist-key`}
         id={`${artist.id}-seed-artist`}
         labelText={artist.name}
-        data={artist}
+        item={artist}
         onClick={removeSeedArtist}
+        enabled={canRemoveSeeds && selectedCount > 0}
       />
     );
   };
@@ -261,22 +263,19 @@ function Home(props: any) {
           <div className="col-lg-4 col-12 form-check bg-light rounded-10 p-3">
             <GenresList
               canAddMoreSeeds={canAddMoreSeeds}
-              canRemoveSeeds={canRemoveSeeds}
+              canRemoveSeeds={canRemoveSeeds && genreSeeds.length > 1}
               accessToken={accessToken}
               genreList={genreSeeds}
               onGenreUpdate={onGenreUpdate}
             />
 
             <div className="rounded-10 pt-3">
-              Seed Songs: {songSeeds.map(renderSeedTrack)}
+              Seed Songs: {songSeeds.map((s: ITrack) => renderSeedTrack(s, songSeeds.length))}
               <SeedSelector
-                selectedSeedsIds={songSeeds.map((i) => i.id)}
+                selectedSeedsIds={songSeeds.map((i: ITrack) => i.id)}
                 country={me.country}
                 accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
-                seedCount={
-                  songSeeds.length + artistSeeds.length + genreSeeds.length
-                }
                 setSeeds={setSongSeeds}
                 seeds={songSeeds}
                 searchType={"track"}
@@ -284,15 +283,12 @@ function Home(props: any) {
             </div>
 
             <div className="rounded-10 pt-3">
-              Seed Artists: {artistSeeds.map(renderSeedArtist)}
+              Seed Artists: {artistSeeds.map((a: IArtist) => renderSeedArtist(a, artistSeeds.length))}
               <SeedSelector
-                selectedSeedsIds={artistSeeds.map((i) => i.id)}
+                selectedSeedsIds={artistSeeds.map((i: IArtist) => i.id)}
                 country={me.country}
                 accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
-                seedCount={
-                  songSeeds.length + artistSeeds.length + genreSeeds.length
-                }
                 setSeeds={setArtistSeeds}
                 seeds={artistSeeds}
                 searchType={"artist"}

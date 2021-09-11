@@ -1,8 +1,7 @@
-import React, { DOMElement, useRef } from "react";
+import React, { useRef } from "react";
 import { IArtist, ITrack } from "../../types/track";
 import AsyncSelect from "react-select/async";
 import api from "../../common/api";
-import { ActionMeta, createFilter } from "react-select";
 import { useState } from "react";
 import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
 
@@ -14,7 +13,6 @@ interface SeedSelectorProps {
   canAddMoreSeeds: boolean,
   country: string,
   accessToken: string,
-  seedCount: number,
   searchType: string,
   setSeeds(data: Array<TPossibleSeedTypes>): void
 }
@@ -22,7 +20,7 @@ interface SeedSelectorProps {
 // TODO: block selected item from rendering
 function SeedSelector(props: SeedSelectorProps) {
   const [offset, setOffset] = useState(0);
-  const songSeedSelectorRef = useRef();
+  const seedSelectorRef = useRef();
   const [localSeeds, setLocalSeeds] = useState(props.seeds);
 
   const getSeeds = (inputValue: string) => {
@@ -47,7 +45,7 @@ function SeedSelector(props: SeedSelectorProps) {
             let newValue: Array<TPossibleSeedTypes> = ([] as Array<TPossibleSeedTypes>).concat(...props.seeds);
             newValue.push(selectedOption);
             props.setSeeds(newValue);
-            clearSelectedValue(songSeedSelectorRef);
+            clearSelectedValue(seedSelectorRef);
         }
     };
     
@@ -63,11 +61,11 @@ function SeedSelector(props: SeedSelectorProps) {
     <AsyncSelect
       className="async-select"
       isDisabled={!props.canAddMoreSeeds}
-      innerRef={songSeedSelectorRef}
+      innerRef={seedSelectorRef}
       getOptionLabel={callRender}
       blurInputOnSelect={true}
       loadOptions={getSeeds}
-      onChange={(options, action) => (onChange(options, action, props))}
+      onChange={(options, action) => (onChange(options, props))}
       cacheOptions
     />
   );

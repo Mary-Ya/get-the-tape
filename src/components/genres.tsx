@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../common/api';
 import CheckButton from './check-button';
+import SelectedSeed from './home/selected-seed';
 
 function GenresList(props: any) {
     const [availableGenreSeeds, setAvailableGenreSeeds] = useState(['rock', 'pop', 'blues']);
@@ -31,13 +32,27 @@ function GenresList(props: any) {
             onChange={props.onGenreUpdate}></CheckButton>
         )
     }
+    
+    const renderSelectedGenre = (genreName: string, isInFetchedList: boolean) => {
+        const isSelected = isSeedSelected(genreName);
+        return (<SelectedSeed
+                key={`${genreName}-removable-button`}
+                id={`${genreName}-removable-seed-track`}
+                labelText={genreName}
+                item={genreName}
+                onClick={props.onGenreUpdate}
+                enabled={props.canRemoveSeeds}
+            />
+        )
+    }
 
     const genresFilter = ((item: string) => {
         return searchQuery.length > 1 ? item.toLowerCase().includes(searchQuery.toLowerCase()) : true;
     })
 
     return (<div className={`${props.className || ''}`}>
-        Seed genres: { props.genreList.map((selectedGenre: string) => (renderGenre(selectedGenre, false))) }
+        Seed genres: {props.genreList
+            .map((selectedGenre: string) => (renderSelectedGenre(selectedGenre, false)))}
         <form>
             <input
                 className="form-control rounded-pill"
@@ -47,7 +62,8 @@ function GenresList(props: any) {
         </form>
 
         <div className="genres-list mt-2 pretty-scroll">
-            {availableGenreSeeds.filter(genresFilter).map((selectableGenre) => renderGenre(selectableGenre, true))}
+            {availableGenreSeeds.filter(genresFilter)
+                .map((selectableGenre) => renderGenre(selectableGenre, true))}
         </div>
     </div>)
 }
