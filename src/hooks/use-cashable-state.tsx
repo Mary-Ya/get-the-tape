@@ -4,19 +4,26 @@ import { safeLocalStorage } from '../common/utils';
 
 type TPossibleCashableStateValueTypes = (string | ITrack | IArtist | number)[] | boolean | string | null;
 
+const isNotEmpty = (value: TPossibleCashableStateValueTypes) => {
+  const isArray = value && Array.isArray(value);
+  return isArray ? value.length > 0 : Boolean(value);
+}
+
 const useCashableState = (initialValue: TPossibleCashableStateValueTypes, localStorageKey: string) => {
-    let savedValue;
+  let savedValue;
+  const initialIsNotEmpty = isNotEmpty(initialValue);
+  console.log('useCashableState', initialValue);
     try {
       savedValue = safeLocalStorage.getItem(localStorageKey) || null;
     } catch (e) {
       console.warn(e);
     }
 
-    if (!savedValue && initialValue) {
+    if (!savedValue && initialIsNotEmpty) {
       safeLocalStorage.setItem(localStorageKey, initialValue);
     }
   
-    const [state, setState] = useState(initialValue ? initialValue : savedValue );
+    const [state, setState] = useState(initialIsNotEmpty ? initialValue : savedValue );
 
     function setter(value: TPossibleCashableStateValueTypes) {
       safeLocalStorage.setItem(localStorageKey, value);

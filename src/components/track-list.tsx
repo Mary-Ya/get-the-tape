@@ -21,7 +21,6 @@ const PlayList = (props: any) => {
             key={"playlist-item" + i.id}
             className="button_"
             onClick={null}
-            
         ></Track>
     );
 

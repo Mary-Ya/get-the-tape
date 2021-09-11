@@ -5,7 +5,6 @@ import api from "../../common/api";
 import { ActionMeta, createFilter } from "react-select";
 import { useState } from "react";
 import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
-import { useEffect } from "react";
 
 type TPossibleSeedTypes = ITrack | IArtist | string;
 
@@ -36,14 +35,11 @@ function SeedSelector(props: SeedSelectorProps) {
         offset,
         props.searchType
       )
-      .then((data) => (data[props.searchType + 's'].items
-        // .filter(i => !props.selectedSeedsIds || props.selectedSeedsIds.indexOf(i.id) === -1)
-      ));
+      .then((data) => (data[props.searchType + 's'].items));
   };
 
   const onChange = (
     selectedOption: TPossibleSeedTypes | null,
-    action: ActionMeta<TPossibleSeedTypes>,
     props: SeedSelectorProps
   ) => {
         const isADuplicate = haveACopyInArray(selectedOption, props.seeds);
@@ -72,7 +68,6 @@ function SeedSelector(props: SeedSelectorProps) {
       blurInputOnSelect={true}
       loadOptions={getSeeds}
       onChange={(options, action) => (onChange(options, action, props))}
-      defaultOptions
       cacheOptions
     />
   );
