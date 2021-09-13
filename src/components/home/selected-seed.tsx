@@ -10,12 +10,13 @@ interface ISelectedSeedProps {
 }
 
 function SelectedSeed(props: ISelectedSeedProps) {
+    const name = props.item.name || props.id;
+    
     return <div className={`d-inline-block m-1`} key={props.id}>
         <input
-            disabled={false}
             type="checkbox"
             className="btn-check"
-            id={`btn-check-${props.item.name}`}
+            id={`btn-check-${name}`}
             onChange={() => {
                 props.enabled ? props.onClick(props.item) : null;
             }}
@@ -24,11 +25,10 @@ function SelectedSeed(props: ISelectedSeedProps) {
         />
         <label
             className="btn btn-outline-secondary rounded-pill text-capitalize"
-            htmlFor={`btn-check-${props.item.name}`}
+            htmlFor={`btn-check-${name}`}
         >
             {props.labelText}
         </label>
-        <br />
     </div>
 }
 
