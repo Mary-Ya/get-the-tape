@@ -5,13 +5,14 @@ import React from 'react';
 interface IHandler {
     value: number,
     index: string,
+    units?: string
 }
 function CustomHandler(props: IHandler) {
-    const { value, index, ...restProps } = props;
+    const { value, index, units, ...restProps } = props;
     return (
       <SliderTooltip
         prefixCls="rc-slider-tooltip"
-        overlay={`${value} BPM`}
+        overlay={`${value} ${units || 'BPM'}`}
         visible={true}
         placement="top"
         key={index}
