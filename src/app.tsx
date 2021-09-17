@@ -65,7 +65,10 @@ const App = () => {
             </PrivateRoute>)} />
 
           <Route path="/play" component={Play} />
-          <Route path="/playlist" component={PlayList} />
+
+          <Route exact path="/playlist" render={routeProps => (<PrivateRoute {...routeProps}>
+                <PlayList></PlayList>
+            </PrivateRoute>)} />
 
           <Route exact path="/" render={routeProps => (<PrivateRoute {...routeProps}>
                 <Home></Home>

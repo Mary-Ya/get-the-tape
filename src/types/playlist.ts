@@ -49,3 +49,13 @@ export interface IPlaylistInitData {
     description: string,
     public: boolean
 }
+
+export interface IPlaylistList {
+    href:     string;
+    items:    IPlaylist[];
+    limit:    number;
+    next:     string;
+    offset:   number;
+    previous: null;
+    total:    number;
+}

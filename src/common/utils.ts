@@ -1,4 +1,5 @@
 import { ITrack } from "../types/track";
+import api from "./api";
 
 const getRandomNumber = (max = 1000) => Math.floor(Math.random() * max)
 
@@ -34,7 +35,17 @@ class SafeStorage {
 }
 
 // add safety check in case i is corrupted
-const returnBody = (i: any) => i.data.body;
+const returnBody = (i: any) => {
+    const status = i.data.statusCode;
+    if (status !== 200) {
+        if (status == 401) {
+            safeLocalStorage.setItem('access_token', '');
+            api.getNewTokens(safeLocalStorage.getItem('refresh_token'));
+        }
+        throw Error(i.data.body.error.message || i.data.error);
+    }
+    return i.data.body;
+};
 
 const safeLocalStorage = new SafeStorage('localStorage');
 const safeSessionStorage = new SafeStorage('sessionStorage');
