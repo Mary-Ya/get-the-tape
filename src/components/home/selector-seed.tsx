@@ -40,14 +40,14 @@ function SeedSelector(props: SeedSelectorProps) {
     selectedOption: TPossibleSeedTypes | null,
     props: SeedSelectorProps
   ) => {
-        const isADuplicate = haveACopyInArray(selectedOption, props.seeds);
-        if (selectedOption && props.canAddMoreSeeds && !isADuplicate) {
-            let newValue: Array<TPossibleSeedTypes> = ([] as Array<TPossibleSeedTypes>).concat(...props.seeds);
-            newValue.push(selectedOption);
-            props.setSeeds(newValue);
-            clearSelectedValue(seedSelectorRef);
-        }
-    };
+      const isADuplicate = haveACopyInArray(selectedOption, props.seeds);
+      if (selectedOption && props.canAddMoreSeeds && !isADuplicate) {
+          let newValue: Array<TPossibleSeedTypes> = ([] as Array<TPossibleSeedTypes>).concat(...props.seeds);
+          newValue.push(selectedOption);
+          props.setSeeds(newValue);
+          clearSelectedValue(seedSelectorRef);
+      }
+  };
     
   const renderOptionLabel: {[key: string]: (option: TPossibleSeedTypes) => string} = {
     track: (option) => 
@@ -65,7 +65,7 @@ function SeedSelector(props: SeedSelectorProps) {
       getOptionLabel={callRender}
       blurInputOnSelect={true}
       loadOptions={getSeeds}
-      onChange={(options, action) => (onChange(options, props))}
+      onChange={(options) => (onChange(options, props))}
       cacheOptions
     />
   );

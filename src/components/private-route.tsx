@@ -5,7 +5,6 @@ import useCashableState from '../hooks/use-cashable-state';
 import PublicHome from '../pages/public-home';
 import Spinner from './spinner';
 
-
 function PrivateRoute(props) {
 
   const retrieveFromSearch = (q: string) => {

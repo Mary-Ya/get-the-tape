@@ -9,11 +9,13 @@ const isNotEmpty = (value: TPossibleCashableStateValueTypes) => {
   return isArray ? value.length > 0 : Boolean(value);
 }
 
-const useCashableState = (initialValue: TPossibleCashableStateValueTypes, localStorageKey: string) => {
+const useCashableState = (initialValue: TPossibleCashableStateValueTypes,
+  localStorageKey: string,
+  defaultValue?: TPossibleCashableStateValueTypes) => {
   let savedValue;
   const initialIsNotEmpty = isNotEmpty(initialValue);
-  console.log('useCashableState', initialValue);
-    try {
+
+  try {
       savedValue = safeLocalStorage.getItem(localStorageKey) || null;
     } catch (e) {
       console.warn(e);
@@ -23,7 +25,8 @@ const useCashableState = (initialValue: TPossibleCashableStateValueTypes, localS
       safeLocalStorage.setItem(localStorageKey, initialValue);
     }
   
-    const [state, setState] = useState(initialIsNotEmpty ? initialValue : savedValue );
+  const [state, setState] = useState(initialIsNotEmpty ? initialValue
+    : savedValue ? savedValue : defaultValue);
 
     function setter(value: TPossibleCashableStateValueTypes) {
       safeLocalStorage.setItem(localStorageKey, value);

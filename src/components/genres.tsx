@@ -14,45 +14,53 @@ function GenresList(props: any) {
     const loadGenres = () => {
         api.getGenres(props.accessToken).then((data) => {
             setAvailableGenreSeeds(data);
-        })
+        });
     }
 
     useEffect(() => {
-        loadGenres()
+        loadGenres();
     }, [])
 
-    const renderGenre = (genreName: string, isInFetchedList: boolean) => {
+    useEffect(() => {
+        setTimeout(() => {
+            if (searchQuery) {
+                setAvailableGenreSeeds(availableGenreSeeds.filter(genresFilter));
+            }
+
+            // TODO: modify for smooth debouncing
+        }, 500)
+    }, [searchQuery])
+
+    const renderGenre = (genreName: string) => {
         const isSelected = isSeedSelected(genreName);
         return (<CheckButton
-            disabled={isInFetchedList && !props.canAddMoreSeeds}
+            disabled={!props.canAddMoreSeeds}
             key={`${genreName}-button`}
             isSelected={isSelected}
             buttonName={genreName}
-            className={isInFetchedList && isSelected ? 'd-none' : ''}
-            onChange={props.onGenreUpdate}></CheckButton>
+            className={isSelected ? 'd-none' : ''}
+            onChange={props.onGenreSelect}></CheckButton>
         )
-    }
+    };
     
-    const renderSelectedGenre = (genreName: string, isInFetchedList: boolean) => {
-        const isSelected = isSeedSelected(genreName);
+    const renderSelectedGenre = (genreName: string) => {
         return (<SelectedSeed
-                key={`${genreName}-removable-button`}
-                id={`${genreName}-removable-seed-track`}
-                labelText={genreName}
-                item={genreName}
-                onClick={props.onGenreUpdate}
-                enabled={props.canRemoveSeeds}
-            />
-        )
-    }
+            key={`${genreName}-removable-button`}
+            id={`${genreName}-removable-seed-track`}
+            labelText={genreName}
+            item={genreName}
+            onClick={props.onGenreRelease}
+            enabled={props.canRemoveSeeds}
+        />);
+    };
 
     const genresFilter = ((item: string) => {
         return searchQuery.length > 1 ? item.toLowerCase().includes(searchQuery.toLowerCase()) : true;
-    })
+    });
 
     return (<div className={`${props.className || ''}`}>
         Seed genres: {props.genreList
-            .map((selectedGenre: string) => (renderSelectedGenre(selectedGenre, false)))}
+            .map((selectedGenre: string) => (renderSelectedGenre(selectedGenre)))}
         <form>
             <input
                 className="form-control rounded-pill"
@@ -62,10 +70,10 @@ function GenresList(props: any) {
         </form>
 
         <div className="genres-list mt-2 pretty-scroll">
-            {availableGenreSeeds.filter(genresFilter)
-                .map((selectableGenre) => renderGenre(selectableGenre, true))}
+            {availableGenreSeeds
+                .map((selectableGenre) => renderGenre(selectableGenre))}
         </div>
-    </div>)
+    </div>);
 }
 
 export default React.memo(GenresList);

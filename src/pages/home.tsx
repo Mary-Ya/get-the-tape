@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Redirect } from "react-router-dom";
 
 import api from "../common/api";
@@ -11,13 +11,15 @@ import PlayList from "../components/track-list";
 import SavePlaylist from "../components/save-playlist";
 
 import Spinner from "../components/spinner";
-import SeedSelector from "../components/home/seed-selector";
+import SeedSelector from "../components/home/selector-seed";
 import SelectedSeed from "../components/home/selected-seed";
 import ToggleAndRange from "../components/home/toggle-and-range";
 import useCashableState from "../hooks/use-cashable-state";
 import useSearchSettings from "../hooks/use-search-settings";
+import useSeedList from "../hooks/use-seed-list";
 
 function Home(props: any) {
+  const ref = useRef();
 
   const [accessToken, setAccessToken] = useState(props.access_token);
   const [refreshToken, setRefreshToken] = useState(props.refresh_token);
@@ -48,12 +50,11 @@ function Home(props: any) {
     seed_artists: undefined,
   });
 
-  const [genreSeeds, setGenreSeeds] = useCashableState(["rock"], 'genreSeeds');
-  const [artistSeeds, setArtistSeeds] = useCashableState([], 'artistSeeds');
-  const [songSeeds, setSongSeeds] = useCashableState([], 'songSeeds');
+  const [genreSeeds, setGenreSeeds, addGenre, removeGenreById, removeItem] = useSeedList(["rock"], 'genreSeeds');
+  const [artistSeeds, setArtistSeeds, addArtist, removeArtistById] = useSeedList([], 'artistSeeds');
+  const [songSeeds, setSongSeeds, addSong, removeSongById] = useSeedList([], 'songSeeds');
 
   const [canAddMoreSeeds, setCanAddMoreSeeds] = useState(false);
-  const [canRemoveSeeds, setCanRemoveSeeds] = useState(false);
 
   const [trackList, setTrackList] = useState<Array<ITrack>>([]);
 
@@ -61,78 +62,16 @@ function Home(props: any) {
     `My ${genreSeeds.join(", ")}`
   );
 
-  // min_acousticness, max_acousticness 0.0 -1.0
-  const [acousticness, setAcousticness] = useState([0.35, 1.33]);
-  // target_acousticness
-
-  // how suitable a track is for dancing 0 - 1
-  // min_danceability, max_danceability
-  const [danceability, setDanceability] = useState([0.35, 4.1]);
-  //target_danceability
-
-  // min_duration_ms, max_duration_ms
-  const [duration, setDuration] = useState([2000, 4000]);
-  // target_duration_ms
-
-  // perceptual measure of intensity and activity -0.2 - 1.2
-  // min_energy, max_energy
-  const [energy, setEnergy] = useState([0.35, 3.15]);
-  // target_energy
-
-  // predicts whether a track contains no vocals
-  // min_instrumentalness, max_instrumentalness
-  const [instrumentalness, setInstrumentalness] = useCashableState([0.35, 1.71], 'instrumentalness');
-  //target_instrumentalness
-
-  // 0 = C, 1 = C♯/D♭, 2 = D
-  // min_key, max_key [0 - 11]
-  const [key, setKey] = useState([1, 10]);
-  // target_key
-
-  // the presence of an audience in the recording: 0.35
-  // min_liveness, max_liveness
-  const [liveness, setLiveness] = useState([0.4, 0.86]);
-  //target_liveness
-
-  // The overall loudness of a track in decibels -60 - 0
-  // min_loudness, max_loudness
-  const [loudness, setLoudness] = useState([-0.15, 0.7]);
-  // target_loudness
-
-  // the modality (major or minor)
-  // min_mode,max_mode
-  const [mode, setMode] = useState([-0.31, -0.31]);
-  // target_mode
-
-  // min_popularity, max_popularity
-  const [popularity, setPopularity] = useCashableState([4, 86], 'popularity');
-  // target_popularity
-
-  // min_speechiness, max_speechiness
-  const [speechiness, setSpeechiness] = useState([0.4, 0.86]);
-  // target_speechiness
-
-  // Target tempo (BPM)
-  // min_tempo, max_tempo 205 - 63
-  // Tempos are also related to different Genres: Hip Hop 85–95 BPM, Techno 120–125 BPM, House & Pop 115–130 BPM, Electro 128 BPM, Reggaeton >130 BPM, Dubstep 140 BPM
-  const [tempo, setTempo] = useCashableState([140, 160], 'tempo');
-  // target_tempo
-  // min_time_signature, max_time_signature
-  const [timeSignature, setTimeSignature] = useState([140, 160]);
-  // target_time_signature
-
-  // musical positiveness
-  // min_valence, max_valence 0.04 - 0.96 (0 - 1)
-  const [valence, setValence] = useState([-0.5, 6.5]);
-  // target_valence
-
   const getDefaultPlayListName = (seeds: Array<string>) =>
     `My ${seeds.join(", ")}`;
 
   useEffect(() => {
-    // ToDO: add random song and artist
     try {
-      setTrackList(JSON.parse(safeLocalStorage.getItem("playList")));
+      const savedPlaylist = safeLocalStorage.getItem("playList");
+      const parsedList = JSON.parse(savedPlaylist);
+      if (parsedList && parsedList.length > 0) {
+        setTrackList(parsedList);
+      }
     } catch (e) {
       console.warn(e);
     }
@@ -148,7 +87,6 @@ function Home(props: any) {
     const genresCount = genreSeeds.length;
     const seedCount = genreSeeds.length + artistSeeds.length + songSeeds.length;
     setCanAddMoreSeeds(seedCount < 5);
-    setCanRemoveSeeds(seedCount > 3 && genreSeeds.length > 0 && artistSeeds.length > 0 && songSeeds.length > 0);
     getDefaultPlayListName([...genreSeeds]);
 
     setNewPlayListName(
@@ -168,7 +106,7 @@ function Home(props: any) {
 
   const fetchAccountData = () => {
     if (!me) {
-      return api.getMe(accessToken).then(setMe).catch(errorHandler);
+      return api.getMe(accessToken).then((res) =>{setMe(res)}).catch(errorHandler);
     } else {
       return Promise.reject(Error("Can't fetchAccountData"));
     }
@@ -192,15 +130,16 @@ function Home(props: any) {
       });
   };
 
-  const onGenreUpdate = (seedName: string) => {
-    const seedIndex = genreSeeds.indexOf(seedName);
-    const newSeedState = [...genreSeeds];
-    if (seedIndex !== -1) {
-      newSeedState.splice(seedIndex, 1);
-    } else {
-      newSeedState.push(seedName);
+  const selectGenre = (seedName: string) => {
+    if (canAddMoreSeeds) {
+      addGenre(seedName);
     }
-    setGenreSeeds(newSeedState);
+  };
+
+  const releaseGenre = (seedName: string) => {
+    if (genreSeeds.length > 0) {
+      removeItem(seedName);
+    }
   };
 
   const fetchPlaylist = () => {
@@ -216,16 +155,14 @@ function Home(props: any) {
   };
 
   const removeSeedTrack = (track: ITrack) => {
-    const newSongSeeds = songSeeds.filter((i: ITrack) => i.id !== track.id);
-    setSongSeeds(newSongSeeds);
+    removeSongById(track.id);
   };
 
   const removeSeedArtist = (artist: IArtist) => {
-    const newSeeds = artistSeeds.filter((i: IArtist) => i.id !== artist.id);
-    setArtistSeeds(newSeeds);
+    removeArtistById(artist.id)
   };
 
-  const renderSeedTrack = (track: ITrack, selectedCount: number) => {
+  const renderSeedTrack = (track: ITrack, enabled: boolean) => {
     // TODO: fix double rendering here
     return (
       <SelectedSeed
@@ -234,14 +171,13 @@ function Home(props: any) {
         labelText={track.name}
         item={track}
         onClick={removeSeedTrack}
-        enabled={canRemoveSeeds && selectedCount > 0}
+        enabled={enabled}
       />
     );
   };
 
-  const renderSeedArtist = (artist: IArtist, selectedCount: number) => {
+  const renderSeedArtist = (artist: IArtist, enabled: boolean) => {
     // TODO: block selected item from rendering
-
     return (
       <SelectedSeed
         key={`${artist.id}-seed-artist-key`}
@@ -249,7 +185,7 @@ function Home(props: any) {
         labelText={artist.name}
         item={artist}
         onClick={removeSeedArtist}
-        enabled={canRemoveSeeds && selectedCount > 0}
+        enabled={enabled}
       />
     );
   };
@@ -259,18 +195,19 @@ function Home(props: any) {
   ) : !me ? (
     <Spinner />
   ) : (
-        <div className="row g-0">
+        <div className="row g-0" ref={ref}>
           <div className="col-lg-4 col-12 form-check bg-light rounded-10 p-3">
             <GenresList
               canAddMoreSeeds={canAddMoreSeeds}
-              canRemoveSeeds={canRemoveSeeds && genreSeeds.length > 1}
+              canRemoveSeeds={genreSeeds.length > 1}
               accessToken={accessToken}
               genreList={genreSeeds}
-              onGenreUpdate={onGenreUpdate}
+              onGenreSelect={selectGenre}
+              onGenreRelease={releaseGenre}
             />
 
             <div className="rounded-10 pt-3">
-              Seed Songs: {songSeeds.map((s: ITrack) => renderSeedTrack(s, songSeeds.length))}
+              Seed Songs: {songSeeds.map((s: ITrack) => renderSeedTrack(s, songSeeds.length > 1))}
               <SeedSelector
                 selectedSeedsIds={songSeeds.map((i: ITrack) => i.id)}
                 country={me.country}
@@ -283,9 +220,9 @@ function Home(props: any) {
             </div>
 
             <div className="rounded-10 pt-3">
-              Seed Artists: {artistSeeds.map((a: IArtist) => renderSeedArtist(a, artistSeeds.length))}
+              Seed Artists: {artistSeeds.map((a: IArtist) => renderSeedArtist(a, artistSeeds.length > 1))}
               <SeedSelector
-                selectedSeedsIds={artistSeeds.map((i: IArtist) => i.id)}
+                selectedSeedsIds={artistSeeds.map((a: IArtist) => a.id)}
                 country={me.country}
                 accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
@@ -294,6 +231,7 @@ function Home(props: any) {
                 searchType={"artist"}
               />
             </div>
+
                 <ToggleAndRange
                   label='Tempo'
                   name='tempo'
