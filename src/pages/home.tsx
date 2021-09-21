@@ -14,13 +14,11 @@ import Spinner from "../components/spinner";
 import SeedSelector from "../components/home/selector-seed";
 import SelectedSeed from "../components/home/selected-seed";
 import ToggleAndRange from "../components/home/toggle-and-range";
-import useCashableState from "../hooks/use-cashable-state";
 import useSearchSettings from "../hooks/use-search-settings";
 import useSeedList from "../hooks/use-seed-list";
+import { ITracks } from "../types/playlist";
 
 function Home(props: any) {
-  const ref = useRef();
-
   const [accessToken, setAccessToken] = useState(props.access_token);
   const [refreshToken, setRefreshToken] = useState(props.refresh_token);
   const [me, setMe] = useState<IMe | null>();
@@ -78,7 +76,17 @@ function Home(props: any) {
   }, []);
 
   useEffect(() => {
-    fetchAccountData();
+    fetchAccountData().then((meRes) => {
+      
+        // TODO: check maybe move to init hook
+      if (songSeeds.length == 0) {
+        api.getRandomTrack(meRes.country, accessToken).then((songRes: ITracks) => {
+          addSong(songRes.items[0]);
+        });
+      }
+
+      
+    });
     
     // TODO: error handling
   }, [accessToken, refreshToken]);
@@ -106,7 +114,10 @@ function Home(props: any) {
 
   const fetchAccountData = () => {
     if (!me) {
-      return api.getMe(accessToken).then((res) =>{setMe(res)}).catch(errorHandler);
+      return api.getMe(accessToken).then((res) => {
+        setMe(res);
+        return res;
+      }).catch(errorHandler);
     } else {
       return Promise.reject(Error("Can't fetchAccountData"));
     }
