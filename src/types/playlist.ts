@@ -1,3 +1,6 @@
+import { IAnyList } from "./common";
+import { ITrack } from "./track";
+
 export interface IPlaylist {
     collaborative: boolean;
     description:   string;
@@ -34,28 +37,16 @@ export interface Owner {
     uri:           string;
 }
 
-export interface Tracks {
-    href:     string;
-    items:    any[];
-    limit:    number;
-    next:     null;
-    offset:   number;
-    previous: null;
-    total:    number;
-}
-
 export interface IPlaylistInitData {
     name: string,
     description: string,
     public: boolean
 }
 
-export interface IPlaylistList {
-    href:     string;
-    items:    IPlaylist[];
-    limit:    number;
-    next:     string;
-    offset:   number;
-    previous: null;
-    total:    number;
+export interface Tracks extends IAnyList {
+    items:    ITrack[];
+}
+
+export interface IPlaylistList extends IAnyList {
+    items: IPlaylist[];
 }

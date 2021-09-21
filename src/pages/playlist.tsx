@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import apiPlaylist from "../common/api-playlist";
+import PaginatedList from "../components/paginated-list";
+import Spinner from "../components/spinner";
 import { IPlaylist, IPlaylistList } from "../types/playlist";
 
 const Playlist = (props) => {
 
-  const [list, setList] = useState<IPlaylist[]>([]);
+  const [res, setRes] = useState<IPlaylistList | null>(null);
 
   useEffect(() => {
     apiPlaylist.getList(props.access_token).then((i: IPlaylistList) => {
-      console.log(i)
-      setList(i.items)
+      setRes(i);
     })
-  }, [])
+  }, []);
 
   const unfollow = (id: string) => {
     apiPlaylist.unfollow(props.access_token, id).then((res) => {
@@ -22,9 +23,15 @@ const Playlist = (props) => {
     });
   };
 
-  return list.length > 0 ? <div>
-    {list.map((item: IPlaylist) => (<div key={item.id}>{item.name}<button onClick={() =>{unfollow(item.id)}}>unfollow</button></div>))} 
-  </div> : <>No playlist yet</>
+  const RenderRow = (item: IPlaylist) => {
+    return <div key={item.id}><button onClick={() => {
+      unfollow(item.id)
+    }}>unfollow</button><button onClick={() => {
+      unfollow(item.id)
+    }}>Edit</button>{item.name}</div>
+  }
+
+  return res ? <PaginatedList {...res} children={<RenderRow/>}/> : <Spinner></Spinner>
 };
 
 export default Playlist;

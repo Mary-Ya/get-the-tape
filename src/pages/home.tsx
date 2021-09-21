@@ -133,13 +133,13 @@ function Home(props: any) {
   const selectGenre = (seedName: string) => {
     if (canAddMoreSeeds) {
       addGenre(seedName);
-    }
+    };
   };
 
   const releaseGenre = (seedName: string) => {
     if (genreSeeds.length > 0) {
       removeItem(seedName);
-    }
+    };
   };
 
   const fetchPlaylist = () => {
@@ -195,7 +195,7 @@ function Home(props: any) {
   ) : !me ? (
     <Spinner />
   ) : (
-        <div className="row g-0" ref={ref}>
+        <div className="row g-0">
           <div className="col-lg-4 col-12 form-check bg-light rounded-10 p-3">
             <GenresList
               canAddMoreSeeds={canAddMoreSeeds}
