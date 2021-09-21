@@ -43,7 +43,7 @@ export interface IPlaylistInitData {
     public: boolean
 }
 
-export interface Tracks extends IAnyList {
+export interface ITracks extends IAnyList {
     items:    ITrack[];
 }
 
