@@ -16,7 +16,7 @@ import SelectedSeed from "../components/home/selected-seed";
 import ToggleAndRange from "../components/home/toggle-and-range";
 import useSearchSettings from "../hooks/use-search-settings";
 import useSeedList from "../hooks/use-seed-list";
-import { ITracks } from "../types/playlist";
+import { IArtists, ITracks } from "../types/playlist";
 
 function Home(props: any) {
   const [accessToken, setAccessToken] = useState(props.access_token);
@@ -85,7 +85,13 @@ function Home(props: any) {
         });
       }
 
-      
+      // TODO: check maybe move to init hook
+      if (artistSeeds.length == 0) {
+        api.search(meRes.country, accessToken, '', 1, 0, 'artist').then((artistRes: {artists: IArtists}) => {
+          addArtist(artistRes.artists?.items[0]);
+        });
+      }
+     
     });
     
     // TODO: error handling

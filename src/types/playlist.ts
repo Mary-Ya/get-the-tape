@@ -1,5 +1,5 @@
 import { IAnyList } from "./common";
-import { ITrack } from "./track";
+import { IArtist, ITrack } from "./track";
 
 export interface IPlaylist {
     collaborative: boolean;
@@ -49,4 +49,8 @@ export interface ITracks extends IAnyList {
 
 export interface IPlaylistList extends IAnyList {
     items: IPlaylist[];
+}
+
+export interface IArtists extends IAnyList {
+    items: IArtist[];
 }
