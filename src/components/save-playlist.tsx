@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import Icons from "../assets/icons";
-import playlistApi from "../common/api-playlist";
+import playlistApi from "../common/playlist-api";
 import useCashableState from "../hooks/use-cashable-state";
 import { ITrack } from "../types/track";
 import EditableText from "./editable-text";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../common/api';
+import userApi from '../common/user-api';
 import { deserialize } from '../common/utils';
 import useCashableState from '../hooks/use-cashable-state';
 import PublicHome from '../pages/public-home';
@@ -25,7 +25,7 @@ function PrivateRoute(props) {
       setIsLoggedIn(true);
       setSpinnerIsOn(false);
     } else if (refresh_token && !access_token) {
-      api.getNewTokens(refresh_token).then(data => {
+      userApi.getNewTokens(refresh_token).then(data => {
           if (data.refresh_token && data.access_token) {
             setRefreshToken(data.refresh_token);
             setAccessToken(data.access_token);

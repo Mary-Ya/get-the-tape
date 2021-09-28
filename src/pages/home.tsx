@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Redirect } from "react-router-dom";
 
 import api from "../common/api";
+import userApi from "../common/user-api";
 import { divideArray, safeLocalStorage, cleanObject } from "../common/utils";
 import GenresList from "../components/genres";
 import { IArtist, ITrack } from "../types/track";
@@ -120,7 +121,7 @@ function Home(props: any) {
 
   const fetchAccountData = () => {
     if (!me) {
-      return api.getMe(accessToken).then((res) => {
+      return userApi.getMe(accessToken).then((res) => {
         setMe(res);
         return res;
       }).catch(errorHandler);

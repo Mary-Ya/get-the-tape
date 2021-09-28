@@ -1,24 +1,11 @@
-import axios from "axios";
 import { AxiosRequestConfig } from "axios";
-import { IPlaylistInitData } from "../types/playlist";
 import { IRecommendationSettings } from "../types/recommendation-settings";
-import { getRandomNumber, returnBody, safeSessionStorage } from "./utils";
+import loggedInAxios from "./logged-in-axios";
+import { getRandomNumber, safeSessionStorage } from "./utils";
+
 const returnTracksData = (i: any) => i.data.body.tracks;
 
-
 export default {
-  getMe: (access_token: string) => {
-    const options: AxiosRequestConfig = {
-      method: "get",
-      headers: {
-        Authorization: "Bearer " + access_token,
-      },
-    };
-    return axios
-      .get("https://api.spotify.com/v1/me", options)
-      .then((i) => i.data);
-  },
-
   getGenres: (access_token: string) => {
     const options: AxiosRequestConfig = {
       method: "get",
@@ -26,21 +13,11 @@ export default {
         access_token: access_token,
       },
     };
-    return axios
+    return loggedInAxios
       .get("/recommendation-genres", options)
       .then((i) => {
         return i.data.genres ? i.data.genres : i.data;
       });
-  },
-
-  getNewTokens: (refresh_token: string) => {
-    const options: AxiosRequestConfig = {
-      method: "get",
-      params: {
-        refresh_token,
-      },
-    };
-    return axios.get("/refresh_token", options).then((i) => i.data);
   },
 
   getTheTape: (access_token: string, limit: number, settings: IRecommendationSettings) => {
@@ -53,7 +30,7 @@ export default {
         settings
       },
     };
-    return axios
+    return loggedInAxios
       .get(`/get-the-tape`, options)
       .then((res) => {
         safeSessionStorage.setItem('currentTrackList', res);
@@ -78,7 +55,7 @@ export default {
         type
       },
     };
-    return axios
+    return loggedInAxios
       .get(`/search`, options)
       .then(res => {
         console.log('search', res)
@@ -100,7 +77,7 @@ export default {
         access_token: accessToken,
       },
     };
-    return axios
+    return loggedInAxios
       .get(`/get_random_track`, options)
       .then(returnTracksData)
       .catch((e) => console.warn(e));

@@ -1,9 +1,10 @@
-import axios, {
+import {
   AxiosRequestConfig
 } from "axios";
 import {
   IPlaylistInitData
 } from "../types/playlist";
+import loggedInAxios from "./logged-in-axios";
 import {
   returnBody
 } from "./utils";
@@ -17,7 +18,7 @@ const create = (access_token: string, userId: string, playlistData: IPlaylistIni
       userId
     },
   };
-  return axios
+  return loggedInAxios
     .get(`/create-playlist`, options)
     .then(returnBody)
     .catch((e) => console.warn(e));
@@ -32,7 +33,7 @@ const update = (access_token: string, playlist_id: string, urisList: Array < str
       access_token
     },
   };
-  return axios
+  return loggedInAxios
     .get(`/update-playlist`, options)
     .then((res) => (Object.assign(returnBody(res), {
       playlist_id
@@ -54,11 +55,11 @@ const getList = (access_token: string) => {
       access_token
     },
   };
-  return axios
+  return loggedInAxios
     .get(`/get-playlist-list`, options)
     .then(returnBody)
     .catch((e) => console.warn(e));
-}
+};
 
 const unfollow = (access_token: string, playlist_id: string) => {
   const options: AxiosRequestConfig = {
@@ -68,7 +69,7 @@ const unfollow = (access_token: string, playlist_id: string) => {
       access_token
     },
   };
-  return axios
+  return loggedInAxios
     .get(`/unfollow-playlist`, options)
     .then((res) => (res.data))
     .catch((e) => console.warn(e));

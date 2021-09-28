@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import apiPlaylist from "../common/api-playlist";
+import apiPlaylist from "../common/playlist-api";
 import PaginatedList from "../components/paginated-list";
 import Spinner from "../components/spinner";
 import { IPlaylist, IPlaylistList } from "../types/playlist";
