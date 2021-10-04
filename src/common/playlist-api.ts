@@ -9,6 +9,9 @@ import {
   returnBody
 } from "./utils";
 
+const DEFAULT_LIMIT = 10;
+const DEFAULT_OFFSET = 0;
+
 const create = (access_token: string, userId: string, playlistData: IPlaylistInitData) => {
   const options: AxiosRequestConfig = {
     method: "get",
@@ -48,11 +51,13 @@ const savePlaylistAsNew = (access_token: string, userId: string, playlistData: I
     });
 };
 
-const getList = (access_token: string) => {
+const getList = (access_token: string, offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT) => {
   const options: AxiosRequestConfig = {
     method: "get",
     params: {
-      access_token
+      access_token,
+      limit,
+      offset
     },
   };
   return loggedInAxios

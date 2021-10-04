@@ -1,26 +1,44 @@
-import React, { DetailedReactHTMLElement, PropsWithChildren, useState } from 'react';
-import {Link} from 'react-router-dom';
+import React from 'react';
 import { IAnyList } from '../types/common';
 
 interface IPaginationListProps extends IAnyList {
   children: any
+  setPage: any
 }
 
-function PaginatedList(props: PropsWithChildren<IAnyList>) {
-  const [items, setItems] = useState(props.items || []);
-  const [href] = useState(props.href || '');
-  const [limit] = useState(props.limit || 0);
-  const [next] = useState(props.next || '');
-  const [offset] = useState(props.offset || 0);
-  const [previous] = useState(props.previous || null);
-  const [total] = useState(props.total || 0);
+function PaginatedList(props: IPaginationListProps) {
+  const renderSpotifyHref = () => {
+    if (props.href) {
+      return <a href={props.href} target="_blank">Open on spotify</a>;
+    } else return '';
+  }
+
+  const renderPagination = () => {
+    let pages: number[] = [];
+    const pagesCount = Math.floor(props.total / props.limit);
+    for (let i = 0; i < pagesCount; i++) {
+      pages.push(i + 1);
+    }
+    return <>{pages.map(i => <button
+      className="btn btn-link"
+      onClick={() => props.setPage(i)}
+      key={`page-${i}`}> {i}</button>)}</>;
+  }
 
   return (
-    <>
-      <div className="row">
-        {items.map(i => React.cloneElement(props.children, i))}
+    <div className="content ">
+      <div className="row m-0">
+        {props.items.map((item, index) => React.cloneElement(props.children, {key: item.id, ...item, index}))}
       </div>
-    </>
+      <div className="row m-0">
+        <div className="col-lg-6">
+          {renderPagination()}
+        </div>
+        <div className="col-lg-6 align-content-end">
+          {renderSpotifyHref()}
+        </div>
+      </div>
+    </div>
   );
 }
 
