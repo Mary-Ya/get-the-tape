@@ -6,6 +6,23 @@ import { getRandomNumber, safeSessionStorage } from "./utils";
 const returnTracksData = (i: any) => i.data.body.tracks;
 
 export default {
+  // for test purposes
+  reject: () => {
+    const options: AxiosRequestConfig = {
+      method: "get",
+      params: {
+        error: {
+          code: 401,
+          message: 'rejected with 401'
+        }
+      },
+    };
+    return loggedInAxios
+      .get("/reject", options)
+      .then((i) => {
+        return console.log(i);
+      });
+  },
   getGenres: (access_token: string) => {
     const options: AxiosRequestConfig = {
       method: "get",

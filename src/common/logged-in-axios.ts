@@ -18,7 +18,6 @@ loggedInAxios.interceptors.response.use((response) => {
 }, (error) => {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   const originalRequest = error.config;
-
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
     safeLocalStorage.setItem('access_token', '');
@@ -34,7 +33,7 @@ loggedInAxios.interceptors.response.use((response) => {
             }
             return axios(originalRequest);
           }
-        })      
+        });
     }
   }
   return Promise.reject(error);

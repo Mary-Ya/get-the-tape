@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
+import loggedInAxios from "./logged-in-axios";
 
 
 export default {
@@ -10,7 +11,7 @@ export default {
         Authorization: "Bearer " + access_token,
       },
     };
-    return axios
+    return loggedInAxios
       .get("https://api.spotify.com/v1/me", options)
       .then((i) => i.data);
   },

@@ -1,25 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 
 // Hook
-const useAsyncList = (asyncFunction, immediate = true) => {
+const useAsync = (getAsyncFunction, immediate = true) => {
     const [status, setStatus] = useState("idle");
     const [error, setError] = useState(null);
 
-    const [list, setList] = useState(null);
+    const [data, setData] = useState(null);
     // The fetch function wraps asyncFunction and
     // handles setting state for pending, value, and error.
     // useCallback ensures the below useEffect is not called
     // on every render, but only if asyncFunction changes.
     const fetch = useCallback(() => {
       setStatus("pending");
-      setList(null);
+      setData(null);
       setError(null);
-      return asyncFunction()
-        .then((response) => {
-            setList(response);
+      return getAsyncFunction()
+        .then((response: any) => {
+          setData(response);
           setStatus("success");
         })
-        .catch((error) => {
+        .catch((error: any) => {
           setError(error);
           setStatus("error");
         });
@@ -32,7 +32,7 @@ const useAsyncList = (asyncFunction, immediate = true) => {
         fetch();
       }
     }, [fetch, immediate]);
-    return { fetch, status, list, error };
+    return { fetch, status, data, error };
 };
   
-export default useAsyncList;
+export default useAsync;
