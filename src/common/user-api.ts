@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
 import loggedInAxios from "./logged-in-axios";
+import { safeLocalStorage } from "./utils";
 
 
 export default {
@@ -23,6 +24,18 @@ export default {
         refresh_token,
       },
     };
-    return axios.get("/refresh_token", options).then((i) => i.data);
+    return axios.get("/refresh_token", options)
+      .then((i) => i.data)
+      .then((data) => {
+        if (data.refresh_token && data.access_token) {
+          safeLocalStorage.setItem('refresh_token', data.refresh_token);
+          safeLocalStorage.setItem('access_token', data.access_token);
+        }
+        return data;
+      }).catch((err) => {
+        safeLocalStorage.setItem('refresh_token', '');
+        safeLocalStorage.setItem('access_token', '');
+        return err;
+      });
   },
 };
