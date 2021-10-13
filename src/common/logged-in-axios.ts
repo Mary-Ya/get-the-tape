@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import { values } from "lodash";
 import userApi from "./user-api";
 import { safeLocalStorage } from "./utils";
 
@@ -21,7 +22,7 @@ const refreshAccessTokenAndTryAgain = (data: AxiosResponse<any>) => {
       .catch((error) => {
         window.location.reload();
 
-        return error;
+        Promise.reject(error);
       }) 
     }
   };
@@ -29,10 +30,19 @@ const refreshAccessTokenAndTryAgain = (data: AxiosResponse<any>) => {
 }
 
 const loggedInAxios: AxiosInstance = axios.create();
+loggedInAxios.interceptors.request.use((config) => {
+  const newConfig = { ...config };
+  const access_token = safeLocalStorage.getItem('access_token');
+  if (access_token && newConfig.params) {
+    newConfig.params.access_token = access_token;
+  }
+  return newConfig;
+})
+
 loggedInAxios.interceptors.response.use((response) => {
   
   // As app api call external api response code may be 2xx
-  // but the response from externa api inside will be 4xx
+  // but the response from external api inside will be 4xx
   // shouldn't appear anymore but 
   // TODO: nest if still need it
   const status = response.data.statusCode;

@@ -23,12 +23,11 @@ export default {
         return console.log(i);
       });
   },
-  getGenres: (access_token: string) => {
+
+  getGenres: () => {
     const options: AxiosRequestConfig = {
       method: "get",
-      params: {
-        access_token: access_token,
-      },
+      params: {}
     };
     return loggedInAxios
       .get("/recommendation-genres", options)
@@ -57,18 +56,14 @@ export default {
       .catch((e) => console.warn(e));
   },
 
-  search: (market: string, access_token: string, q: string = "", limit: number, offset: number, type: string) => {
+  search: (market: string, q: string = "", limit: number, offset: number, type: string) => {
     const options: AxiosRequestConfig = {
       method: "get",
-      headers: {
-        Authorization: "Bearer " + access_token,
-      },
       params: {
         market,
         q,
         offset,
         limit,
-        access_token,
         type
       },
     };
@@ -81,17 +76,13 @@ export default {
       .catch((e) => console.warn(e));
   },
 
-  getRandomTrack: (market: string, accessToken: string, q: string = "") => {
+  getRandomTrack: (market: string, q: string = "") => {
     const options: AxiosRequestConfig = {
       method: "get",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
       params: {
         market,
         q,
         offset: getRandomNumber(),
-        access_token: accessToken,
       },
     };
     return loggedInAxios

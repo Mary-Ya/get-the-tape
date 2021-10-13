@@ -81,14 +81,14 @@ function Home(props: any) {
       
         // TODO: check maybe move to init hook
       if (songSeeds.length == 0) {
-        api.getRandomTrack(meRes.country, accessToken).then((songRes: ITracks) => {
+        api.getRandomTrack(meRes.country).then((songRes: ITracks) => {
           addSong(songRes.items[0]);
         });
       }
 
       // TODO: check maybe move to init hook
       if (artistSeeds.length == 0) {
-        api.search(meRes.country, accessToken, '', 1, 0, 'artist').then((artistRes: {artists: IArtists}) => {
+        api.search(meRes.country, '', 1, 0, 'artist').then((artistRes: {artists: IArtists}) => {
           addArtist(artistRes.artists?.items[0]);
         });
       }

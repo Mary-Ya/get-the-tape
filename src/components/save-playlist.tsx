@@ -34,7 +34,6 @@ function SavePlaylist(props: ISavePlaylistProps) {
   const createPlayList = () => {
     playlistApi
       .savePlaylistAsNew(
-        props.accessToken,
         props.myId,
         {
           name,
@@ -52,7 +51,6 @@ function SavePlaylist(props: ISavePlaylistProps) {
   const updatePlayList = () => {
     playlistApi
       .update(
-        props.accessToken,
         playListID,
         props.trackList.map((i) => i.uri)
       )

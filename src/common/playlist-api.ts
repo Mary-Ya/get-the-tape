@@ -12,11 +12,10 @@ import {
 const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;
 
-const create = (access_token: string, userId: string, playlistData: IPlaylistInitData) => {
+const create = (userId: string, playlistData: IPlaylistInitData) => {
   const options: AxiosRequestConfig = {
     method: "get",
     params: {
-      access_token,
       data: playlistData,
       userId
     },
@@ -27,13 +26,12 @@ const create = (access_token: string, userId: string, playlistData: IPlaylistIni
     .catch((e) => console.warn(e));
 };
 
-const update = (access_token: string, playlist_id: string, urisList: Array < string > ) => {
+const update = (playlist_id: string, urisList: Array < string > ) => {
   const options: AxiosRequestConfig = {
     method: "get",
     params: {
       playlist_id,
-      urisList,
-      access_token
+      urisList
     },
   };
   return loggedInAxios
@@ -44,18 +42,17 @@ const update = (access_token: string, playlist_id: string, urisList: Array < str
     .catch((e) => console.warn(e));
 };
 
-const savePlaylistAsNew = (access_token: string, userId: string, playlistData: IPlaylistInitData, trackUrisList: Array < string > ) => {
-  return create(access_token, userId, playlistData)
+const savePlaylistAsNew = (userId: string, playlistData: IPlaylistInitData, trackUrisList: Array < string > ) => {
+  return create(userId, playlistData)
     .then(res => {
-      return update(access_token, res.id, trackUrisList);
+      return update(res.id, trackUrisList);
     });
 };
 
-const getList = (access_token: string, offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT) => {
+const getList = (offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT) => {
   const options: AxiosRequestConfig = {
     method: "get",
     params: {
-      access_token,
       limit,
       offset
     },
@@ -66,12 +63,11 @@ const getList = (access_token: string, offset = DEFAULT_OFFSET, limit = DEFAULT_
     .catch((e) => console.warn(e));
 };
 
-const unfollow = (access_token: string, playlist_id: string) => {
+const unfollow = (playlist_id: string) => {
   const options: AxiosRequestConfig = {
     method: "get",
     params: {
-      playlist_id,
-      access_token
+      playlist_id
     },
   };
   return loggedInAxios

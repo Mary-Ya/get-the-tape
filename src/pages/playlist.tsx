@@ -9,19 +9,19 @@ const Playlist = (props) => {
   // const { execute, status, value, error } = useAsyncList(makeFetchFunction(), false);
 
   const makeFetchFunction = () => {
-    return apiPlaylist.getList(props.access_token)
+    return apiPlaylist.getList()
   }
 
   useEffect(() => {
-    apiPlaylist.getList(props.access_token).then((i: IPlaylistList) => {
+    apiPlaylist.getList().then((i: IPlaylistList) => {
       setList(i);
     })
   }, []);
 
   const unfollow = (id: string, index: number) => {
-    apiPlaylist.unfollow(props.access_token, id).then((res) => {
+    apiPlaylist.unfollow(id).then((res) => {
       if (res.statusCode == 200) {
-        apiPlaylist.getList(props.access_token, list?.offset, list?.limit).then((i: IPlaylistList) => {
+        apiPlaylist.getList(list?.offset, list?.limit).then((i: IPlaylistList) => {
           setList(i);
         })
       }
@@ -40,7 +40,7 @@ const Playlist = (props) => {
     return (page: number) => {
       const offset = list.limit * page;
       console.log(page)
-      apiPlaylist.getList(props.access_token, offset).then((i: IPlaylistList) => {
+      apiPlaylist.getList(offset).then((i: IPlaylistList) => {
         setList(i);
       });
     }
