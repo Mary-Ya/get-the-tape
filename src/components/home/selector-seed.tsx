@@ -12,7 +12,6 @@ interface SeedSelectorProps {
   selectedSeedsIds: Array<string>,
   canAddMoreSeeds: boolean,
   country: string,
-  accessToken: string,
   searchType: string,
   setSeeds(data: Array<TPossibleSeedTypes>): void
 }
@@ -27,7 +26,6 @@ function SeedSelector(props: SeedSelectorProps) {
     return api
       .search(
         props.country,
-        props.accessToken,
         encodeURI(inputValue),
         10,
         offset,

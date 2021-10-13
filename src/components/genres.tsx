@@ -6,14 +6,16 @@ import SelectedSeed from './home/selected-seed';
 function GenresList(props: any) {
     const [availableGenreSeeds, setAvailableGenreSeeds] = useState(['rock', 'pop', 'blues']);
     const [searchQuery, setSearchQuery] = useState('');
+    const [visibleGenreSeeds, setVisibleGenreSeeds] = useState(availableGenreSeeds);
 
     const isSeedSelected = (seedName: string) => {
         return props.genreList.indexOf(seedName) !== -1;
     }
 
     const loadGenres = () => {
-        api.getGenres(props.accessToken).then((data) => {
+        api.getGenres().then((data) => {
             setAvailableGenreSeeds(data);
+            setVisibleGenreSeeds(data.filter(genresFilter));
         });
     }
 
@@ -24,7 +26,7 @@ function GenresList(props: any) {
     useEffect(() => {
         setTimeout(() => {
             if (searchQuery) {
-                setAvailableGenreSeeds(availableGenreSeeds.filter(genresFilter));
+                setVisibleGenreSeeds(availableGenreSeeds.filter(genresFilter));
             }
 
             // TODO: modify for smooth debouncing
@@ -70,7 +72,7 @@ function GenresList(props: any) {
         </form>
 
         <div className="genres-list mt-2 pretty-scroll">
-            {availableGenreSeeds
+            {visibleGenreSeeds
                 .map((selectableGenre) => renderGenre(selectableGenre))}
         </div>
     </div>);

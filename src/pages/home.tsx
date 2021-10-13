@@ -218,7 +218,6 @@ function Home(props: any) {
             <GenresList
               canAddMoreSeeds={canAddMoreSeeds}
               canRemoveSeeds={genreSeeds.length > 1}
-              accessToken={accessToken}
               genreList={genreSeeds}
               onGenreSelect={selectGenre}
               onGenreRelease={releaseGenre}

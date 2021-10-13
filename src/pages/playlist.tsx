@@ -31,10 +31,11 @@ const Playlist = (props) => {
   const RenderRow = (item: IPlaylist) => {
     return <div><button onClick={() => {
       unfollow(item.id, item.index)
-    }}>unfollow</button><button onClick={() => {
-      console.log('edit')
-    }}>Edit</button>{item.name}</div>
-  }
+    }}>unfollow</button>
+      <button onClick={() => {
+        console.log('edit')
+      }}>Edit</button>{item.name}</div>
+  };
 
   const setPage = () => {
     return (page: number) => {
