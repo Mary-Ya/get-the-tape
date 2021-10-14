@@ -72,3 +72,11 @@ html {
         border-width: 1px;
     }
 }
+
+.handler-container {
+    padding-top: 16px;
+    height: 99%;
+    background-color: rgba(#6f42c1,.3);;
+    color: $handle-border-color;
+    border-radius: 5px 0 0 5px;
+}

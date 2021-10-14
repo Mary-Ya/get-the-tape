@@ -1,6 +1,7 @@
 import React from 'react';
 import { IArtist, ITrack } from '../types/track';
 import Icons from "../assets/icons";
+import { SortableHandle } from 'react-sortable-hoc';
 
 function Artists(props: any) {
     return props.data.map((i: { name: any; }) =>`
@@ -19,17 +20,23 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
         </a>
     }
 
-    
+
     render() {
         const i = this.props.track;
+        const DraggableHandle = SortableHandle(({ children }) => children)
 
         return <div className={`row g-0 my-3 justify-content-left ${this.props.className}`}
             onClick={this.props.onClick}
             key={`song-${i.id}`}>
         <div className="col-3 col-xs-2 logo-container">
-            <a className="mr-1" href={i.album.external_urls.spotify} target="_blank">
+                <DraggableHandle>
+                    <div className="d-inline-block w-25 handler-container">
+                        <Icons.List height={18  } width={18} />
+                    </div>
+                </DraggableHandle>
+            <div className="d-inline-block w-75"><a className="mr-1" href={i.album.external_urls.spotify} target="_blank">
                 <img className="img-fluid" src={i.album.images[0].url}></img>
-            </a>
+            </a></div>
         </div>
         <div className="col-lg-4 col-9 ps-3">
             <a target="_blank" href={i.external_urls.spotify} className="fs-4">{i.name}</a>

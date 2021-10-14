@@ -32,7 +32,7 @@ const PlayList = (props: any) => {
                     <SortableItem key={`item-${value.id}`} index={index} value={value} />
                 ))}
             </ul>
-        )
+        );
     });
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -43,7 +43,7 @@ const PlayList = (props: any) => {
     };
     
     return <div>
-        <SortableList items={currentList} onSortEnd={onSortEnd} />
+        <SortableList items={currentList} onSortEnd={onSortEnd} useDragHandle={true} />
         TODO: pagination
     </div>
 };
