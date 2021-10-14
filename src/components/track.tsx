@@ -2,6 +2,7 @@ import React from 'react';
 import { IArtist, ITrack } from '../types/track';
 import Icons from "../assets/icons";
 import { SortableHandle } from 'react-sortable-hoc';
+import Player from './player';
 
 function Artists(props: any) {
     return props.data.map((i: { name: any; }) =>`
@@ -34,7 +35,11 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
                         <Icons.List height={18  } width={18} />
                     </div>
                 </DraggableHandle>
-            <div className="d-inline-block w-75"><a className="mr-1" href={i.album.external_urls.spotify} target="_blank">
+                <div className="d-inline-block w-75">
+                    <a className="mr-1"
+                        href={i.album.external_urls.spotify}
+                        target="_blank"
+                    >
                 <img className="img-fluid" src={i.album.images[0].url}></img>
             </a></div>
         </div>
@@ -44,14 +49,18 @@ class Track extends React.Component<{track: ITrack, className: string, controls:
             { i.artists.map(this.renderArtist) }
             <i className="bi-alarm"></i>
         </div>
-        <div className={`col-lg-1 col-12 ${ this.props.controls ? '' : 'd-none'}`}>
-            <audio
+            <div className={`col-lg-1 col-12 ${this.props.controls ? '' : 'd-none'}`}>
+                <Player id={`audio-${i.id}`}
+                    src={i.preview_url || i.href}
+                    loop={true}
+                />
+            {/* <audio
                 id={`audio-${i.id}`}
                 controls={true}
                 src={i.preview_url || i.href}>
                     Your browser does not support the
                     <code>audio</code> element.
-            </audio>
+            </audio> */}
         </div>
     </div>
     }

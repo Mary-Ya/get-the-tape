@@ -42,10 +42,7 @@ const PlayList = (props: any) => {
         }
     };
     
-    return <div>
-        <SortableList items={currentList} onSortEnd={onSortEnd} useDragHandle={true} />
-        TODO: pagination
-    </div>
+    return <SortableList items={currentList} onSortEnd={onSortEnd} useDragHandle={true} />
 };
 
 export default React.memo(PlayList);
