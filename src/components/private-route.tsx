@@ -9,7 +9,7 @@ function PrivateRoute(props) {
 
   const retrieveFromSearch = (q: string) => {
     if (props?.location?.search) {
-      return deserialize(props.location.search)[q]
+      return deserialize(props.location.search)[q];
     }
 
     return null;
@@ -26,17 +26,17 @@ function PrivateRoute(props) {
       setSpinnerIsOn(false);
     } else if (refresh_token && !access_token) {
       userApi.getNewTokens(refresh_token).then(data => {
-          if (data.refresh_token && data.access_token) {
-            setRefreshToken(data.refresh_token);
-            setAccessToken(data.access_token);
-            setIsLoggedIn(true);
-            setSpinnerIsOn(false);
-          } 
-        });
-      } else {
-        setSpinnerIsOn(false);
-      };
-    }, [])
+        if (data.refresh_token && data.access_token) {
+          setRefreshToken(data.refresh_token);
+          setAccessToken(data.access_token);
+          setIsLoggedIn(true);
+          setSpinnerIsOn(false);
+        }
+      });
+    } else {
+      setSpinnerIsOn(false);
+    };
+  }, []);
     
     return !spinnerIsOn && isLoggedIn
         ? React.cloneElement(props.children, { access_token, refresh_token })

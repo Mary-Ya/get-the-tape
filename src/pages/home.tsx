@@ -125,9 +125,8 @@ function Home(props: any) {
         setMe(res);
         return res;
       }).catch(errorHandler);
-    } else {
-      return Promise.reject(Error("Can't fetchAccountData"));
     }
+    return Promise.resolve(me);
   };
 
   const fetchRefreshToken = () => {
@@ -163,7 +162,7 @@ function Home(props: any) {
   const fetchPlaylist = () => {
     const cleanSettings = cleanObject({...settings, optional: cleanObject(optionalSettings)})
     api
-      .getTheTape(accessToken, tracksCount, cleanSettings)
+      .getTheTape(tracksCount, cleanSettings)
       .then((res) => {
         safeLocalStorage.setItem("playList", JSON.stringify(res));
         return res;
@@ -228,7 +227,6 @@ function Home(props: any) {
               <SeedSelector
                 selectedSeedsIds={songSeeds.map((i: ITrack) => i.id)}
                 country={me.country}
-                accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
                 setSeeds={setSongSeeds}
                 seeds={songSeeds}
@@ -241,7 +239,6 @@ function Home(props: any) {
               <SeedSelector
                 selectedSeedsIds={artistSeeds.map((a: IArtist) => a.id)}
                 country={me.country}
-                accessToken={accessToken}
                 canAddMoreSeeds={canAddMoreSeeds}
                 setSeeds={setArtistSeeds}
                 seeds={artistSeeds}

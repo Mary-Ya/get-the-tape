@@ -25,7 +25,7 @@ export default {
       },
     };
     return axios.get("/refresh_token", options)
-      .then((i) => i.data)
+      .then((i) => (i.data))
       .then((data) => {
         if (data.refresh_token && data.access_token) {
           safeLocalStorage.setItem('refresh_token', data.refresh_token);

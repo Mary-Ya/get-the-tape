@@ -36,12 +36,11 @@ export default {
       });
   },
 
-  getTheTape: (access_token: string, limit: number, settings: IRecommendationSettings) => {
+  getTheTape: (limit: number, settings: IRecommendationSettings) => {
     console.log(settings)
     const options: AxiosRequestConfig = {
       method: "get",
       params: {
-        access_token,
         limit,
         settings
       },

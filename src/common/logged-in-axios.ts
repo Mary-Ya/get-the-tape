@@ -14,15 +14,17 @@ const refreshAccessTokenAndTryAgain = (data: AxiosResponse<any>) => {
   if (refresh_token) {
     return userApi.getNewTokens(refresh_token)
       .then(tokenData => {
-        if (isSuccessCode(tokenData.status)) {
-          return axios(originalRequest);
+        if (tokenData.access_token) {
+          const newRequest = { ...originalRequest };
+          newRequest.params = tokenData.access_token;
+          return axios(newRequest);
         }
         return data;
       })
       .catch((error) => {
         window.location.reload();
 
-        Promise.reject(error);
+        return Promise.reject(error);
       }) 
     }
   };
