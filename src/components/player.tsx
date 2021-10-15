@@ -15,9 +15,16 @@ const Player = (props: {src: string, id: string, loop?: boolean}) => {
     }
   };
 
-  return (<div key={props.id}>
-    {isPlaying ? <div onClick={() => togglePlayer(false)}><icons.Pause /></div> :
-  <div onClick={() => togglePlayer(true)}><icons.Play /></div>}
+  return (<div className="play-button-wrapper" key={props.id}>
+    {isPlaying ?
+      <div className="play-button"
+        onClick={() => togglePlayer(false)}>
+        <icons.Pause width={20} height={20} />
+      </div> :
+      <div className="play-button"
+        onClick={() => togglePlayer(true)}>
+          <icons.Play width={20} height={20} />
+      </div>}
   </div>)
 }
 

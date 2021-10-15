@@ -74,9 +74,28 @@ html {
 }
 
 .handler-container {
-    padding-top: 16px;
     height: 99%;
-    background-color: rgba(#6f42c1,.3);;
+    background-color: transparent;
     color: $handle-border-color;
-    border-radius: 5px 0 0 5px;
+    border-style: none;
+}
+
+.play-button {
+    color: $handle-border-color;
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    padding-left: 5px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.track-row {
+    background-color: rgba(#6f42c1,.3);
+    border-radius: 5px;
+}
+
+.play-button-wrapper {
+    display: flex;
+    align-items: center;
 }

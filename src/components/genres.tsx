@@ -28,8 +28,6 @@ function GenresList(props: any) {
             if (searchQuery) {
                 setVisibleGenreSeeds(availableGenreSeeds.filter(genresFilter));
             }
-
-            // TODO: modify for smooth debouncing
         }, 500)
     }, [searchQuery])
 
