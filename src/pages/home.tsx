@@ -297,7 +297,7 @@ function Home(props: any) {
                   // intervalFormat={divideArray}
                 />
           </div>
-          <div className="col-lg-8 col-12 ps-lg-5 pt-3 pt-lg-0">
+          <div className="col-lg-3 col-12 ps-lg-5 pt-3 pt-lg-0">
             <SavePlaylist
               name={newPlayListName}
               accessToken={accessToken}

@@ -15,16 +15,51 @@ interface ISavePlaylistProps {
   fetchPlaylist: () => void
 }
 
+const TRACKLIST_STATUS_LIST = {
+  "NEW": "NEW",
+  "SAVED": "SAVED",
+  "MODIFIED": "MODIFIED"
+}
+
+const TRACKLIST_STATUS_TEXT_LIST = {
+  "NEW": () => (() => (<></>)),
+  "SAVED": () => ((id) => (<span className="text-black-50">Added to the playlist  
+    <span className="text-decoration-none mx-2 py-2">{id} </span>
+      <a href={`https://open.spotify.com/playlist/${id}`} target="_blank">
+      Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
+    </a>
+  </span>)),
+  "MODIFIED": () => ((id) => (<span className="text-black-50">Changes will be saved to the playlist 
+    <span className="text-decoration-none mx-2 py-2">{id} </span>
+      <a href={`https://open.spotify.com/playlist/${id}`} target="_blank">
+      Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
+    </a>
+  </span>)),
+}
+
+function StatusText(props: {status: string, playListID: null | string}) {
+  return TRACKLIST_STATUS_TEXT_LIST[props.status]()(props.playListID);
+};
+
 function SavePlaylist(props: ISavePlaylistProps) {
   const [isChangedManually, setIsChangedManually] = useState(false);
   const [name, setName] = useState(props.name);
   const [playListID, setPlayListID] = useCashableState("", 'playListID');
+  const [status, setStatus] = useCashableState(TRACKLIST_STATUS_LIST['NEW'], );
 
   useEffect(() => {
     if (!isChangedManually) {
       setName(props.name);
     }
   }, [props.name]);
+
+  useEffect(() => {
+    setStatus(TRACKLIST_STATUS_LIST['SAVED']);
+  }, [playListID]);
+
+  useEffect(() => {
+    setStatus(TRACKLIST_STATUS_LIST['MODIFIED']);
+  }, [props.trackList]);
 
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsChangedManually(true);
@@ -55,6 +90,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
         props.trackList.map((i) => i.uri)
       )
       .then((res) => {
+        setStatus(TRACKLIST_STATUS_LIST['SAVED']);
         console.log(res);
       });
   };
@@ -84,7 +120,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
         </button>
         
         <button
-          className="btn btn-outline-secondary"
+          className={`btn btn-outline-secondary ${props.trackList.length > 0 ? "" : "d-none"}`}
           type="button"
           id="button-addon2"
           onClick={() => {
@@ -101,16 +137,9 @@ function SavePlaylist(props: ISavePlaylistProps) {
           placeholder={'Playlist name here'}
         />
       </div>
-      {playListID
-        ? <span className="text-black-50">This playlist ID is 
-            <span className="text-decoration-none mx-2 py-2">{playListID} </span>
-              <a href={`https://open.spotify.com/playlist/${playListID}`} target="_blank">
-              Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
-            </a>
-          </span>
-        : ''}
+      <StatusText playListID={playListID} status={status}/>
     </div>
   );
 }
 
-export default React.memo(SavePlaylist);
+export default SavePlaylist;

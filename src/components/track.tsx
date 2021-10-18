@@ -69,7 +69,7 @@ class Track extends React.Component<{
             </div>
           </div>
         </div>
-        <div className="col-lg-4 col-9 ps-3">
+        <div className="col-lg-8 col-9 ps-3">
           <a target="_blank" href={i.external_urls.spotify} className="fs-4">
             {i.name}
           </a>
@@ -85,13 +85,6 @@ class Track extends React.Component<{
             src={i.preview_url || i.href}
             loop={true}
           />
-          {/* <audio
-                id={`audio-${i.id}`}
-                controls={true}
-                src={i.preview_url || i.href}>
-                    Your browser does not support the
-                    <code>audio</code> element.
-            </audio> */}
         </div>
       </div>
     );
