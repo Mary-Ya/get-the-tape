@@ -45,7 +45,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
   const [isChangedManually, setIsChangedManually] = useState(false);
   const [name, setName] = useState(props.name);
   const [playListID, setPlayListID] = useCashableState("", 'playListID');
-  const [status, setStatus] = useCashableState(TRACKLIST_STATUS_LIST['NEW'], );
+  const [status, setStatus] = useCashableState(TRACKLIST_STATUS_LIST['NEW'], 'TRACKLIST_STATUS_LIST');
 
   useEffect(() => {
     if (!isChangedManually) {
