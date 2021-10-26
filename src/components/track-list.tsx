@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
-import api from "../common/api";
-import { IPlayState } from "../types/play-state";
-import { errorHandler } from "../common/utils";
-import { IArtist, ITrack } from "../types/track";
-import Icons from "../assets/icons";
-import Player from "./player";
+import React, { useEffect } from "react";
+import { ITrack } from "../types/track";
 import Track from "./track";
 import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
+import useTrackList from "../hooks/use-track-list";
 
-const PlayList = (props: any) => {
-    const [currentList, setCurrentList] = useState(props.trackList || []);
+const TrackList = (props: any) => {
+    const [currentList, setCurrentList, removeTrack] = useTrackList(props.trackList);
 
     useEffect(() => {
-        setCurrentList(props.trackList || [])
-    }, [props.trackList])
+        setCurrentList(props.trackList)
+    }, [props.trackList]);
+
+    const onRemoveTrack = (id) => {
+        const newList = removeTrack(id);
+        props.updateTrackList(newList);
+    }
 
     const renderItem = (i: ITrack) => (
         <Track controls={true}
@@ -21,6 +22,7 @@ const PlayList = (props: any) => {
             key={"playlist-item" + i.id}
             className="button_"
             onClick={null}
+            remove={onRemoveTrack}
         ></Track>
     );
 
@@ -45,4 +47,4 @@ const PlayList = (props: any) => {
     return <SortableList items={currentList} onSortEnd={onSortEnd} useDragHandle={true} />
 };
 
-export default React.memo(PlayList);
+export default React.memo(TrackList);

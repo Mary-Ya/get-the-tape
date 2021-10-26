@@ -6,7 +6,7 @@ import userApi from "../common/user-api";
 import { divideArray, safeLocalStorage, cleanObject } from "../common/utils";
 import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
-import PlayList from "../components/track-list";
+import TrackList from "../components/track-list";
 
 import SavePlaylist from "../components/save-playlist";
 import SeedSettings from '../components/home/seed-settings';
@@ -15,6 +15,7 @@ import OptionalSettings from '../components/home/optional-settings';
 import Spinner from "../components/spinner";
 
 import useSearchSettings from "../hooks/use-search-settings";
+import useCashableState from "../hooks/use-cashable-state";
 
 function Home(props: any) {
   const [accessToken, setAccessToken] = useState(props.access_token);
@@ -52,7 +53,7 @@ function Home(props: any) {
     });
   }, []);
 
-  const [trackList, setTrackList] = useState<Array<ITrack>>([]);
+  const [trackList, setTrackList] = useCashableState([], 'playList', []);
 
   const [newPlayListName, setNewPlayListName] = useState(
     `My ${settings['genre_seeds']}`
@@ -63,11 +64,11 @@ function Home(props: any) {
 
   useEffect(() => {
     try {
-      const savedPlaylist = safeLocalStorage.getItem("playList");
-      const parsedList = JSON.parse(savedPlaylist);
-      if (parsedList && parsedList.length > 0) {
+      //const savedPlaylist = safeLocalStorage.getItem("playList");
+      //const parsedList = JSON.parse(savedPlaylist);
+      /*if (parsedList && parsedList.length > 0) {
         setTrackList(parsedList);
-      }
+      }*/
     } catch (e) {
       console.warn(e);
     }
@@ -109,10 +110,6 @@ function Home(props: any) {
     const cleanSettings = cleanObject({...settings, optional: cleanObject(optionalSettings)})
     api
       .getTheTape(tracksCount, cleanSettings)
-      .then((res) => {
-        safeLocalStorage.setItem("playList", JSON.stringify(res));
-        return res;
-      })
       .then(setTrackList)
       .catch(errorHandler);
   };
@@ -131,7 +128,7 @@ function Home(props: any) {
             <OptionalSettings setOptionalSettings={setOptionalSettings} />
             
           </div>
-          <div className="col-lg-3 col-12 ps-lg-5 pt-3 pt-lg-0">
+          <div className="col-lg-4 col-12 ps-lg-5 pt-3 pt-lg-0">
             <SavePlaylist
               name={newPlayListName}
               accessToken={accessToken}
@@ -141,7 +138,7 @@ function Home(props: any) {
             />
             {trackList && trackList.length > 0 ? (
               <div className="">
-                <PlayList
+                <TrackList
                   trackList={trackList}
                   updateTrackList={setTrackList}
                 />

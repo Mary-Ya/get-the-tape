@@ -17,12 +17,14 @@ class Track extends React.Component<{
   className: string;
   controls: boolean;
   onClick: any;
+  remove?: any;
 }, { [key: string]: any}> {
   constructor(props: {
     track: ITrack;
     className: string;
     controls: boolean;
     onClick: any;
+    remove?: any;
   }) {
     super(props);
     this.state = {
@@ -51,10 +53,10 @@ class Track extends React.Component<{
         onClick={this.props.onClick}
         key={`song-${i.id}`}
       >
-        <div className="col-3 col-xs-2 logo-container">
+        <div className="col-3 col-xs-2">
           <div className="row g-0 h-100">
             <this.state.DraggableHandle>
-              <div className="col-3 h-100 align-items-center">
+              <div className="col-3 h-100 align-items-center px-2">
                 <Icons.List height={18} width={18} className='card card-block h-100 align-items-center handler-container'/>
               </div>
             </this.state.DraggableHandle>
@@ -64,12 +66,12 @@ class Track extends React.Component<{
                 href={i.album.external_urls.spotify}
                 target="_blank"
               >
-                <img className="img-fluid" src={i.album.images[0].url}></img>
+                <img className="img-fluid  logo-container" src={i.album.images[0].url}></img>
               </a>
             </div>
           </div>
         </div>
-        <div className="col-lg-8 col-9 ps-3">
+        <div className="col-lg-7 col-9">
           <a target="_blank" href={i.external_urls.spotify} className="fs-4">
             {i.name}
           </a>
@@ -85,6 +87,14 @@ class Track extends React.Component<{
             src={i.preview_url || i.href}
             loop={true}
           />
+          <div className="button-wrapper ms-2">
+            <div className="remove-button"
+              onClick={() => { this.props.remove(i.id) }}>
+              <Icons.Remove className="remove-button"
+                width={20} height={20}
+              ></Icons.Remove>
+            </div>
+          </div>
         </div>
       </div>
     );

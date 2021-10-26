@@ -90,6 +90,15 @@ html {
     border-style: solid;
 }
 
+.remove-button {
+    color: $wine;
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    padding-left: 4px;
+    padding-top: 1px;
+}
+
 .track-row {
     border-color: rgba(111, 66, 193, 0.3);
     border-radius: 17px;
@@ -97,7 +106,7 @@ html {
     border-style: solid;
 }
 
-.play-button-wrapper {
+.button-wrapper {
     display: flex;
     align-items: center;
 }

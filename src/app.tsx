@@ -13,7 +13,7 @@ import Home from "./pages/home";
 import PublicHome from "./pages/public-home";
 import NoMatch from "./pages/no-match";
 
-import PlayList from "./pages/playlist";
+import TrackList from "./pages/playlist";
 import Icons from "./assets/icons";
 import PrivateRoute from "./components/private-route";
 
@@ -67,7 +67,7 @@ const App = () => {
           <Route path="/play" component={Play} />
 
           <Route exact path="/playlist" render={routeProps => (<PrivateRoute {...routeProps}>
-                <PlayList></PlayList>
+                <TrackList></TrackList>
             </PrivateRoute>)} />
 
           <Route exact path="/" render={routeProps => (<PrivateRoute {...routeProps}>

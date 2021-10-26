@@ -15,7 +15,7 @@ const Player = (props: {src: string, id: string, loop?: boolean}) => {
     }
   };
 
-  return (<div className="play-button-wrapper" key={props.id}>
+  return (<div className="button-wrapper" key={props.id}>
     {isPlaying ?
       <div className="play-button"
         onClick={() => togglePlayer(false)}>

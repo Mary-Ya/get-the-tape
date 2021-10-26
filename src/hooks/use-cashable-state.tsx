@@ -16,7 +16,7 @@ const useCashableState = (initialValue: TPossibleCashableStateValueTypes,
   const initialIsNotEmpty = isNotEmpty(initialValue);
 
   try {
-      savedValue = safeLocalStorage.getItem(localStorageKey) || null;
+    savedValue = safeLocalStorage.getItem(localStorageKey) || null;
     } catch (e) {
       console.warn(e);
     }
@@ -32,7 +32,7 @@ const useCashableState = (initialValue: TPossibleCashableStateValueTypes,
       safeLocalStorage.setItem(localStorageKey, value);
       setState(value);
     }
-    
+  console.log(localStorageKey, state);
     return [state, setter] as const;
 }
   
