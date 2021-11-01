@@ -1,18 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ITrack } from "../types/track";
 import Track from "./track";
 import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
-import useTrackList from "../hooks/use-track-list";
+import { removeItemByProperty } from "../common/utils";
 
-const TrackList = (props: any) => {
-    const [currentList, setCurrentList, removeTrack] = useTrackList(props.trackList);
+interface ITrackListProps {
+    trackList: ITrack[],
+    updateTrackList: (a: ITrack[]) => void
+}
 
-    useEffect(() => {
-        setCurrentList(props.trackList)
-    }, [props.trackList]);
-
-    const onRemoveTrack = (id) => {
-        const newList = removeTrack(id);
+const TrackList = (props: ITrackListProps) => {
+    const onRemoveTrack = (id: ITrack) => {
+        const newList = removeItemByProperty(props.trackList, id, 'id');
         props.updateTrackList(newList);
     }
 
@@ -39,12 +38,12 @@ const TrackList = (props: any) => {
 
     const onSortEnd = ({ oldIndex, newIndex }) => {
         if (oldIndex !== newIndex) {
-            const newArray = arrayMove(currentList, oldIndex, newIndex);
+            const newArray = arrayMove(props.trackList, oldIndex, newIndex);
             props.updateTrackList(newArray);
         }
     };
     
-    return <SortableList items={currentList} onSortEnd={onSortEnd} useDragHandle={true} />
+    return <SortableList items={props.trackList} onSortEnd={onSortEnd} useDragHandle={true} />
 };
 
 export default React.memo(TrackList);

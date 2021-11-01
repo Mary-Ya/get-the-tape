@@ -106,7 +106,7 @@ function Home(props: any) {
       });
   };
 
-  const fetchPlaylist = () => {
+  const fetchTrackList = () => {
     const cleanSettings = cleanObject({...settings, optional: cleanObject(optionalSettings)})
     api
       .getTheTape(tracksCount, cleanSettings)
@@ -121,20 +121,19 @@ function Home(props: any) {
     <Spinner />
   ) : (
         <div className="row g-0">
-          <div className="col-lg-4 col-12 form-check bg-light rounded-10 p-3">
+          <div className="col-lg-3 col-12 form-check bg-light rounded-10 p-3">
             
             <SeedSettings setSettings={setSettings} country={me.country} />
-
             <OptionalSettings setOptionalSettings={setOptionalSettings} />
             
           </div>
-          <div className="col-lg-4 col-12 ps-lg-5 pt-3 pt-lg-0">
+          <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
             <SavePlaylist
               name={newPlayListName}
               accessToken={accessToken}
               myId={me.id}
               trackList={trackList}
-              fetchPlaylist={fetchPlaylist}
+              fetchTrackList={fetchTrackList}
             />
             {trackList && trackList.length > 0 ? (
               <div className="">

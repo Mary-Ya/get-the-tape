@@ -12,7 +12,7 @@ interface ISavePlaylistProps {
   accessToken: string;
   myId: string;
   trackList: Array<ITrack>;
-  fetchPlaylist: () => void
+  fetchTrackList: () => void
 }
 
 const TRACKLIST_STATUS_LIST = {
@@ -101,7 +101,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
         <button
           className="btn btn-outline-primary"
           onClick={() => {
-            props.fetchPlaylist();
+            props.fetchTrackList();
           }}
         >
           GET THE TAPE!

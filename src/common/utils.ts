@@ -66,6 +66,12 @@ const cleanObject = (data: any) => {
 const deserialize = (search: string) =>
     Object.fromEntries(new URLSearchParams(search));
 
+    
+const removeItemByProperty = (data: any[], filter: any, propName: string) => {
+    const newSongSeeds = data.filter((i) => i[propName] !== filter);
+    return newSongSeeds;
+};
+
 export {
     getRandomNumber,
     safeLocalStorage,
@@ -76,5 +82,6 @@ export {
     clearSelectedValue,
     haveACopyInArray,
     cleanObject,
-    deserialize
+    deserialize,
+    removeItemByProperty
 }

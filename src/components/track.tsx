@@ -53,7 +53,7 @@ class Track extends React.Component<{
         onClick={this.props.onClick}
         key={`song-${i.id}`}
       >
-        <div className="col-3 col-xs-2">
+        <div className="col-2 col-xs-2">
           <div className="row g-0 h-100">
             <this.state.DraggableHandle>
               <div className="col-3 h-100 align-items-center px-2">
@@ -71,7 +71,7 @@ class Track extends React.Component<{
             </div>
           </div>
         </div>
-        <div className="col-lg-7 col-9">
+        <div className="col-lg-9 col-9">
           <a target="_blank" href={i.external_urls.spotify} className="fs-4">
             {i.name}
           </a>
@@ -79,8 +79,7 @@ class Track extends React.Component<{
           {i.artists.map(this.renderArtist)}
           <i className="bi-alarm"></i>
         </div>
-        <div
-          className={`col-lg-1 col-12 d-flex ${this.props.controls ? "" : "d-none"}`}
+        <div className={`col-lg-1 col-12 d-flex ${this.props.controls ? "" : "d-none"}`}
         >
           <Player
             id={`audio-${i.id}`}
