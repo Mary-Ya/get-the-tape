@@ -4,7 +4,7 @@ import useSeedList from "../../hooks/use-seed-list";
 import { IArtists, ITracks } from "../../types/playlist";
 import { IArtist, ITrack } from "../../types/track";
 
-import GenresList from "../genres";
+import GenresList from "../GenresList/GenresList";
 import SelectedSeed from "./selected-seed";
 import SeedSelector from "./selector-seed";
 
@@ -105,7 +105,7 @@ function SeedSettings(props: any) {
       <GenresList
         canAddMoreSeeds={canAddMoreSeeds}
         canRemoveSeeds={genreSeeds.length > 1}
-        genreList={genreSeeds}
+        selectedGenresList={genreSeeds}
         onGenreSelect={selectGenre}
         onGenreRelease={releaseGenre}
       />

@@ -12,9 +12,9 @@ const useTrackList = (initialValue: ITrack[]) => {
 
     const setList = (data) => {
         setState(data || []);
-    }
+    };
 
-    return [state, setList, removeItemById]
+    return [state, setList, removeItemById];
 }
 
 export default useTrackList;

@@ -1,14 +1,34 @@
-import React from 'react';
+import React from "react";
 
-function CheckButton(props: { onChange: any, buttonName: string, isSelected: any, className: string, disabled: boolean }) {
+interface ICHeckButtonProps {
+  onChange: (buttonName: string) => void;
+  buttonName: string;
+  className: string;
+  isSelected: boolean;
+  disabled: boolean;
+}
+
+function CheckButton({onChange, buttonName, isSelected, className, disabled}: ICHeckButtonProps) {
   return (
-    <div className={`d-inline-block m-1 ${props.className}`}>
-      <input disabled={props.disabled} type="checkbox" className="btn-check" id={`btn-check-${props.buttonName}`} onChange={() => {
-        props.onChange(props.buttonName);
-      }}
-        checked={props.isSelected} autoComplete="off" />
-      <label className="btn btn-outline-secondary rounded-pill text-capitalize" htmlFor={`btn-check-${props.buttonName}`}>
-        {props.buttonName}</label><br />
+    <div className={`d-inline-block m-1 ${className}`}>
+      <input
+        disabled={disabled}
+        type="checkbox"
+        className="btn-check"
+        id={`btn-check-${buttonName}`}
+        onChange={() => {
+          onChange(buttonName);
+        }}
+        checked={isSelected}
+        autoComplete="off"
+      />
+      <label
+        className="btn btn-outline-secondary rounded-pill text-capitalize"
+        htmlFor={`btn-check-${buttonName}`}
+      >
+        {buttonName}
+      </label>
+      <br />
     </div>
   );
 }
