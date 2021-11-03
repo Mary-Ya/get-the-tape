@@ -1,5 +1,4 @@
 import { ITrack } from "../types/track";
-import userApi from "./user-api";
 
 const getRandomNumber = (max = 1000) => Math.floor(Math.random() * max)
 

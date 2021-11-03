@@ -46,7 +46,7 @@ function GenresList(props: GenresProps) {
 
   return (
     <div className={`${props.className || ""}`}>
-      Seed genres:{" "}
+      Seed genres:
       {props.selectedGenresList.map((selectedGenre: string) =>
         <SelectedGenreItem
           key={`genre-selected-item-${selectedGenre}`}

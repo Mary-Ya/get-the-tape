@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Redirect } from "react-router-dom";
 
 import api from "../common/api";
@@ -16,6 +16,7 @@ import Spinner from "../components/spinner";
 
 import useSearchSettings from "../hooks/use-search-settings";
 import useCashableState from "../hooks/use-cashable-state";
+import getRandomListName from "../common/name-gen";
 
 function Home(props: any) {
   const [accessToken, setAccessToken] = useState(props.access_token);
@@ -37,6 +38,7 @@ function Home(props: any) {
     max_popularity: undefined,
     target_popularity: undefined,
   });
+  const [trackList, setTrackList] = useCashableState([], 'playList', []);
 
   // TODO: check if we actually need getSettingByName
   const [settings, setSettings, getSettingByName] = useSearchSettings({
@@ -48,30 +50,7 @@ function Home(props: any) {
   });
 
   useEffect(() => {
-    fetchAccountData().then((meRes) => {
-
-    });
-  }, []);
-
-  const [trackList, setTrackList] = useCashableState([], 'playList', []);
-
-  const [newPlayListName, setNewPlayListName] = useState(
-    `My ${settings['genre_seeds']}`
-  );
-
-  const getDefaultPlayListName = (seeds: Array<string>) =>
-    `My ${seeds.join(", ")}`;
-
-  useEffect(() => {
-    try {
-      //const savedPlaylist = safeLocalStorage.getItem("playList");
-      //const parsedList = JSON.parse(savedPlaylist);
-      /*if (parsedList && parsedList.length > 0) {
-        setTrackList(parsedList);
-      }*/
-    } catch (e) {
-      console.warn(e);
-    }
+    fetchAccountData();
   }, []);
 
   const errorHandler = (e: JQueryXHR) => {
@@ -114,6 +93,7 @@ function Home(props: any) {
       .catch(errorHandler);
   };
 
+  const trackListUpdateCallback = useCallback(setTrackList, [trackList]);
 
   return !auth ? (
     <Redirect to="/public-home" />
@@ -129,7 +109,6 @@ function Home(props: any) {
           </div>
           <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
             <SavePlaylist
-              name={newPlayListName}
               accessToken={accessToken}
               myId={me.id}
               trackList={trackList}
@@ -139,7 +118,7 @@ function Home(props: any) {
               <div className="">
                 <TrackList
                   trackList={trackList}
-                  updateTrackList={setTrackList}
+                  updateTrackList={trackListUpdateCallback}
                 />
               </div>
             ) : (

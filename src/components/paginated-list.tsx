@@ -2,8 +2,8 @@ import React from 'react';
 import { IAnyList } from '../types/common';
 
 interface IPaginationListProps extends IAnyList {
-  children: any
-  setPage: any
+  children: any;
+  setPage: (pageNumber: number) => void;
 }
 
 function PaginatedList(props: IPaginationListProps) {
@@ -26,7 +26,7 @@ function PaginatedList(props: IPaginationListProps) {
   }
 
   return (
-    <div className="content ">
+    <div className="content">
       <div className="row m-0">
         {props.items.map((item, index) => React.cloneElement(props.children, {key: item.id, ...item, index}))}
       </div>

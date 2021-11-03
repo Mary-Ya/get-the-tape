@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
 import Icons from "../assets/icons";
+import getRandomListName from "../common/name-gen";
 import playlistApi from "../common/playlist-api";
 import useCashableState from "../hooks/use-cashable-state";
 import { ITrack } from "../types/track";
 import EditableText from "./editable-text";
 
 interface ISavePlaylistProps {
-  name: string;
   accessToken: string;
   myId: string;
   trackList: Array<ITrack>;
@@ -43,15 +43,9 @@ function StatusText(props: {status: string, playListID: null | string}) {
 
 function SavePlaylist(props: ISavePlaylistProps) {
   const [isChangedManually, setIsChangedManually] = useState(false);
-  const [name, setName] = useState(props.name);
+  const [name, setName] = useState(getRandomListName());
   const [playListID, setPlayListID] = useCashableState("", 'playListID');
   const [status, setStatus] = useCashableState(TRACKLIST_STATUS_LIST['NEW'], 'TRACKLIST_STATUS_LIST');
-
-  useEffect(() => {
-    if (!isChangedManually) {
-      setName(props.name);
-    }
-  }, [props.name]);
 
   useEffect(() => {
     setStatus(TRACKLIST_STATUS_LIST['SAVED']);
@@ -61,6 +55,8 @@ function SavePlaylist(props: ISavePlaylistProps) {
     setStatus(TRACKLIST_STATUS_LIST['MODIFIED']);
   }, [props.trackList]);
 
+
+  // TODO: if playlist is created - update it
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIsChangedManually(true);
     setName(e.target.value);
