@@ -14,7 +14,7 @@ export interface IPlaylist {
     primary_color: null;
     public:        boolean;
     snapshot_id:   string;
-    tracks:        Tracks;
+    tracks:        ITracks;
     type:          string;
     uri:           string;
 }

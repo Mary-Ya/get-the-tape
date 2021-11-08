@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 
 import api from "../common/api";
 import userApi from "../common/user-api";
-import { divideArray, safeLocalStorage, cleanObject } from "../common/utils";
+import { divideArray, safeLocalStorage, cleanObject, getRandomNumber } from "../common/utils";
 import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
 import TrackList from "../components/track-list";
@@ -39,6 +39,12 @@ function Home(props: any) {
     target_popularity: undefined,
   });
   const [trackList, setTrackList] = useCashableState([], 'playList', []);
+  const [trackListSnapshot, setSnapshot] = useState('00000000');
+
+  const updateTrackListAndSnapshot = (data: ITrack[]) => {
+    setSnapshot(`${getRandomNumber()}${getRandomNumber()}`);
+    setTrackList(data);
+}
 
   // TODO: check if we actually need getSettingByName
   const [settings, setSettings, getSettingByName] = useSearchSettings({
@@ -93,7 +99,7 @@ function Home(props: any) {
       .catch(errorHandler);
   };
 
-  const trackListUpdateCallback = useCallback(setTrackList, [trackList]);
+  const trackListUpdateCallback = useCallback(updateTrackListAndSnapshot, [trackList]);
 
   return !auth ? (
     <Redirect to="/public-home" />
@@ -102,10 +108,8 @@ function Home(props: any) {
   ) : (
         <div className="row g-0">
           <div className="col-lg-3 col-12 form-check bg-light rounded-10 p-3">
-            
             <SeedSettings setSettings={setSettings} country={me.country} />
             <OptionalSettings setOptionalSettings={setOptionalSettings} />
-            
           </div>
           <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
             <SavePlaylist
@@ -117,6 +121,7 @@ function Home(props: any) {
             {trackList && trackList.length > 0 ? (
               <div className="">
                 <TrackList
+                  snapshot={trackListSnapshot}
                   trackList={trackList}
                   updateTrackList={trackListUpdateCallback}
                 />

@@ -18,7 +18,7 @@ const Playlist = (props) => {
     })
   }, []);
 
-  const unfollow = (id: string, index: number) => {
+  const unfollow = (id: string) => {
     apiPlaylist.unfollow(id).then((res) => {
       if (res.statusCode == 200) {
         apiPlaylist.getList(list?.offset, list?.limit).then((i: IPlaylistList) => {
@@ -30,7 +30,7 @@ const Playlist = (props) => {
 
   const RenderRow = (item: IPlaylist) => {
     return <div><button onClick={() => {
-      unfollow(item.id, item.index)
+      unfollow(item.id);
     }}>unfollow</button>
       <button onClick={() => {
         console.log('edit')
@@ -40,7 +40,6 @@ const Playlist = (props) => {
   const setPage = () => {
     return (page: number) => {
       const offset = list.limit * page;
-      console.log(page)
       apiPlaylist.getList(offset).then((i: IPlaylistList) => {
         setList(i);
       });

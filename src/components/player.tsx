@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useSimpleAudio from 'use-simple-audio';
 import icons from '../assets/icons';
 
-const Player = (props: {src: string, id: string, loop?: boolean}) => {
+const Player = (props: {src: string, id: string, loop?: boolean, className?:string}) => {
   const { play, pause, stop } = useSimpleAudio(props.src, props.loop);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -15,7 +15,7 @@ const Player = (props: {src: string, id: string, loop?: boolean}) => {
     }
   };
 
-  return (<div className="button-wrapper" key={props.id}>
+  return (<div className={`button-wrapper ${props.className}`} key={props.id}>
     {isPlaying ?
       <div className="play-button"
         onClick={() => togglePlayer(false)}>
