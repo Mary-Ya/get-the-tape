@@ -3,14 +3,19 @@ import { Redirect } from "react-router-dom";
 
 import api from "../common/api";
 import userApi from "../common/user-api";
-import { divideArray, safeLocalStorage, cleanObject, getRandomNumber } from "../common/utils";
+import {
+  divideArray,
+  safeLocalStorage,
+  cleanObject,
+  getRandomNumber,
+} from "../common/utils";
 import { IArtist, ITrack } from "../types/track";
 import { IMe } from "./../types/me";
 import TrackList from "../components/track-list";
 
 import SavePlaylist from "../components/save-playlist";
-import SeedSettings from '../components/home/seed-settings';
-import OptionalSettings from '../components/home/optional-settings';
+import SeedSettings from "../components/home/seed-settings";
+import OptionalSettings from "../components/home/optional-settings";
 
 import Spinner from "../components/spinner";
 
@@ -29,22 +34,22 @@ function Home(props: any) {
     min_tempo: undefined,
     max_tempo: undefined,
     target_tempo: undefined,
-    
+
     min_instrumentalness: undefined,
     max_instrumentalness: undefined,
     target_instrumentalness: undefined,
-    
+
     min_popularity: undefined,
     max_popularity: undefined,
     target_popularity: undefined,
   });
-  const [trackList, setTrackList] = useCashableState([], 'playList', []);
-  const [trackListSnapshot, setSnapshot] = useState('00000000');
+  const [trackList, setTrackList] = useCashableState([], "playList", []);
+  const [trackListSnapshot, setSnapshot] = useState("00000000");
 
   const updateTrackListAndSnapshot = (data: ITrack[]) => {
     setSnapshot(`${getRandomNumber()}${getRandomNumber()}`);
     setTrackList(data);
-}
+  };
 
   // TODO: check if we actually need getSettingByName
   const [settings, setSettings, getSettingByName] = useSearchSettings({
@@ -65,10 +70,13 @@ function Home(props: any) {
 
   const fetchAccountData = () => {
     if (!me) {
-      return userApi.getMe(accessToken).then((res) => {
-        setMe(res);
-        return res;
-      }).catch(errorHandler);
+      return userApi
+        .getMe(accessToken)
+        .then((res) => {
+          setMe(res);
+          return res;
+        })
+        .catch(errorHandler);
     }
     return Promise.resolve(me);
   };
@@ -92,45 +100,67 @@ function Home(props: any) {
   };
 
   const fetchTrackList = () => {
-    const cleanSettings = cleanObject({...settings, optional: cleanObject(optionalSettings)})
+    const cleanSettings = cleanObject({
+      ...settings,
+      optional: cleanObject(optionalSettings),
+    });
     api
       .getTheTape(tracksCount, cleanSettings)
       .then(setTrackList)
       .catch(errorHandler);
   };
 
-  const trackListUpdateCallback = useCallback(updateTrackListAndSnapshot, [trackList]);
+  const trackListUpdateCallback = useCallback(updateTrackListAndSnapshot, [
+    trackList,
+  ]);
+
+  const shuffle = (index: number) => {
+    const cleanSettings = cleanObject({
+      ...settings,
+      optional: cleanObject(optionalSettings),
+    });
+    return api
+      .getTheTape(1, cleanSettings)
+      .then(([newTrack]) => {
+        const nextListState = [...trackList];
+        nextListState[index] = newTrack;
+        updateTrackListAndSnapshot(nextListState);
+        return nextListState as ITrack[];
+      })
+      .catch(errorHandler);
+  };
 
   return !auth ? (
     <Redirect to="/public-home" />
   ) : !me ? (
     <Spinner />
   ) : (
-        <div className="row g-0">
-          <div className="col-lg-3 col-12 form-check bg-light rounded-10 p-3">
-            <SeedSettings setSettings={setSettings} country={me.country} />
-            <OptionalSettings setOptionalSettings={setOptionalSettings} />
-          </div>
-          <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
-            <SavePlaylist
-              accessToken={accessToken}
-              myId={me.id}
+    <div className="row g-0">
+      <div className="col-lg-3 col-12 form-check bg-light rounded-10 p-3">
+        <SeedSettings setSettings={setSettings} country={me.country} />
+        <OptionalSettings setOptionalSettings={setOptionalSettings} />
+      </div>
+      <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
+        <SavePlaylist
+          accessToken={accessToken}
+          myId={me.id}
+          trackList={trackList}
+          fetchTrackList={fetchTrackList}
+        />
+        {trackList && trackList.length > 0 ? (
+          <div className="">
+            <TrackList
+              snapshot={trackListSnapshot}
               trackList={trackList}
-              fetchTrackList={fetchTrackList}
+              updateTrackList={trackListUpdateCallback}
+              shuffleItem={shuffle}
             />
-            {trackList && trackList.length > 0 ? (
-              <div className="">
-                <TrackList
-                  snapshot={trackListSnapshot}
-                  trackList={trackList}
-                  updateTrackList={trackListUpdateCallback}
-                />
-              </div>
-            ) : (
-              <>💃💃💃</>
-            )}
           </div>
-        </div>
+        ) : (
+          <>💃💃💃</>
+        )}
+      </div>
+    </div>
   );
 }
 

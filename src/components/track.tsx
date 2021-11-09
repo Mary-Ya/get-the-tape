@@ -43,13 +43,11 @@ class Track extends React.Component<{
   
   render() {
     const track = this.state.track;
-
+/**
+ * TODO: make hover styles
+ */
     return (
-      <div
-        className={`row gx-0  my-1 py-1 justify-content-left track-row ${this.props.className}`}
-        onClick={this.props.onClick}
-        key={`song-${track.id}`}
-      >
+      <>
         <div className="col-2 col-xs-2">
           <div className="row g-0 h-100">
             <this.state.DraggableHandle>
@@ -63,7 +61,7 @@ class Track extends React.Component<{
                 href={track.album.external_urls.spotify}
                 target="_blank"
               >
-                <img className="img-fluid  logo-container" src={track.album.images[0].url}></img>
+                <img height="78" className="img-fluid logo-container" src={track.album.images[0].url}></img>
               </a>
             </div>
           </div>
@@ -100,7 +98,7 @@ class Track extends React.Component<{
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }
