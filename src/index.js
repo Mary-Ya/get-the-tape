@@ -4,7 +4,7 @@ import {
     BrowserRouter as Router
   } from "react-router-dom";
 
-import '../../node_modules/bootstrap/dist/js/bootstrap.bundle'
+import './../node_modules/bootstrap/dist/js/bootstrap.bundle'
   
 import App from "./app.tsx"
 import "./app.scss";

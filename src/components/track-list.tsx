@@ -6,7 +6,7 @@ import {
   SortableContainer,
   SortableElement,
 } from "react-sortable-hoc";
-import { getRandomNumber, removeItemByProperty } from "../common/utils";
+import { removeItemByProperty } from "./../common/utils";
 
 interface ITrackListProps {
   snapshot: string;
@@ -23,9 +23,6 @@ const TrackList = (props: ITrackListProps) => {
     props.updateTrackList(newList);
   };
 
-  // TODO: make API call for random track
-  // will need to make optimization (fetch a bunch before all alts are used)
-  // will need to think through collisions and potential micro freezes between removes and shuffles
   const shuffle = (index: number) => {
     setSortIsDisabled(true);
     props.shuffleItem(index).then(() => {
