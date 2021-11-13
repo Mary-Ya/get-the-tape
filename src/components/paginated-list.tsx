@@ -2,7 +2,7 @@ import React from 'react';
 import { IAnyList } from '../types/common';
 
 interface IPaginationListProps extends IAnyList {
-  children: any;
+  row: any;
   total: number;
   limit: number;
   items: any[];
@@ -10,7 +10,7 @@ interface IPaginationListProps extends IAnyList {
   setPage: (pageNumber: number) => void;
 }
 
-function PaginatedList({children, total, limit, items, href, setPage}: IPaginationListProps) {
+function PaginatedList({row, total, limit, items, href, setPage}: IPaginationListProps) {
   const renderSpotifyHref = () => {
     if (href) {
       return <a href={href} target="_blank">Open on spotify</a>;
@@ -29,10 +29,12 @@ function PaginatedList({children, total, limit, items, href, setPage}: IPaginati
       key={`page-${i}`}> {i}</button>)}</>;
   }
 
+  const Row = row;
+
   return (
     <div className="content">
       <div className="row m-0">
-        {items.map((item, index) => React.cloneElement(children, {key: item.id, ...item, index}))}
+        {items.map((item, index) => React.createElement(Row, {key: item.id, ...item, index}))}
       </div>
       <div className="row m-0">
         <div className="col-lg-6">

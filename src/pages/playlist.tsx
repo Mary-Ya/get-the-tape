@@ -47,7 +47,7 @@ const Playlist = (props) => {
   }
 
   return list ? <PaginatedList {...list}
-    children={<RenderRow />}
+    row={RenderRow}
     setPage={setPage()}
   /> : <Spinner></Spinner>
 };
