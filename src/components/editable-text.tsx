@@ -24,11 +24,12 @@ function EditableText(props: IEditableTextProps) {
   };
 
   const renderText = () => (
-    <button className={`btn btn-link text-decoration-none ${props.textClass}`}>
-      {props.value}
-      <span onClick={toggleControls} className="ms-2">
+    <button className={`btn btn-link text-decoration-none`}>
+      <div className={`d-inline ${props.textClass}`}>
+        <span onClick={toggleControls} className="me-2">
         <Icons.Pencil />
-      </span>
+      </span></div>
+      <div className={`d-inline ${props.textClass}`}>{props.value}</div>
     </button>
   );
 

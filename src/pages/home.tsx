@@ -22,6 +22,7 @@ import Spinner from "../components/spinner";
 import useSearchSettings from "../hooks/use-search-settings";
 import useCashableState from "../hooks/use-cashable-state";
 import getRandomListName from "../common/name-gen";
+import TapeControls from "../components/TapeControls";
 
 function Home(props: any) {
   const [accessToken, setAccessToken] = useState(props.access_token);
@@ -140,7 +141,7 @@ function Home(props: any) {
         <SeedSettings setSettings={setSettings} country={me.country} />
         <OptionalSettings setOptionalSettings={setOptionalSettings} />
       </div>
-      <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
+          <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
         <SavePlaylist
           accessToken={accessToken}
           myId={me.id}

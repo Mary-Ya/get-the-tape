@@ -7,6 +7,7 @@ import playlistApi from "../common/playlist-api";
 import useCashableState from "../hooks/use-cashable-state";
 import { ITrack } from "../types/track";
 import EditableText from "./editable-text";
+import TapeStatusText from "./TapeStatusText";
 
 interface ISavePlaylistProps {
   accessToken: string;
@@ -15,44 +16,32 @@ interface ISavePlaylistProps {
   fetchTrackList: () => void
 }
 
-const TRACKLIST_STATUS_LIST = {
-  "NEW": "NEW",
-  "SAVED": "SAVED",
-  "MODIFIED": "MODIFIED"
-}
-
-const TRACKLIST_STATUS_TEXT_LIST = {
-  "NEW": () => (() => (<></>)),
-  "SAVED": () => ((id) => (<span className="text-black-50">Added to the playlist  
-    <span className="text-decoration-none mx-2 py-2">{id} </span>
-      <a href={`https://open.spotify.com/playlist/${id}`} target="_blank">
-      Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
-    </a>
-  </span>)),
-  "MODIFIED": () => ((id) => (<span className="text-black-50">Changes will be saved to the playlist 
-    <span className="text-decoration-none mx-2 py-2">{id} </span>
-      <a href={`https://open.spotify.com/playlist/${id}`} target="_blank">
-      Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
-    </a>
-  </span>)),
-}
-
-function StatusText(props: {status: string, playListID: null | string}) {
-  return TRACKLIST_STATUS_TEXT_LIST[props.status]()(props.playListID);
-};
-
 function SavePlaylist(props: ISavePlaylistProps) {
   const [isChangedManually, setIsChangedManually] = useState(false);
   const [name, setName] = useState(getRandomListName());
   const [playListID, setPlayListID] = useCashableState("", 'playListID');
-  const [status, setStatus] = useCashableState(TRACKLIST_STATUS_LIST['NEW'], 'TRACKLIST_STATUS_LIST');
+  const [status, setStatus] = useCashableState(null, 'TRACKLIST_STATUS_LIST', props.trackList?.length == 0 ? 'EMPTY' : 'NEW');
+
+  const [notFirstRender, setNotFirstRender] = useState(false);
 
   useEffect(() => {
-    setStatus(TRACKLIST_STATUS_LIST['SAVED']);
+    setNotFirstRender(true);
+  })
+
+  useEffect(() => {
+    if (playListID && notFirstRender) {
+      setStatus('SAVED');
+    };
   }, [playListID]);
 
   useEffect(() => {
-    setStatus(TRACKLIST_STATUS_LIST['MODIFIED']);
+    if (notFirstRender) {
+      if (playListID) {
+        setStatus('MODIFIED');
+      } else {
+        setStatus('NEW')
+      }
+    }
   }, [props.trackList]);
 
 
@@ -86,13 +75,23 @@ function SavePlaylist(props: ISavePlaylistProps) {
         props.trackList.map((i) => i.uri)
       )
       .then((res) => {
-        setStatus(TRACKLIST_STATUS_LIST['SAVED']);
+        setStatus('SAVED');
         console.log(res);
       });
   };
 
   return (
     <div>
+      <EditableText
+          textClass={'h1'}
+          value={name}
+          onChange={onNameChange}
+          placeholder={'Playlist name here'}
+        />
+      <div className="text-black-50">ID: {playListID} <a href={`https://open.spotify.com/playlist/${playListID}`} target="_blank">
+        Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
+      </a></div>
+      <TapeStatusText status={status} />
       <div className={`input-group mb-3 px-lg-0 px-3`}>
         <button
           className="btn btn-outline-primary"
@@ -112,7 +111,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
           }}
         >
           <Icons.Plus />
-          Add
+          Save
         </button>
         
         <button
@@ -126,14 +125,7 @@ function SavePlaylist(props: ISavePlaylistProps) {
           <Icons.Inside />
           Save as New
         </button>
-        <EditableText
-          textClass={'ms-3 py-2'}
-          value={name}
-          onChange={onNameChange}
-          placeholder={'Playlist name here'}
-        />
       </div>
-      <StatusText playListID={playListID} status={status}/>
     </div>
   );
 }
