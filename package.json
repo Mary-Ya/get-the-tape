@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --watch --mode development"
+    "start": "webpack --watch --mode development",
+    "test": "jest --runInBand"
   },
   "author": "",
   "license": "ISC",
@@ -12,25 +13,30 @@
     "@babel/core": "^7.13.15",
     "@babel/plugin-transform-react-jsx": "^7.13.12",
     "@babel/plugin-transform-runtime": "^7.13.15",
-    "@babel/preset-env": "^7.13.15",
-    "@babel/preset-react": "^7.13.13",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime": "^7.13.10",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^11.2.7",
     "@types/babel__core": "^7.1.14",
     "@types/babel__plugin-transform-runtime": "^7.9.1",
     "@types/babel__preset-env": "^7.9.1",
     "@types/eslint": "^7.2.10",
+    "@types/jest": "^27.0.2",
     "@types/jquery": "^3.5.5",
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-select": "^4.0.17",
+    "@types/react-test-renderer": "^17.0.1",
     "@types/webpack": "^5.28.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "autoprefixer": "^10.2.6",
     "babel-cli": "^6.26.0",
+    "babel-jest": "^27.3.1",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "css-loader": "^5.2.3",
@@ -41,11 +47,15 @@
     "favicons-webpack-plugin": "^5.0.2",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
+    "jest": "^27.3.1",
+    "jest-junit": "^13.0.0",
     "postcss-loader": "^6.1.0",
+    "react-test-renderer": "^17.0.2",
     "sass": "^1.35.1",
     "sass-loader": "^12.1.0",
     "style-loader": "^2.0.0",
     "svg-url-loader": "^7.1.1",
+    "ts-jest": "^27.0.7",
     "ts-loader": "^9.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4",
@@ -67,5 +77,20 @@
     "react-select": "^4.3.1",
     "react-sortable-hoc": "^2.0.0",
     "use-simple-audio": "^1.1.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "testEnvironment": "jsdom"
   }
 }

@@ -16,21 +16,22 @@ module.exports = {
 
 // Rules of how webpack will take our files, compile & bundle them for the browser 
  module: {
-  rules: [
-    {
-        test: /\.(ts|js)x?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
-              "@babel/preset-typescript",
+   rules: [
+     {
+       test: /\.(ts|js)x?$/,
+       exclude: /node_modules/,
+       use: {
+         loader: "babel-loader",
+         options: {
+           presets: [
+             "@babel/preset-env",
+             "@babel/preset-react",
+             "@babel/preset-typescript",
             ],
           },
         },
       },
+      { test: /\.tsx?$/, include: /front/},
       {
         test: /\.(scss)$/,
         use: [{

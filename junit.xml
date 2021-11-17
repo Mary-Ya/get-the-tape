@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="1" errors="0" time="5.575">
+  <testsuite name="&lt;TapeStatusText /&gt;" errors="0" failures="1" skipped="0" timestamp="2021-11-16T12:39:11" time="5.261" tests="1">
+    <testcase classname="&lt;TapeStatusText /&gt; renders &lt;TapeStatusText /&gt; component" name="&lt;TapeStatusText /&gt; renders &lt;TapeStatusText /&gt; component" time="0.007">
+      <failure>Error: expect(received).toContain(expected) // indexOf
+
+Expected value:  &quot;local&quot;
+Received object: {}
+    at Object.&lt;anonymous&gt; (C:\DATA\PROJ\tree-talk\constable\front\src\components\TapeStatusText\__test__\index.test.tsx:9:21)
+    at Promise.then.completed (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\utils.js:390:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\utils.js:315:10)
+    at _callCircusTest (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)
+    at _runTest (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\run.js:66:9)
+    at _runTestsForDescribeBlock (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\run.js:60:9)
+    at run (C:\DATA\PROJ\tree-talk\constable\front\node_modules\jest-circus\build\run.js:25:3)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

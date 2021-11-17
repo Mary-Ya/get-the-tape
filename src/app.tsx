@@ -17,7 +17,7 @@ import Icons from "./assets/icons";
 import PrivateRoute from "./components/private-route";
 
 const App = () => {
-  return (<div>
+  return (<div data-testid="app">
     <div className="container d-lg-none">
       <div className="row">
         <div className="col-4 text-center">
@@ -34,7 +34,7 @@ const App = () => {
         </div>
       </div>
     </div>
-    <div className="d-flex align-items-start">
+    <div className="d-flex align-items-start" data-testid="main-menu-desktop">
       <ul className="nav flex-column mt-lg-5 w-lg-10 d-none d-lg-flex py-3 ps-3 pe-5">
         <li className="nav-item text-center">
           <Icons.Star></Icons.Star>
