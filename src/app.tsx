@@ -13,41 +13,14 @@ import PublicHome from "./pages/public-home";
 import NoMatch from "./pages/no-match";
 
 import TrackList from "./pages/playlist";
-import Icons from "./assets/icons";
 import PrivateRoute from "./components/private-route";
+import TopMenu from "./layout/TopMenu";
 
 const App = () => {
   return (<div data-testid="app">
-    <div className="container d-lg-none">
-      <div className="row">
-        <div className="col-4 text-center">
-        </div>
-        <div className="col-4 text-center">
-          <Icons.Star></Icons.Star>
-          <NavLink to="/" className="nav-link px-0 mr-5">GetTheTape</NavLink>
-        </div>
-        <div className="col-4 text-center">
-          <NavLink to="/about" className="nav-link" activeClassName="active">About</NavLink>
-        </div>
-        <div className="col-4 text-center">
-          <NavLink to="/playlist" className="nav-link" activeClassName="active">Playlist</NavLink>
-        </div>
-      </div>
-    </div>
+    <TopMenu />
     <div className="d-flex align-items-start" data-testid="main-menu-desktop">
-      <ul className="nav flex-column mt-lg-5 w-lg-10 d-none d-lg-flex py-3 ps-3 pe-5">
-        <li className="nav-item text-center">
-          <Icons.Star></Icons.Star>
-          <NavLink to="/" className="nav-link px-0 mr-5">GetTheTape</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/about" className="nav-link" activeClassName="active">About</NavLink>
-        </li>
-        <li>
-          <NavLink to="/playlist" className="nav-link" activeClassName="active">Playlist</NavLink>
-        </li>
-      </ul>
-      <div className="d-flex mt-lg-5 w-lg-90">
+       <div className="d-flex mt-lg-5 w-lg-90">
         <Switch>
           <Route path="/about">
             <About />

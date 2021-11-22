@@ -17,7 +17,6 @@ interface ISavePlaylistProps {
 }
 
 function SavePlaylist(props: ISavePlaylistProps) {
-  const [isChangedManually, setIsChangedManually] = useState(false);
   const [name, setName] = useState(getRandomListName());
   const [playListID, setPlayListID] = useCashableState("", 'playListID');
   const [status, setStatus] = useCashableState(null, 'TRACKLIST_STATUS_LIST', props.trackList?.length == 0 ? 'EMPTY' : 'NEW');
@@ -47,7 +46,6 @@ function SavePlaylist(props: ISavePlaylistProps) {
 
   // TODO: if playlist is created - update it
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsChangedManually(true);
     setName(e.target.value);
   };
 

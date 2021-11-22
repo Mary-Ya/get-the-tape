@@ -59,4 +59,4 @@ function OptionalSettings(props) {
   );
 }
 
-export default React.memo(OptionalSettings, () => true);
+export default OptionalSettings;

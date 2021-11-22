@@ -15,8 +15,8 @@ const STATUS_TEXT = {
     ),
 };
 
-function TapeStatusText({ status }: { status: string }) {
-  return <span data-testid="tape-status-text">{STATUS_TEXT[status as keyof typeof STATUS_TEXT]()()}</span>;
+function TapeStatusText({ status }: { status: keyof typeof STATUS_TEXT }) {
+  return <span data-testid="tape-status-text">{STATUS_TEXT[status]()()}</span>;
 }
 
 export default React.memo(TapeStatusText);
