@@ -31,12 +31,7 @@ const TrackList = (props: ITrackListProps) => {
   };
 
   const renderItem = (i: ITrack, index: number) => (
-    <div
-        className={`row gx-0  my-1 py-1 justify-content-left track-row button_`}
-        key={"playlist-item" + i.id}
-        style={{ minHeight: 88}}
-      >
-      <Track
+    <Track
         controls={true}
         track={i}
         className=""
@@ -44,7 +39,6 @@ const TrackList = (props: ITrackListProps) => {
         remove={onRemoveTrack}
         shuffle={() => shuffle(index)}
       ></Track>
-    </div>
   );
 
   const SortableItem = SortableElement((params) => {

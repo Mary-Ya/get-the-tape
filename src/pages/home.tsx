@@ -134,7 +134,7 @@ function Home(props: any) {
   ) : !me ? (
     <Spinner />
   ) : (
-    <div className="row g-0">
+    <div className="row g-0 justify-content-center">
       <div className="col-lg-3 col-12 form-check bg-light rounded-10 p-3">
         <SeedSettings setSettings={setSettings} country={me.country} />
         <OptionalSettings setOptionalSettings={setOptionalSettings} />

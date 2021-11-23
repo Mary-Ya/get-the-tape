@@ -8,7 +8,7 @@ const MainMenu = () => {
   return (
     <div className="container">
       <div className="row align-items-end">
-        <div className="col-2 text-center">
+        <div className="col-2 text-end">
           <NavLink exact to="/" className="nav-link px-0 mr-5" activeClassName="menu__item--active"><Icons.Star className="d-inline-block"></Icons.Star></NavLink>
         </div>
         <div className="col-4 text-center">

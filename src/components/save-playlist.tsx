@@ -79,18 +79,18 @@ function SavePlaylist(props: ISavePlaylistProps) {
   };
 
   return (
-    <div>
+    <div className="px-3">
       <EditableText
           textClass={'h1'}
           value={name}
           onChange={onNameChange}
           placeholder={'Playlist name here'}
-        />
+      />
       <div className="text-black-50">ID: {playListID} <a href={`https://open.spotify.com/playlist/${playListID}`} target="_blank">
         Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
       </a></div>
       <TapeStatusText status={status} />
-      <div className={`input-group mb-3 px-lg-0 px-3`}>
+      <div className={`input-group mb-3 px-lg-0`}>
         <button
           className="btn btn-outline-primary"
           onClick={() => {

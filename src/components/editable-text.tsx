@@ -24,7 +24,7 @@ function EditableText(props: IEditableTextProps) {
   };
 
   const renderText = () => (
-    <button className={`btn btn-link text-decoration-none`}>
+    <button className={`btn btn-link text-decoration-none px-0`}>
       <div className={`d-inline ${props.textClass}`}>
         <span onClick={toggleControls} className="me-2">
         <Icons.Pencil />
