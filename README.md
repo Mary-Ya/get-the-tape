@@ -8,8 +8,11 @@ You can choose parameters and get playlist assembled for you.
 ## Technologies used
 
 🐥 Frontend: React 16+ and React-friendly libraries 
+
 🎒 Backend: Node.js, express (https://github.com/Mary-Ya/get-the-tape-app) 
+
 🧪 Testing: in process. Will be developed with Jest and React Testing Library
+
 🎶 API: gratitude to Spotify open API (you can find it on https://developer.spotify.com/)
 
 
