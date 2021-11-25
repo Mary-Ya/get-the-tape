@@ -60,23 +60,31 @@ module.exports = {
           loader: 'sass-loader'
         }]
       }, {
-      test: /\.svg$/,
-      use: [
-        {
-          loader: 'svg-url-loader',
-          options: {
-            limit: 10000,
-          },
-        },
-      ],
+        test: /\.svg$/,
+        use: [
+            {
+                loader: "@svgr/webpack"
+            },
+            {
+              loader: "file-loader",
+              options: {
+                name: 'assets/[path][name].[ext]',
+              },
+            }
+        ],
+        type: "javascript/auto",
+        issuer: {
+            and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
+        }
     }, {
-      test: /\.(png|jpe?g|gif)$/i,
-      use: [
-        {
-          loader: 'file-loader',
-        },
-      ],
-    },
+        test: /\.(png|jpe?g|gif)$/i,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'file-loader'
+          },
+        ],
+      },
    ]
  },
  resolve: {
