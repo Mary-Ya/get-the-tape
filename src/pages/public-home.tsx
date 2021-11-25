@@ -1,16 +1,18 @@
 import React from "react";
 import Login from './spotify-login';
+import TapesUrl from './About/assets/tapes-normal.svg';
 
 const PublicHome = () => (
-    <div>
-        <div>
-            <h1>So you found a tape. Now what?</h1>
-        </div>
-        <div>
-            <Login />
-            OR "GET SPOTIFY FREE"
-        </div>
+    <div className="container">
+    <div className="row">
+      <div className="col-sm">
+        <Login />
+      </div>
+      <div className="col-sm">
+        <img src={TapesUrl} />
+      </div>
     </div>
+  </div>
 );
 
 export default PublicHome;

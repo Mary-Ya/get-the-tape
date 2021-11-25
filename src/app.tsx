@@ -18,7 +18,6 @@ import TopMenu from "./layout/TopMenu";
 
 const App = () => {
   return (<div data-testid="app" className="container">
-    <TopMenu data-testid="main-menu-desktop" />
     <div className="align-items-start mt-xxl-5 w-xxl-90">
         <Switch>
           <Route path="/about">
