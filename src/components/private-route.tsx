@@ -40,6 +40,7 @@ function PrivateRoute({children, location}: PrivateRouteProps) {
       });
     } else {
       setSpinnerIsOn(false);
+      setIsLoggedIn(false);
     };
   }, []);
     
