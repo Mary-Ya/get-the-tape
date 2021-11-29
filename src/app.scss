@@ -5,108 +5,175 @@
 
 
 html {
-    height: 100%;
+  height: 100%;
 }
 
 .cls-1 {
-    fill: #c4c4c4;
-    opacity: 0.1;
-    isolation: isolate;
+  fill: #c4c4c4;
+  opacity: 0.1;
+  isolation: isolate;
 }
 
 .cls-2 {
-    fill: #1ed760;
+  fill: #1ed760;
 }
 
 .logo-container {
-    max-width: 78px;
+  max-width: 78px;
 }
 
 .pretty-scroll {
-    &::-webkit-scrollbar {
-        width: 1em;
-        height: 1em;
-        background-color: rgba(#6f42c1,.1);
-        border-radius: 10px;
+  &::-webkit-scrollbar {
+    width: 1em;
+    height: 1em;
+    background-color: rgba(#6f42c1, .1);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(#6f42c1, .3);
+    border-radius: 10px;
+
+    &:hover {
+      background: #6f42c1
     }
-    
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(#6f42c1,.3);
-        border-radius: 10px;
-    
-        &:hover {
-            background: #6f42c1
-        }
-    }
+  }
 }
+
 @media (min-width: 992px) {
-    .w-lg-10 {
-        max-width: 10%;
-    }
-    
-    .w-lg-90 {
-        max-width: 90%;
-    }
-    
+  .w-lg-10 {
+    max-width: 10%;
+  }
+
+  .w-lg-90 {
+    max-width: 90%;
+  }
+
 }
 
 .async-select {
-    .css-yk16xz-control {
-        border-radius: 50rem;
-        border-color: hsl(0, 0%, 80%);
-        border-style: solid;
-        border-width: 1px;
-    }
+  .css-yk16xz-control {
+    border-radius: 50rem;
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px;
+  }
 
-    .css-1pahdxg-control {
-        border-radius: 50rem;
-        border-color: hsl(0, 0%, 80%);
-        border-style: solid;
-        border-width: 1px;
-    }
+  .css-1pahdxg-control {
+    border-radius: 50rem;
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px;
+  }
 
-    .css-1fhf3k1-control {
-        border-radius: 50rem;
-        border-color: hsl(0, 0%, 80%);
-        border-style: solid;
-        border-width: 1px;
-    }
+  .css-1fhf3k1-control {
+    border-radius: 50rem;
+    border-color: hsl(0, 0%, 80%);
+    border-style: solid;
+    border-width: 1px;
+  }
 }
 
 .handler-container {
-    height: 99%;
-    background-color: transparent;
-    color: $handle-border-color;
-    border-style: none;
+  height: 99%;
+  background-color: transparent;
+  color: $handle-border-color;
+  border-style: none;
 }
 
 .play-button {
-    color: $handle-border-color;
-    border-radius: 30px;
-    width: 30px;
-    height: 30px;
-    padding-left: 5px;
-    border-width: 1px;
-    border-style: solid;
+  color: $handle-border-color;
+  border-radius: 30px;
+  width: 30px;
+  height: 30px;
+  padding-left: 5px;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .remove-button {
-    color: $wine;
-    border-radius: 30px;
-    width: 30px;
-    height: 30px;
-    padding-left: 4px;
-    padding-top: 1px;
+  color: $black;
+  border-radius: 30px;
+  width: 30px;
+  height: 30px;
+  padding-left: 4px;
+  padding-top: 1px;
 }
 
 .track-row {
-    border-color: rgba(111, 66, 193, 0.3);
-    border-radius: 17px;
-    border-width: 0 0 1px;
-    border-style: solid;
+  border-color: rgba(111, 66, 193, 0.3);
+  border-radius: 17px;
+  border-width: 0 0 1px;
+  border-style: solid;
 }
 
 .button-wrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+}
+
+.full-height {
+  min-height: 100vh;
+}
+
+.public-home {
+  &__slide {
+    height: calc(82vh);
+    padding-top: calc(18vh);
+
+    &--bg {
+      background-repeat: no-repeat;
+      background-position-x: right;
+      background-image: url('./pages/about/assets/tapes-normal.svg');
+    }
+  }
+}
+
+.read-more {
+  cursor: pointer;
+
+  &--text {
+    background: $body-bg;
+    color: #484C49;
+
+    &:before, &:after { 
+      content: 'v';
+      padding: 0 8px;
+      font-weight: 400;
+    }
+  }
+
+  &--break {
+    background-color: #484C49;
+    margin-top: -27px;
+    height: 1px;
+    z-index: 0;
+  }
+  
+  &:hover {
+    .read-more--text {
+      color: #1A1F1C;
+    }
+    .read-more--bleak {
+      background-color: #1A1F1C;
+      color: #1A1F1C;
+    }
+  }
+}
+
+.login__register {
+  padding-left: 12px;
+}
+.btn-spotify {
+  background-color: $spotify-green;
+  color: #fff;
+  
+  &:hover {
+    background-image: linear-gradient(to top, 
+    #168B3F 0%, 
+    #168B3F 50%, 
+    $spotify-green 50%, 
+    $spotify-green 100%);
+    color: #D2F1DD;
+  }
 }

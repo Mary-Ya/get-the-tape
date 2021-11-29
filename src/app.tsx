@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 
 import About from "./pages/about";
-import Play from "./pages/play";
 import SpotifyLogin from "./pages/spotify-login";
 import Home from "./pages/home";
 import PublicHome from "./pages/public-home";
@@ -18,7 +17,7 @@ import TopMenu from "./layout/TopMenu";
 
 const App = () => {
   return (<div data-testid="app" className="container">
-    <div className="align-items-start mt-xxl-5 w-xxl-90">
+    <div className="align-items-start w-xxl-90">
         <Switch>
           <Route path="/about">
             <About />
@@ -33,8 +32,6 @@ const App = () => {
           <Route path="/home" render={routeProps => (<PrivateRoute {...routeProps}>
                 <Home></Home>
             </PrivateRoute>)} />
-
-          <Route path="/play" component={Play} />
 
           <Route exact path="/playlist" render={routeProps => (<PrivateRoute {...routeProps}>
                 <TrackList></TrackList>

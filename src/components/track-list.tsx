@@ -41,8 +41,7 @@ const TrackList = (props: ITrackListProps) => {
       ></Track>
   );
 
-  const SortableItem = SortableElement((params) => {
-    const { value, sortIndex } = params;
+  const SortableItem = SortableElement(({ value, sortIndex }) => {
     return renderItem(value, sortIndex);
   });
 

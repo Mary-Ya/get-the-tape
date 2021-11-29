@@ -107,8 +107,7 @@ function SeedSettings(props: any) {
         canRemoveSeeds={genreSeeds.length > 1}
         selectedGenresList={genreSeeds}
         onGenreSelect={selectGenre}
-        onGenreRelease={releaseGenre}
-      />
+        onGenreRelease={releaseGenre} className={""}      />
       
       <div className="rounded-10 pt-3">
         Seed Songs: {songSeeds.map((s: ITrack) => renderSeedTrack(s, songSeeds.length > 1))}

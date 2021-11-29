@@ -18,11 +18,21 @@
 @import "node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-$body-bg: #fff;
-$wine: #9c8e94;
+$body-bg: #FBF9FA;
+$black: #1A1F1C;
+$spotify-green: #1DB954;
+
+$display-font-sizes: (
+  1: 5rem,
+  2: 4.5rem,
+  3: 3.8rem,
+  4: 3.5rem,
+  5: 3rem,
+  6: 2.5rem
+) !default;
 
 h1 {
-    color: $wine;
+    color: $black;
 }
 
 .genres-list {
