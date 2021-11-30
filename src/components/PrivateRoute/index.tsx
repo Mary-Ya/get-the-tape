@@ -3,8 +3,8 @@ import userApi from '@api/user-api';
 import { deserialize } from '@common/utils';
 import useCashableState from '@hooks/use-cashable-state';
 import TopMenu from '@layout/TopMenu';
-import PublicHome from '@pages/public-home';
-import Spinner from '@components/spinner';
+import PublicHome from '@pages/PublicHome';
+import Spinner from '@components/Spinner';
 
 const retrieveFromSearch = (search:string, q: string) => {
   if (search) {
@@ -49,5 +49,5 @@ function PrivateRoute({children, location}: PrivateRouteProps) {
         : spinnerIsOn ? <Spinner></Spinner> : <PublicHome />
 }
 
-export default PrivateRoute;
+export default React.memo(PrivateRoute);
 

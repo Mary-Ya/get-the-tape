@@ -1,5 +1,5 @@
 import React from "react";
-import EditableText from "@components/editable-text";
+import EditableText from "@components/EditableText";
 
 interface TapeControlsProps {
   id: string;

@@ -4,14 +4,13 @@ import {
   Route,
 } from "react-router-dom";
 
-import About from "@pages/about";
-import SpotifyLogin from "@pages/spotify-login";
-import Home from "@pages/home";
-import PublicHome from "@pages/public-home";
-import NoMatch from "@pages/no-match";
+import About from "@pages/About";
+import Home from "@pages/Home";
+import PublicHome from "@pages/PublicHome";
+import NoMatch from "@pages/NoMatch";
+import TrackList from "@pages/Playlist";
 
-import TrackList from "@pages/playlist";
-import PrivateRoute from "@components/private-route";
+import PrivateRoute from "@components/PrivateRoute";
 
 const App = () => {
   return (<div data-testid="app" className="container">
@@ -19,10 +18,6 @@ const App = () => {
         <Switch>
           <Route path="/about">
             <About />
-          </Route>
-
-          <Route path="/login">
-            <SpotifyLogin />
           </Route>
 
           <Route path="/public-home" component={PublicHome} />

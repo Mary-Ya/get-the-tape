@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import api from "@api/api";
 
-const About = () => {
+const AboutPage = () => {
 
     // TEST
     /*useEffect(() => {
@@ -13,8 +13,8 @@ const About = () => {
     }, [])*/
 
     return <div>
-        About the game
+        About Get The Tape
     </div>
 };
 
-export default About;
+export default AboutPage;

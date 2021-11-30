@@ -2,7 +2,7 @@ import React from "react";
 import { SortableHandle } from "react-sortable-hoc";
 import { IArtist, ITrack } from "@interfaces/track";
 import Icons from "@common/icons";
-import Player from "@components/player";
+import Player from "@components/Player";
 
 const renderArtist = (artist: IArtist) => {
   return (

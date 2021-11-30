@@ -6,7 +6,7 @@ import getRandomListName from "@common/name-gen";
 import playlistApi from "@api/playlist-api";
 import useCashableState from "@hooks/use-cashable-state";
 import { ITrack } from "@interfaces/track";
-import EditableText from "@components/editable-text";
+import EditableText from "@components/EditableText";
 import TapeStatusText from "@components/TapeStatusText";
 
 interface ISavePlaylistProps {

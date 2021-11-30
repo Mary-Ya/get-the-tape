@@ -9,13 +9,13 @@ import {
 } from "@common/utils";
 import { ITrack } from "@interfaces/track";
 import { IMe } from "@interfaces/me";
-import TrackList from "@components/track-list";
+import TrackList from "@components/TrackList";
 
-import SavePlaylist from "@components/save-playlist";
+import SavePlaylist from "@components/SavePlaylist";
 import SeedSettings from "@components/home/seed-settings";
 import OptionalSettings from "@components/home/optional-settings";
 
-import Spinner from "@components/spinner";
+import Spinner from "@components/Spinner";
 
 import useSearchSettings from "@hooks/use-search-settings";
 import useCashableState from "@hooks/use-cashable-state";
@@ -126,6 +126,8 @@ function Home(props: any) {
       })
       .catch(errorHandler);
   };
+
+  useEffect(() => {console.log('Home Rerender')})
 
   return !auth ? (
     <Redirect to="/public-home" />

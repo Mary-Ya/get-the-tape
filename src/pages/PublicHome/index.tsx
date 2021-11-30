@@ -1,5 +1,4 @@
 import React from "react";
-import Login from "@pages/spotify-login";
 
 const PublicHome = () => (
   <div className="jumbotron public-home__slide full-height">
@@ -15,7 +14,10 @@ const PublicHome = () => (
         </p>
         <div className="read-more read-more--break"/>
         <div className="mt-5">
-          <Login /> 
+          <div>
+              <a href="/login" className="btn btn-spotify rounded-pill">Log in with Spotify</a>
+          </div>
+          <span className="login__register">Don’t have an account yet? Register now!</span>
         </div>
       </div>
       <div className="col-sm-4 pull-right d-none d-sm-flex public-home__slide--bg"></div>

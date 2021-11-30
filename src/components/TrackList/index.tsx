@@ -5,7 +5,7 @@ import {
   SortableElement,
 } from "react-sortable-hoc";
 import { ITrack } from "@interfaces/track";
-import Track from "@components/track";
+import Track from "@components/Track";
 import { removeItemByProperty } from "@common/utils";
 
 interface ITrackListProps {

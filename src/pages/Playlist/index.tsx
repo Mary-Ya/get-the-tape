@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiPlaylist from "@api/playlist-api";
-import PaginatedList from "@components/paginated-list";
-import Spinner from "@components/spinner";
+import PaginatedList from "@components/PaginatedList";
+import Spinner from "@components/Spinner";
 import { IPlaylist, IPlaylistList } from "@interfaces/playlist";
 
 const Playlist = () => {
