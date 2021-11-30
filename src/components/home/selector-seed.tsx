@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
-import { IArtist, ITrack } from "../../types/track";
-import AsyncSelect from "react-select/async";
-import api from "../../common/api";
 import { useState } from "react";
-import { clearSelectedValue, haveACopyInArray } from "../../common/utils";
+import { IArtist, ITrack } from "@interfaces/track";
+import AsyncSelect from "react-select/async";
+import api from "@api/api";
+import { clearSelectedValue, haveACopyInArray } from "@common/utils";
 
 type TPossibleSeedTypes = ITrack | IArtist | string;
 

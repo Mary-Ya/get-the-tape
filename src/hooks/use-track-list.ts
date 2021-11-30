@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ITrack } from "../types/track";
+import { ITrack } from "@interfaces/track";
 
 const useTrackList = (initialValue: ITrack[]) => {
     const [state, setState] = useState(initialValue || []);
@@ -10,7 +10,7 @@ const useTrackList = (initialValue: ITrack[]) => {
         return newSongSeeds;
     };
 
-    const setList = (data) => {
+    const setList = (data: any[]) => {
         setState(data || []);
     };
 

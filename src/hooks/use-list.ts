@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { genresFilter } from "../components/GenresList/utils";
+import { genresFilter } from "@components/GenresList/utils";
 
 const UseList = (initialValue: any[]) => {
   const [data, useData] = useState(initialValue);

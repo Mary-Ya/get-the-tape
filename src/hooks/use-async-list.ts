@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { IAnyList } from "../types/common";
-import useAsync from "./use-async";
+import { IAnyList } from "@interfaces/common";
+import useAsync from "@hooks/use-async";
 
 // Hook
 const useAsyncList = (fetchList, immediate = true) => {

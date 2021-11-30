@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "./spotify-login";
+import Login from "@pages/spotify-login";
 
 const PublicHome = () => (
   <div className="jumbotron public-home__slide full-height">

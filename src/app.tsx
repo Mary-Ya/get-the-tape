@@ -2,18 +2,16 @@ import React from "react";
 import {
   Switch,
   Route,
-  NavLink,
 } from "react-router-dom";
 
-import About from "./pages/about";
-import SpotifyLogin from "./pages/spotify-login";
-import Home from "./pages/home";
-import PublicHome from "./pages/public-home";
-import NoMatch from "./pages/no-match";
+import About from "@pages/about";
+import SpotifyLogin from "@pages/spotify-login";
+import Home from "@pages/home";
+import PublicHome from "@pages/public-home";
+import NoMatch from "@pages/no-match";
 
-import TrackList from "./pages/playlist";
-import PrivateRoute from "./components/private-route";
-import TopMenu from "./layout/TopMenu";
+import TrackList from "@pages/playlist";
+import PrivateRoute from "@components/private-route";
 
 const App = () => {
   return (<div data-testid="app" className="container">

@@ -1,11 +1,11 @@
 import { AxiosRequestConfig } from "axios";
-import { IRecommendationSettings } from "../types/recommendation-settings";
-import loggedInAxios from "./logged-in-axios";
-import { getRandomNumber, safeSessionStorage } from "./utils";
+import { IRecommendationSettings } from "@interfaces/recommendation-settings";
+import loggedInAxios from "@common/logged-in-axios";
+import { getRandomNumber, safeSessionStorage } from "@common/utils";
 
 const returnTracksData = (i: any) => i.data.body.tracks;
 
-export default {
+const api = {
   // for test purposes
   reject: () => {
     const options: AxiosRequestConfig = {
@@ -90,3 +90,5 @@ export default {
       .catch((e) => console.warn(e));
   }
 };
+
+export default api;

@@ -1,5 +1,5 @@
 import React from "react";
-import CheckButton from "../CheckButton";
+import CheckButton from "@components/CheckButton";
 
 interface IGenreItemProps {
     canAddMoreSeeds: boolean;

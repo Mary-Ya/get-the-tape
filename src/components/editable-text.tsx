@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { useState } from "react";
-import Icons from "../assets/icons";
+import Icons from "@common/icons";
 
 interface IEditableTextProps {
   value: string;

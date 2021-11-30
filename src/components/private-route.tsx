@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import userApi from '../common/user-api';
-import { deserialize } from '../common/utils';
-import useCashableState from '../hooks/use-cashable-state';
-import TopMenu from '../layout/TopMenu';
-import PublicHome from '../pages/public-home';
-import Spinner from './spinner';
+import userApi from '@api/user-api';
+import { deserialize } from '@common/utils';
+import useCashableState from '@hooks/use-cashable-state';
+import TopMenu from '@layout/TopMenu';
+import PublicHome from '@pages/public-home';
+import Spinner from '@components/spinner';
 
 const retrieveFromSearch = (search:string, q: string) => {
   if (search) {

@@ -1,7 +1,7 @@
 import React from "react";
-import ToggleAndRange from "./toggle-and-range";
+import ToggleAndRange from "@components/home/toggle-and-range";
 
-import { divideArray } from "../../common/utils";
+import { divideArray } from "@common/utils";
 
 function OptionalSettings(props) {
   return (

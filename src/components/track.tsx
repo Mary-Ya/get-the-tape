@@ -1,9 +1,8 @@
 import React from "react";
-import { IArtist, ITrack } from "../types/track";
-import Icons from "../assets/icons";
 import { SortableHandle } from "react-sortable-hoc";
-import Player from "./player";
-import { getRandomNumber } from "../common/utils";
+import { IArtist, ITrack } from "@interfaces/track";
+import Icons from "@common/icons";
+import Player from "@components/player";
 
 const renderArtist = (artist: IArtist) => {
   return (

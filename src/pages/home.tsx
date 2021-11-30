@@ -1,26 +1,24 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Redirect } from "react-router-dom";
 
-import api from "../common/api";
-import userApi from "../common/user-api";
+import api from "@api/api";
+import userApi from "@api/user-api";
 import {
-  divideArray,
-  safeLocalStorage,
   cleanObject,
   getRandomNumber,
-} from "../common/utils";
-import { IArtist, ITrack } from "../types/track";
-import { IMe } from "./../types/me";
-import TrackList from "../components/track-list";
+} from "@common/utils";
+import { ITrack } from "@interfaces/track";
+import { IMe } from "@interfaces/me";
+import TrackList from "@components/track-list";
 
-import SavePlaylist from "../components/save-playlist";
-import SeedSettings from "../components/home/seed-settings";
-import OptionalSettings from "../components/home/optional-settings";
+import SavePlaylist from "@components/save-playlist";
+import SeedSettings from "@components/home/seed-settings";
+import OptionalSettings from "@components/home/optional-settings";
 
-import Spinner from "../components/spinner";
+import Spinner from "@components/spinner";
 
-import useSearchSettings from "../hooks/use-search-settings";
-import useCashableState from "../hooks/use-cashable-state";
+import useSearchSettings from "@hooks/use-search-settings";
+import useCashableState from "@hooks/use-cashable-state";
 
 function Home(props: any) {
   const [accessToken, setAccessToken] = useState(props.access_token);

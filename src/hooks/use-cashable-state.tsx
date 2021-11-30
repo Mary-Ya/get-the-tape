@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { IArtist, ITrack } from "../types/track";
-import { safeLocalStorage } from "../common/utils";
+import { IArtist, ITrack } from "@interfaces/track";
+import { safeLocalStorage } from "@common/utils";
 
 type TPossibleCashableStateValueTypes =
   | (string | ITrack | IArtist | number)[]

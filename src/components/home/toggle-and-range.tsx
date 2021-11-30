@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { divideArray, getRandomNumber } from '../../common/utils';
-import useCashableState from '../../hooks/use-cashable-state';
-import { IArtist, ITrack } from '../../types/track';
+import useCashableState from '@hooks/use-cashable-state';
 
 const Slider = require('rc-slider');
 const createSliderWithTooltip = Slider.createSliderWithTooltip;

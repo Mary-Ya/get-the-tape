@@ -3,7 +3,7 @@ import './style.scss';
 
 import { NavLink, useLocation } from 'react-router-dom'
 
-import Icons from "./../../assets/icons";
+import Icons from "@common/icons";
 const MainMenu = () => {
   return (
     <div className="container">

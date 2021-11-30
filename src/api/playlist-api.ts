@@ -3,11 +3,11 @@ import {
 } from "axios";
 import {
   IPlaylistInitData
-} from "../types/playlist";
-import loggedInAxios from "./logged-in-axios";
+} from "@interfaces/playlist";
+import loggedInAxios from "@common/logged-in-axios";
 import {
   returnBody
-} from "./utils";
+} from "@common/utils";
 
 const DEFAULT_LIMIT = 10;
 const DEFAULT_OFFSET = 0;

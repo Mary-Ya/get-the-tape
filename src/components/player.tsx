@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useSimpleAudio from 'use-simple-audio';
-import icons from '../assets/icons';
+import icons from '@common/icons';
 
 const Player = (props: {src: string, id: string, loop?: boolean, className?:string}) => {
   const { play, pause, stop } = useSimpleAudio(props.src, props.loop);

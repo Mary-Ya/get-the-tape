@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { values } from "lodash";
-import userApi from "./user-api";
+import userApi from "@api/user-api";
 import { safeLocalStorage } from "./utils";
 
 const isSuccessCode = (code: number) => (code && code > 199 && code < 300);

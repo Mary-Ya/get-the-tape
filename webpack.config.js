@@ -61,21 +61,20 @@ module.exports = {
         }]
       }, {
         test: /\.svg$/,
-        use: [
-            {
-                loader: "@svgr/webpack"
-            },
-            {
-              loader: "file-loader",
-              options: {
-                name: 'assets/[path][name].[ext]',
-              },
-            }
-        ],
-        type: "javascript/auto",
-        issuer: {
-            and: [/\.(ts|tsx|js|jsx|md|mdx)$/]
-        }
+        oneOf: [
+          {
+              issuer: /\.[jt]sx?$/,
+              use: ['@svgr/webpack']
+          },
+          {
+              type: 'asset',
+              parser: {
+                  dataUrlCondition: {
+                      maxSize: 200
+                  }
+              }
+          },
+      ]
     }, {
         test: /\.(png|jpe?g|gif)$/i,
         exclude: /node_modules/,
@@ -88,21 +87,27 @@ module.exports = {
    ]
  },
  resolve: {
-  alias: {     
-    // bind to modules;
-    modules: path.join(__dirname, "node_modules")
+  alias: {
+    "@api": path.join(__dirname, "src", "api"),
+    "@assets": path.join(__dirname, "src", "assets"),
+    "@common": path.join(__dirname, "src", "common"),
+    "@components": path.join(__dirname, "src", "components"),
+    "@hooks": path.join(__dirname, "src", "hooks"),
+    "@layout": path.join(__dirname, "src", "layout"),
+    "@pages": path.join(__dirname, "src", "pages"),
+    "@interfaces": path.join(__dirname, "src", "types")
    },
    extensions: ['.tsx', '.ts', '.js'],
   },
- plugins: [
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-  }),
-  new HtmlWebpackPlugin({
-    template: './src/index.html', 
-    inject: false
-  }),
-  new FaviconsWebpackPlugin("./src/assets/favicon.png"),
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html', 
+      inject: false
+    }),
+    new FaviconsWebpackPlugin("./src/assets/favicon.png"),
  ]
 }

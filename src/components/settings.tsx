@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useCashableState from '../hooks/use-cashable-state';
+import useCashableState from '@hooks/use-cashable-state';
 
 function Settings() {
   // min_acousticness, max_acousticness 0.0 -1.0

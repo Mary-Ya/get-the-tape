@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "./../public/",
+      "types": ["node"],
       "sourceMap": true,
       "lib": ["dom", "dom.iterable", "esnext"],
       "allowJs": true,
@@ -13,7 +14,23 @@
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": true,
-      "jsx": "react"
+      "jsx": "react",
+      "baseUrl": ".",
+      "paths": {
+        "@api": ["./src/api"],
+        "@api/*": ["./src/api/*"],
+        "@assets/*": ["./src/assets/*"],
+        "@common/*": ["./src/common/*"],
+        "@components/*": ["./src/components/*"],
+        "@hooks/*": ["./src/hooks/*"],
+        "@pages/*": ["./src/pages/*"],
+        "@layout/*": ["./src/layout/*"],
+        "@interfaces/*": ["./src/types/*"]
+      }
     },
-    "include": ["src", "optional.d.ts"]
+    "include": ["src", "optional.d.ts"],
+    "exclude": [
+      "dist",
+      "node_modules"
+    ]
   }

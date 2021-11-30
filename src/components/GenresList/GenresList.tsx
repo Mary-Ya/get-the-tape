@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import api from "../../common/api";
-import useList from "../../hooks/use-list";
+import api from "@api/api";
+import useList from "@hooks/use-list";
 import GenreItem from "./GenreItem";
 import SelectedGenreItem from "./SelectedGenreItem";
 

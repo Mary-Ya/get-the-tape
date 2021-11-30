@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { ChangeEvent } from "react";
 import { useEffect } from "react";
-import Icons from "../assets/icons";
-import getRandomListName from "../common/name-gen";
-import playlistApi from "../common/playlist-api";
-import useCashableState from "../hooks/use-cashable-state";
-import { ITrack } from "../types/track";
-import EditableText from "./editable-text";
-import TapeStatusText from "./TapeStatusText";
+import Icons from "@common/icons";
+import getRandomListName from "@common/name-gen";
+import playlistApi from "@api/playlist-api";
+import useCashableState from "@hooks/use-cashable-state";
+import { ITrack } from "@interfaces/track";
+import EditableText from "@components/editable-text";
+import TapeStatusText from "@components/TapeStatusText";
 
 interface ISavePlaylistProps {
   accessToken: string;

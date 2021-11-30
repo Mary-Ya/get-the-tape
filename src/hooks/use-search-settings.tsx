@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IPossibleSettings } from "../types/recommendation-settings";
+import { IPossibleSettings } from "@interfaces/recommendation-settings";
 
 function useSearchSettings(initialValue: any) {
     const [state, setState] = useState(initialValue);
@@ -9,7 +9,6 @@ function useSearchSettings(initialValue: any) {
         const newState = { ...prevState, ...value };
         return newState;
       });
-      console.log('setSettings: ', state);
     }
   
     function getItem(name: string) {

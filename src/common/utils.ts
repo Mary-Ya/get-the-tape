@@ -1,4 +1,4 @@
-import { ITrack } from "../types/track";
+import { ITrack } from "@interfaces/track";
 
 const getRandomNumber = (max = 1000) => Math.floor(Math.random() * max)
 

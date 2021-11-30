@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import api from "../common/api";
+import api from "@api/api";
 
 const About = () => {
 

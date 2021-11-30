@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AxiosRequestConfig } from "axios";
-import loggedInAxios from "./logged-in-axios";
-import { safeLocalStorage } from "./utils";
+import loggedInAxios from "@common/logged-in-axios";
+import { safeLocalStorage } from "@common/utils";
 
 
 export default {

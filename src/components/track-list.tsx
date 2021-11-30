@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { ITrack } from "../types/track";
-import Track from "./track";
 import {
   arrayMove,
   SortableContainer,
   SortableElement,
 } from "react-sortable-hoc";
-import { removeItemByProperty } from "./../common/utils";
+import { ITrack } from "@interfaces/track";
+import Track from "@components/track";
+import { removeItemByProperty } from "@common/utils";
 
 interface ITrackListProps {
   snapshot: string;

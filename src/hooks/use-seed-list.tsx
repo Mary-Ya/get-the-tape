@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import { IArtist, ITrack } from '../types/track';
-import { safeLocalStorage } from '../common/utils';
-import useCashableState from './use-cashable-state';
+import { IArtist, ITrack } from '@interfaces/track';
+import useCashableState from '@hooks/use-cashable-state';
 
 type TPossibleSeeds = string | ITrack | IArtist | number;
 type TSeedList = (TPossibleSeeds)[];

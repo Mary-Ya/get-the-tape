@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import apiPlaylist from "../common/playlist-api";
-import PaginatedList from "../components/paginated-list";
-import Spinner from "../components/spinner";
-import { IPlaylist, IPlaylistList } from "../types/playlist";
+import apiPlaylist from "@api/playlist-api";
+import PaginatedList from "@components/paginated-list";
+import Spinner from "@components/spinner";
+import { IPlaylist, IPlaylistList } from "@interfaces/playlist";
 
-const Playlist = (props) => {
+const Playlist = () => {
   const [list, setList] = useState<IPlaylistList | null>(null);
   // const { execute, status, value, error } = useAsyncList(makeFetchFunction(), false);
 

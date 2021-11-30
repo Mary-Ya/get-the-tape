@@ -1,5 +1,5 @@
 import React from 'react';
-import { IArtist, ITrack } from '../../types/track';
+import { IArtist, ITrack } from '@interfaces/track';
 
 interface ISelectedSeedProps {
     id: string,

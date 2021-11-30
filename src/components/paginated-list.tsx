@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAnyList } from '../types/common';
+import { IAnyList } from '@interfaces/common';
 
 interface IPaginationListProps extends IAnyList {
   row: any;

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import api from "../../common/api";
-import useSeedList from "../../hooks/use-seed-list";
-import { IArtists, ITracks } from "../../types/playlist";
-import { IArtist, ITrack } from "../../types/track";
+import api from "@api/api";
+import useSeedList from "@hooks/use-seed-list";
+import { IArtists, ITracks } from "@interfaces/playlist";
+import { IArtist, ITrack } from "@interfaces/track";
 
-import GenresList from "../GenresList/GenresList";
-import SelectedSeed from "./selected-seed";
-import SeedSelector from "./selector-seed";
+import GenresList from "@components/GenresList/GenresList";
+import SelectedSeed from "@components/home/selected-seed";
+import SeedSelector from "@components/home/selector-seed";
 
 function SeedSettings(props: any) {
 
