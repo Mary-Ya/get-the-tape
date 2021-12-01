@@ -1,26 +1,23 @@
-import React, { useRef } from "react";
-import { useState } from "react";
-import { IArtist, ITrack } from "@interfaces/track";
+import React, { useRef, useState } from "react";
 import AsyncSelect from "react-select/async";
+import { OptionTypeBase } from "react-select";
 import api from "@api/api";
 import { clearSelectedValue, haveACopyInArray } from "@common/utils";
-
-type TPossibleSeedTypes = ITrack | IArtist | string;
+import { getOptionalLabel } from "./services";
 
 interface SeedSelectorProps {
-  seeds: Array<TPossibleSeedTypes>,
+  seeds: Array<OptionTypeBase>,
   selectedSeedsIds: Array<string>,
   canAddMoreSeeds: boolean,
   country: string,
   searchType: string,
-  setSeeds(data: Array<TPossibleSeedTypes>): void
+  setSeeds(data: Array<OptionTypeBase>): void
 }
 
 // TODO: block selected item from rendering
 function SeedSelector(props: SeedSelectorProps) {
   const [offset, setOffset] = useState(0);
   const seedSelectorRef = useRef();
-  const [localSeeds, setLocalSeeds] = useState(props.seeds);
 
   const getSeeds = (inputValue: string) => {
     return api
@@ -35,32 +32,24 @@ function SeedSelector(props: SeedSelectorProps) {
   };
 
   const onChange = (
-    selectedOption: TPossibleSeedTypes | null,
+    selectedOption: OptionTypeBase | null,
     props: SeedSelectorProps
   ) => {
       const isADuplicate = haveACopyInArray(selectedOption, props.seeds);
       if (selectedOption && props.canAddMoreSeeds && !isADuplicate) {
-          let newValue: Array<TPossibleSeedTypes> = ([] as Array<TPossibleSeedTypes>).concat(...props.seeds);
+          let newValue: Array<OptionTypeBase> = ([] as Array<OptionTypeBase>).concat(...props.seeds);
           newValue.push(selectedOption);
           props.setSeeds(newValue);
           clearSelectedValue(seedSelectorRef);
       }
   };
     
-  const renderOptionLabel: {[key: string]: (option: TPossibleSeedTypes) => string} = {
-    track: (option) => 
-      (`${option.name} by ${option.artists.map((i: ITrack) => i.name).join(", ")}`),
-    artist: (option) => (`${option.name}`)
-  }
-
-  const callRender = (option: IArtist | ITrack) => (renderOptionLabel[props.searchType](option))
-
   return (
     <AsyncSelect
       className="async-select"
       isDisabled={!props.canAddMoreSeeds}
       innerRef={seedSelectorRef}
-      getOptionLabel={callRender}
+      getOptionLabel={(options: OptionTypeBase) => (getOptionalLabel(options, props.searchType))}
       blurInputOnSelect={true}
       loadOptions={getSeeds}
       onChange={(options) => (onChange(options, props))}

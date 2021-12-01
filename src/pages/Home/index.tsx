@@ -127,8 +127,6 @@ function Home(props: any) {
       .catch(errorHandler);
   };
 
-  useEffect(() => {console.log('Home Rerender')})
-
   return !auth ? (
     <Redirect to="/public-home" />
   ) : !me ? (

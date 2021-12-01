@@ -6,7 +6,7 @@ import { IArtist, ITrack } from "@interfaces/track";
 
 import GenresList from "@components/GenresList/GenresList";
 import SelectedSeed from "@components/home/selected-seed";
-import SeedSelector from "@components/home/selector-seed";
+import SeedSelector from "@components/home/SelectorSeed";
 
 function SeedSettings(props: any) {
 
