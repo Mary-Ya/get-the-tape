@@ -11,7 +11,7 @@ interface SeedSelectorProps {
   canAddMoreSeeds: boolean,
   country: string,
   searchType: string,
-  setSeeds(data: Array<OptionTypeBase>): void
+  setSeeds(data: Array<any>): void
 }
 
 // TODO: block selected item from rendering

@@ -116,54 +116,6 @@ html {
   min-height: 100vh;
 }
 
-.public-home {
-  &__slide {
-    height: calc(82vh);
-    padding-top: calc(18vh);
-
-    &--bg {
-      background-repeat: no-repeat;
-      background-position-x: right;
-      background-image: url('./pages/about/assets/tapes-normal.svg');
-    }
-  }
-}
-
-.read-more {
-  cursor: pointer;
-
-  &--text {
-    background: $body-bg;
-    color: #484C49;
-
-    &:before, &:after { 
-      content: 'v';
-      padding: 0 8px;
-      font-weight: 400;
-    }
-  }
-
-  &--break {
-    background-color: #484C49;
-    margin-top: -27px;
-    height: 1px;
-    z-index: 0;
-  }
-  
-  &:hover {
-    .read-more--text {
-      color: #1A1F1C;
-    }
-    .read-more--bleak {
-      background-color: #1A1F1C;
-      color: #1A1F1C;
-    }
-  }
-}
-
-.login__register {
-  padding-left: 12px;
-}
 .btn-spotify {
   background-color: $spotify-green;
   color: #fff;

@@ -3,7 +3,7 @@ import ToggleAndRange from "@components/home/toggle-and-range";
 
 import { divideArray } from "@common/utils";
 
-function OptionalSettings(props) {
+function OptionalSettings(props: {setOptionalSettings: (data: number[]) => void}) {
   return (
     <>
       <ToggleAndRange

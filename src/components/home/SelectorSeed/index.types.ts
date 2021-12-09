@@ -1,7 +1,7 @@
 import { IArtist, ITrack } from "@interfaces/track";
 import { OptionTypeBase } from "react-select";
 
-type TPossibleSeedTypes = ITrack | IArtist | string;
+export type TPossibleSeedTypes = ITrack | IArtist | string;
 
 export interface SeedSelectorProps {
   seeds: Array<TPossibleSeedTypes>,

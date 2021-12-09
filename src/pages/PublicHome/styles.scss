@@ -1,0 +1,73 @@
+@import "@assets/style/custom.scss";
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "@assets/style/overwrite.scss";
+@import "@assets/style/rc-slider-custom.scss";
+
+.public-home {
+  &__slide {
+    height: calc(82vh);
+    padding-top: calc(18vh);
+
+  }
+}
+
+.read-more {
+  cursor: pointer;
+
+  &--text {
+    background: $body-bg;
+    color: #484C49;
+
+    &:before,
+    &:after {
+      content: 'v';
+      padding: 0 8px;
+      font-weight: 400;
+    }
+  }
+
+  &--break {
+    background-color: #484C49;
+    margin-top: -27px;
+    height: 1px;
+    z-index: 0;
+  }
+
+  &:hover {
+    .read-more--text {
+      color: #1A1F1C;
+    }
+
+    .read-more--bleak {
+      background-color: #1A1F1C;
+      color: #1A1F1C;
+    }
+  }
+}
+
+.login__register {
+  padding-left: 12px;
+}
+
+.up-button {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(#6f42c1, .3);
+  padding-left: 8px;
+  padding-top: 7px;
+  border-radius: 50px;
+  a {
+    color: rgba(#3c206f, .3);
+    text-decoration: none;
+    &:hover {
+      color: rgba(#3c206f, .5);
+    }
+  }
+  
+  &:hover {
+    a {
+      color: rgba(#3c206f, .5);
+    }
+    background-color: rgba(#6f42c1, .5);
+  }
+}

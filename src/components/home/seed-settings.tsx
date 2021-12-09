@@ -7,8 +7,15 @@ import { IArtist, ITrack } from "@interfaces/track";
 import GenresList from "@components/GenresList/GenresList";
 import SelectedSeed from "@components/home/selected-seed";
 import SeedSelector from "@components/home/SelectorSeed";
+import { IMe } from "@interfaces/me";
 
-function SeedSettings(props: any) {
+interface TSeedSettingsProps {
+  setSettings: (seeds: any) => void,
+  country: string,
+  me: IMe,
+}
+
+function SeedSettings(props: TSeedSettingsProps) {
 
   const [genreSeeds, setGenreSeeds, addGenre, removeGenreById, removeItem] = useSeedList(["rock"], 'genreSeeds');
   const [artistSeeds, setArtistSeeds, addArtist, removeArtistById] = useSeedList([], 'artistSeeds');
@@ -135,6 +142,6 @@ function SeedSettings(props: any) {
     </>
 }
 
-const areEqual = (prevProps, nextProps) => (prevProps.country == nextProps.country);
+const areEqual = (prevProps, nextProps: {prevProps: TSeedSettingsProps, nextProps: TSeedSettingsProps}) => (prevProps.country == nextProps.country);
 
 export default React.memo(SeedSettings, areEqual);
