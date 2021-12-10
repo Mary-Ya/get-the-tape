@@ -7,7 +7,10 @@
   &__slide {
     height: calc(82vh);
     padding-top: calc(18vh);
-
+    
+    &--mobile {
+      margin-top: -153px;
+    }
   }
 }
 
@@ -56,18 +59,11 @@
   padding-left: 8px;
   padding-top: 7px;
   border-radius: 50px;
-  a {
-    color: rgba(#3c206f, .3);
-    text-decoration: none;
-    &:hover {
-      color: rgba(#3c206f, .5);
-    }
-  }
+  color: rgba(#3c206f, .3);
+  text-decoration: none;
   
   &:hover {
-    a {
-      color: rgba(#3c206f, .5);
-    }
+    color: rgba(#3c206f, .5);
     background-color: rgba(#6f42c1, .5);
-  }
+  };
 }

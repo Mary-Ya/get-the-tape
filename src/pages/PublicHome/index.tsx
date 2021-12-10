@@ -1,6 +1,7 @@
 import React from "react";
 import './styles.scss';
 import TapeJumLg from '@assets/tape-jum-lg.svg';
+import TapeJumMobile from '@assets/tape-mini.svg';
 import TapeWithPencil from '@assets/tape-with-pencil.svg';
 import Icons from '@common/icons';
 
@@ -14,7 +15,7 @@ const PublicHome = () => (
           <br />Playlist generator for Spotify
         </p>
         <p className="mt-2 fw-bolder text-center read-more">
-          <span className="read-more--text">Read more</span>
+          <a href="#wgh" className="text-decoration-none"><span className="read-more--text">Read more</span></a>
         </p>
         <div className="read-more read-more--break"/>
         <div className="mt-5">
@@ -23,19 +24,20 @@ const PublicHome = () => (
           </div>
           <span className="login__register">Don’t have an account yet? Register now!</span>
         </div>
-        <div className="up-button mt-5">
-          <a href="#wgf">
-            <Icons.Down height="33" width="33" />
-          </a>
-        </div>
+        <a className="d-inline-block up-button mt-5" href="#wgh">
+          <Icons.Down height="33" width="33" />
+        </a>
       </div>
       <div className="col-sm-4 pull-right d-none d-sm-flex public-home__slide--bg">
         <TapeJumLg />
       </div>
     </div>
+    <div className="public-home__slide--mobile d-block d-sm-none">
+        <TapeJumMobile />
+      </div>
     <div className="row mb-5" style={{minHeight: '35vh'}}>
       <div className="col">
-        <h2 className="display-3" id="wgf">What’s gonna happen?</h2>
+        <h2 className="display-3" id="wgh">What’s gonna happen?</h2>
         <ol className="list">
           <li>You will choose “seed” track, song and artist</li>
           <li>You will choose optional settings (if you want)</li>
@@ -45,10 +47,10 @@ const PublicHome = () => (
       </div>
     </div>
     <div className="row mt-5" style={{minHeight: '50vh'}}>
-      <div className="col">
+      <div className="col-md-6 col-12">
         <div><TapeWithPencil style={{ maxHeight: '315px' }}/></div>
       </div>
-      <div className="col ms-lg-5 ps-lg-5">
+      <div className="col-md-6 col-12 ms-lg-5 ps-lg-5">
         <h2 className="display-4">F.A.Q.</h2>
           <dl className="">
             <dt className="">* Do I need to register at GetTheTape?</dt>
