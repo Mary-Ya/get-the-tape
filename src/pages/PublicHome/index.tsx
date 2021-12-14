@@ -50,7 +50,7 @@ const PublicHome = () => (
       <div className="col-md-6 col-12">
         <div><TapeWithPencil style={{ maxHeight: '315px' }}/></div>
       </div>
-      <div className="col-md-6 col-12 ms-lg-5 ps-lg-5">
+      <div className="col-md-6 col-12">
         <h2 className="display-4">F.A.Q.</h2>
           <dl className="">
             <dt className="">* Do I need to register at GetTheTape?</dt>
@@ -59,6 +59,13 @@ const PublicHome = () => (
             <dd className="">- GTT stores you data in your browser only. 
               <br/>It doesn’t even have a data base.</dd>
           </dl>
+      </div>
+    </div>
+    <div className="row my-5 public-home__footer">
+      <div className="col-12 p-5 fs-5">
+        <p>This is a work in progress that started as a practice in React.js</p>
+        <p>See a bug? Feel free to post <a href="https://github.com/Mary-Ya/get-the-tape/issues" target="_blank">issue on GitHub</a></p>
+        <p>Looking for a Frontend Web Developer? Contact me on GitHub or through <a href="https://www.linkedin.com/in/mary-ya/" target="_blank">LinkedIn</a></p>
       </div>
     </div>
   </div>
