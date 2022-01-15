@@ -1,6 +1,7 @@
 import { ITrack } from "@interfaces/track";
 import SafeStorage from "./safe-storage";
 
+const DEFAULT_MAX_RANDOM_NUMBER = 1000;
 const getRandomNumber = (max = 1000) => Math.floor(Math.random() * max)
 
 const returnBody = (i: any) => {
@@ -14,22 +15,23 @@ const errorHandler = (e: any) => {
     console.log(e);
 };
 
-
-const divideArray = (e: Array<number | null>, divider = 100) => {
-    return e.map(i => i ? i / divider : null)
-}
-
 const haveACopyInArray = (item: any, array: Array<any>) => (array.findIndex((i: ITrack) => {
     return i.id === item?.id;
 }) !== -1);
 
-const clearSelectedValue = (selectorRef) => {
+const clearSelectedValue = (selectorRef: any) => {
     selectorRef.current?.select?.select?.clearValue();
 }
 
+// to remove properties with falsy values
 const cleanObject = (data: any) => {
     let cleanData = { ...data };
-    Object.keys(cleanData).forEach(key => !cleanData[key] ? delete cleanData[key] : {});
+    Object.keys(cleanData).forEach((key) => {
+        if (!cleanData[key]) {
+            delete cleanData[key];
+        }
+    });
+
     return cleanData;
 }
 
@@ -38,17 +40,16 @@ const deserialize = (search: string) =>
 
     
 const removeItemByProperty = (data: any[], filter: any, propName: string) => {
-    const newSongSeeds = data.filter((i) => i[propName] !== filter);
-    return newSongSeeds;
+    return data.filter((i) => i[propName] !== filter);
 };
 
 export {
+    DEFAULT_MAX_RANDOM_NUMBER,
     getRandomNumber,
     safeLocalStorage,
     safeSessionStorage,
     errorHandler,
     returnBody,
-    divideArray,
     clearSelectedValue,
     haveACopyInArray,
     cleanObject,

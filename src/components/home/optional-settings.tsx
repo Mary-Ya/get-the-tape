@@ -1,7 +1,6 @@
 import React from "react";
 import ToggleAndRange from "@components/home/toggle-and-range";
-
-import { divideArray } from "@common/utils";
+import { divideArray } from "./optional-settings/services";
 
 function OptionalSettings(props: {setOptionalSettings: (data: number[]) => void}) {
   return (
