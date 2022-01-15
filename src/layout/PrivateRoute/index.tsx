@@ -45,7 +45,7 @@ function PrivateRoute({children, location}: PrivateRouteProps) {
   }, []);
     
     return !spinnerIsOn && isLoggedIn
-        ? <><TopMenu data-testid="main-menu-desktop" />{React.cloneElement(children, { access_token, refresh_token })}</>
+        ? <><TopMenu data-testid="main-menu-desktop" /><div className="container">{React.cloneElement(children, { access_token, refresh_token })}</div></>
         : spinnerIsOn ? <Spinner></Spinner> : <PublicHome />
 }
 

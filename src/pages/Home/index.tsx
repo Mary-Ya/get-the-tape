@@ -133,11 +133,11 @@ function Home(props: any) {
     <Spinner />
   ) : (
     <div className="row g-0 justify-content-center">
-      <div className="col-lg-3 col-12 form-check bg-light rounded-10 p-3">
+      <div className="col-lg-3 col-12 bg-light rounded-10 pt-3 pe-3">
         <SeedSettings setSettings={setSettings} country={me.country} />
         <OptionalSettings setOptionalSettings={setOptionalSettings} />
       </div>
-          <div className="col-lg-7 col-12 ps-lg-7 pt-3 pt-lg-0 ms-lg-4 ">
+          <div className="col-lg-9 col-12">
         <SavePlaylist
           accessToken={accessToken}
           myId={me.id}

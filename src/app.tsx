@@ -10,7 +10,7 @@ import PublicHome from "@pages/PublicHome";
 import NoMatch from "@pages/NoMatch";
 import TrackList from "@pages/Playlist";
 
-import PrivateRoute from "@components/PrivateRoute";
+import PrivateRoute from "@layout/PrivateRoute";
 
 const App = () => {
   return (<div data-testid="app" className="container">

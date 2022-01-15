@@ -5,6 +5,7 @@ interface IPaginationListProps extends IAnyList {
   row: any;
   total: number;
   limit: number;
+  
   items: any[];
   href: string;
   setPage: (pageNumber: number) => void;
