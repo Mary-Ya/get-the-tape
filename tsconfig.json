@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "./../public/",
-      "types": ["node", "jquery"],
+      "types": ["node", "jquery", "jest"],
       "sourceMap": true,
       "lib": ["dom", "dom.iterable", "esnext"],
       "allowJs": true,
