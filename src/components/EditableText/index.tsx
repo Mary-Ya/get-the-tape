@@ -55,7 +55,7 @@ function EditableText(props: IEditableTextProps) {
     </>
   );
 
-  return hideInput ? renderText() : renderInput();
+  return <div data-testid="playlist-name">{hideInput ? renderText() : renderInput()}</div> ;
 }
 
 export default React.memo(EditableText);
