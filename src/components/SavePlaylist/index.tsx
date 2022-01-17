@@ -19,7 +19,7 @@ interface ISavePlaylistProps {
 function SavePlaylist(props: ISavePlaylistProps) {
   const [name, setName] = useState(getRandomListName());
   const [playListID, setPlayListID] = useCashableState("", 'playListID');
-  const [status, setStatus] = useCashableState(null, 'TRACKLIST_STATUS_LIST', props.trackList?.length == 0 ? 'EMPTY' : 'NEW');
+  const [status, setStatus] = useCashableState(null, 'TRACK_LIST_STATUS', props.trackList?.length == 0 ? 'EMPTY' : 'NEW');
 
   const [notFirstRender, setNotFirstRender] = useState(false);
 
@@ -86,9 +86,9 @@ function SavePlaylist(props: ISavePlaylistProps) {
           onChange={onNameChange}
           placeholder={'Playlist name here'}
       />
-      <div className="text-black-50">ID: {playListID} <a href={`https://open.spotify.com/playlist/${playListID}`} target="_blank">
+      {playListID ? <div className="text-black-50">ID: {playListID} <a href={`https://open.spotify.com/playlist/${playListID}`} target="_blank">
         Open on spotify <Icons.Logo width='25px' height='25px'></Icons.Logo>
-      </a></div>
+      </a></div> : ''}
       <TapeStatusText status={status} />
       <div className={`input-group mb-3 px-lg-0`}>
         <button
