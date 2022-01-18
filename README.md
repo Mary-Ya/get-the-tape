@@ -1,4 +1,4 @@
-# Get the Tape backend
+# Get the Tape
 
 Application is a Spotify playlist generator.
 You can choose parameters and get playlist assembled for you.
